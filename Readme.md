@@ -12,16 +12,16 @@
 |--------|-------|
 | **Runtime** | 35 minutes |
 | **Hardware** | Personal Laptop (consumer-grade) |
-| **New Discoveries** | 30 planet candidates |
+| **New Discoveries** | 33 planet candidates |
 | **Known Planets Verified** | 2 existing planets confirmed |
-| **Total Candidates Processed** | 32 |
+| **Total Candidates Processed** | 35 |
 | **Data Source** | TESS Sector 5 lightcurves |
 
 ---
 
 ## Discovery Breakdown
 
-### New Discoveries (30 candidates)
+### New Discoveries (33 candidates)
 
 All 30 candidates were validated as **NEW DISCOVERY CANDIDATES** - meaning they have **never been registered in any existing dataset** (NASA Exoplanet Archive, TOI catalog, or other major exoplanet databases).
 
@@ -132,8 +132,7 @@ Based on the Sector 5 performance metrics:
 ```
 axiom_output/sector_5/
 ├── FLEX.md                    # This documentation
-├── discoveries_summary.json     # Summary of 5 sample discoveries
-├── discoveries/                 # 30 full discovery cards (JSON)
+├── discoveries/                 # 33 full discovery cards (JSON)
 │   ├── Discovery_ZS-T-1197754-01_*.json
 │   ├── Discovery_ZS-T-1220444-01_*.json
 │   └── ... (28 additional)
@@ -145,7 +144,7 @@ axiom_output/sector_5/
 
 ## Truthimatics Seal
 
-> **TRUTHIMATICS-SOVEREIGN | ZSpace=Sector-5-Batch | CVS≈0.84 avg | 30 NEW | WHITE-BOX | NO-ML | PHYSICS-DERIVED**
+> **TRUTHIMATICS-SOVEREIGN | ZSpace=Sector-5-Batch | CVS≈0.84 avg | 33 NEW | WHITE-BOX | NO-ML | PHYSICS-DERIVED**
 
 ---
 
