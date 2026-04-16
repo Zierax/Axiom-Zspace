@@ -151,6 +151,9 @@ axiom_output/sector_5/
 
 ---
 
+## Latest Activities
+[Zooniverse Discussion - TIC 590241](https://www.zooniverse.org/projects/nora-dot-eisner/planet-hunters-tess/talk/2110/3987225)
+
 *Document Version: 1.0*  
 *Generated: 2026-04-15*  
 *Engine: Axiom-ZSpace Sovereign Logic v1.0*
