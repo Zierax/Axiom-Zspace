@@ -1,5 +1,9 @@
 
-# Version 2 is coming current is Version 1 and if not 100% accurate it still not enough
+# Version 2 results in root dir in this repo not in axiom_output
+
+
+
+OLD-----
 
 # Axiom-ZSpace Project: Partial Sector 5 Results
 
