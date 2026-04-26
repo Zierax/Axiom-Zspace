@@ -1,0 +1,79 @@
+{
+  "schema": "Axiom-ZSpace Existing Planet Card v1.0",
+  "zspace_id": "ZS-T-440887364-01",
+  "timestamp_utc": "2026-04-26T19:32:09.108797+00:00",
+  "status": "KNOWN",
+  "match_source": "TOI",
+  "match_summary": {
+    "planet_name": "836.01",
+    "period_delta_days": 0.00026596,
+    "tolerance_days": 0.01,
+    "proof": "|P_candidate - P_archive| = 0.00026596 d \u2264 0.01 d \u2192 MATCH"
+  },
+  "candidate_parameters": {
+    "tic_id": "440887364",
+    "period_days": 8.595745160853676,
+    "transit_depth_ppm": 1263.59,
+    "planet_radius_earth": 2.5784331105943097,
+    "stellar_mass_solar": 0.678,
+    "stellar_radius_solar": 0.665,
+    "stellar_teff_k": 4552.0,
+    "cvs_score": 0.6378676470588236,
+    "cvs_verdict": "UNCERTAIN"
+  },
+  "archive_parameters": {
+    "planet_name": "836.01",
+    "period_days_archive": 8.5954792,
+    "transit_depth_archive": 1140.0,
+    "planet_radius_earth": 2.64032,
+    "semi_major_axis_au": null,
+    "stellar_teff_k": 4476.0,
+    "stellar_radius_solar": 0.69,
+    "stellar_mass_solar": null,
+    "discovery_method": "Transit (TESS)",
+    "disposition": "CP",
+    "extra_fields": {
+      "tmag": 8.6486,
+      "period_alias_factor": 1.0
+    }
+  },
+  "parameter_deltas": {
+    "period_delta_days": 0.00026596,
+    "period_delta_pct": 0.0031,
+    "depth_delta_ppm": -1139998736.41,
+    "radius_delta_pct": -2.3439
+  },
+  "all_archive_entries_for_tic": [],
+  "all_toi_entries_for_tic": [
+    {
+      "toi": "836.01",
+      "tid": 440887364,
+      "pl_orbper": 8.5954792,
+      "pl_trandep": 1140.0,
+      "pl_trandurh": 2.47,
+      "tfopwg_disp": "CP",
+      "ra": 225.079883,
+      "dec": -24.454202,
+      "st_tmag": 8.6486,
+      "st_teff": 4476.0,
+      "st_logg": 4.58156,
+      "st_rad": 0.69,
+      "pl_rade": 2.64032
+    },
+    {
+      "toi": "836.02",
+      "tid": 440887364,
+      "pl_orbper": 3.8167262,
+      "pl_trandep": 580.0,
+      "pl_trandurh": 1.602,
+      "tfopwg_disp": "CP",
+      "ra": 225.079883,
+      "dec": -24.454202,
+      "st_tmag": 8.6486,
+      "st_teff": 4476.0,
+      "st_logg": 4.58156,
+      "st_rad": 0.69,
+      "pl_rade": 1.69257
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "schema": "Axiom-ZSpace Existing Planet Card v1.0",
+  "zspace_id": "ZS-T-30122649-01",
+  "timestamp_utc": "2026-04-26T19:54:14.625831+00:00",
+  "status": "KNOWN",
+  "match_source": "TOI",
+  "match_summary": {
+    "planet_name": "808.01",
+    "period_delta_days": 3.078e-05,
+    "tolerance_days": 0.01,
+    "proof": "|P_candidate - P_archive| = 0.00003078 d \u2264 0.01 d \u2192 MATCH"
+  },
+  "candidate_parameters": {
+    "tic_id": "30122649",
+    "period_days": 3.246500411716269,
+    "transit_depth_ppm": 211.38,
+    "planet_radius_earth": 1.3213140290553225,
+    "stellar_mass_solar": 0.87,
+    "stellar_radius_solar": 0.833198,
+    "stellar_teff_k": 5078.2,
+    "cvs_score": 0.32272099688793343,
+    "cvs_verdict": "UNCERTAIN"
+  },
+  "archive_parameters": {
+    "planet_name": "808.01",
+    "period_days_archive": 9.7394089,
+    "transit_depth_archive": 641.7240822,
+    "planet_radius_earth": 2.2696307,
+    "semi_major_axis_au": null,
+    "stellar_teff_k": 5216.0,
+    "stellar_radius_solar": 0.833198,
+    "stellar_mass_solar": null,
+    "discovery_method": "Transit (TESS)",
+    "disposition": "PC",
+    "extra_fields": {
+      "tmag": 10.0659,
+      "period_alias_factor": 0.3333333333333333
+    }
+  },
+  "parameter_deltas": {
+    "period_delta_days": 3.078e-05,
+    "period_delta_pct": -66.6664,
+    "depth_delta_ppm": -641723870.82,
+    "radius_delta_pct": -41.7829
+  },
+  "all_archive_entries_for_tic": [],
+  "all_toi_entries_for_tic": [
+    {
+      "toi": "808.01",
+      "tid": 30122649,
+      "pl_orbper": 9.7394089,
+      "pl_trandep": 641.7240822,
+      "pl_trandurh": 3.5625788,
+      "tfopwg_disp": "PC",
+      "ra": 133.74855,
+      "dec": -44.28863,
+      "st_tmag": 10.0659,
+      "st_teff": 5216.0,
+      "st_logg": 4.52613,
+      "st_rad": 0.833198,
+      "pl_rade": 2.2696307
+    }
+  ]
+}

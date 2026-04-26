@@ -1,0 +1,64 @@
+{
+  "schema": "Axiom-ZSpace Existing Planet Card v1.0",
+  "zspace_id": "ZS-T-394918211-01",
+  "timestamp_utc": "2026-04-26T17:37:13.907664+00:00",
+  "status": "KNOWN",
+  "match_source": "TOI",
+  "match_summary": {
+    "planet_name": "4377.01",
+    "period_delta_days": 0.00035089,
+    "tolerance_days": 0.01,
+    "proof": "|P_candidate - P_archive| = 0.00035089 d \u2264 0.01 d \u2192 MATCH"
+  },
+  "candidate_parameters": {
+    "tic_id": "394918211",
+    "period_days": 4.378370294880032,
+    "transit_depth_ppm": 1427.42,
+    "planet_radius_earth": 14.50605279103161,
+    "stellar_mass_solar": 1.36,
+    "stellar_radius_solar": 3.52,
+    "stellar_teff_k": 4974.0,
+    "cvs_score": 0.6378676470588236,
+    "cvs_verdict": "UNCERTAIN"
+  },
+  "archive_parameters": {
+    "planet_name": "4377.01",
+    "period_days_archive": 4.3780194,
+    "transit_depth_archive": 1604.3825129,
+    "planet_radius_earth": 14.3632742,
+    "semi_major_axis_au": null,
+    "stellar_teff_k": 4913.0,
+    "stellar_radius_solar": 3.41348,
+    "stellar_mass_solar": null,
+    "discovery_method": "Transit (TESS)",
+    "disposition": "CP",
+    "extra_fields": {
+      "tmag": 10.7934,
+      "period_alias_factor": 1.0
+    }
+  },
+  "parameter_deltas": {
+    "period_delta_days": 0.00035089,
+    "period_delta_pct": 0.008,
+    "depth_delta_ppm": -1604381085.48,
+    "radius_delta_pct": 0.9941
+  },
+  "all_archive_entries_for_tic": [],
+  "all_toi_entries_for_tic": [
+    {
+      "toi": "4377.01",
+      "tid": 394918211,
+      "pl_orbper": 4.3780194,
+      "pl_trandep": 1604.3825129,
+      "pl_trandurh": 8.4203321,
+      "tfopwg_disp": "CP",
+      "ra": 164.932471,
+      "dec": -82.22135,
+      "st_tmag": 10.7934,
+      "st_teff": 4913.0,
+      "st_logg": 0.0,
+      "st_rad": 3.41348,
+      "pl_rade": 14.3632742
+    }
+  ]
+}

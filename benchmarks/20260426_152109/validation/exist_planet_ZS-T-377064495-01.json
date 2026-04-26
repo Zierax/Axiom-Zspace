@@ -1,0 +1,109 @@
+{
+  "schema": "Axiom-ZSpace Existing Planet Card v1.0",
+  "zspace_id": "ZS-T-377064495-01",
+  "timestamp_utc": "2026-04-26T15:26:08.269623+00:00",
+  "status": "KNOWN",
+  "match_source": "TOI",
+  "match_summary": {
+    "planet_name": "561.01",
+    "period_delta_days": 0.00288927,
+    "tolerance_days": 0.01,
+    "proof": "|P_candidate - P_archive| = 0.00288927 d \u2264 0.01 d \u2192 MATCH"
+  },
+  "candidate_parameters": {
+    "tic_id": "377064495",
+    "period_days": 10.775943728018758,
+    "transit_depth_ppm": 632.64,
+    "planet_radius_earth": 2.312786560717405,
+    "stellar_mass_solar": 0.806,
+    "stellar_radius_solar": 0.843,
+    "stellar_teff_k": 5342.0,
+    "cvs_score": 0.3851112571080795,
+    "cvs_verdict": "UNCERTAIN"
+  },
+  "archive_parameters": {
+    "planet_name": "561.01",
+    "period_days_archive": 10.778833,
+    "transit_depth_archive": 1130.0,
+    "planet_radius_earth": 2.6584,
+    "semi_major_axis_au": null,
+    "stellar_teff_k": 5391.0,
+    "stellar_radius_solar": 0.84,
+    "stellar_mass_solar": null,
+    "discovery_method": "Transit (TESS)",
+    "disposition": "CP",
+    "extra_fields": {
+      "tmag": 9.5273,
+      "period_alias_factor": 1.0
+    }
+  },
+  "parameter_deltas": {
+    "period_delta_days": 0.00288927,
+    "period_delta_pct": -0.0268,
+    "depth_delta_ppm": -1129999367.36,
+    "radius_delta_pct": -13.0008
+  },
+  "all_archive_entries_for_tic": [],
+  "all_toi_entries_for_tic": [
+    {
+      "toi": "561.01",
+      "tid": 377064495,
+      "pl_orbper": 10.778833,
+      "pl_trandep": 1130.0,
+      "pl_trandurh": 3.416,
+      "tfopwg_disp": "CP",
+      "ra": 148.185152,
+      "dec": 6.216103,
+      "st_tmag": 9.5273,
+      "st_teff": 5391.0,
+      "st_logg": 4.52526,
+      "st_rad": 0.84,
+      "pl_rade": 2.6584
+    },
+    {
+      "toi": "561.02",
+      "tid": 377064495,
+      "pl_orbper": 0.4465713,
+      "pl_trandep": 294.0,
+      "pl_trandurh": 1.077,
+      "tfopwg_disp": "CP",
+      "ra": 148.185152,
+      "dec": 6.216103,
+      "st_tmag": 9.5273,
+      "st_teff": 5391.0,
+      "st_logg": 4.52526,
+      "st_rad": 0.84,
+      "pl_rade": 1.48867
+    },
+    {
+      "toi": "561.03",
+      "tid": 377064495,
+      "pl_orbper": 25.7122157,
+      "pl_trandep": 1151.454738,
+      "pl_trandurh": 5.9710228,
+      "tfopwg_disp": "CP",
+      "ra": 148.185152,
+      "dec": 6.216103,
+      "st_tmag": 9.5273,
+      "st_teff": 5391.0,
+      "st_logg": 4.52526,
+      "st_rad": 0.840576,
+      "pl_rade": 2.8781392
+    },
+    {
+      "toi": "561.04",
+      "tid": 377064495,
+      "pl_orbper": 0.0,
+      "pl_trandep": 914.6281731,
+      "pl_trandurh": 6.6489216,
+      "tfopwg_disp": "CP",
+      "ra": 148.185152,
+      "dec": 6.216103,
+      "st_tmag": 9.5273,
+      "st_teff": 5391.0,
+      "st_logg": 4.52526,
+      "st_rad": 0.840576,
+      "pl_rade": 3.1858058
+    }
+  ]
+}

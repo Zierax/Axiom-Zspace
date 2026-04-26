@@ -1,0 +1,94 @@
+{
+  "schema": "Axiom-ZSpace Existing Planet Card v1.0",
+  "zspace_id": "ZS-T-178155732-01",
+  "timestamp_utc": "2026-04-26T18:24:29.640973+00:00",
+  "status": "KNOWN",
+  "match_source": "TOI",
+  "match_summary": {
+    "planet_name": "396.02",
+    "period_delta_days": 0.00027901,
+    "tolerance_days": 0.01,
+    "proof": "|P_candidate - P_archive| = 0.00027901 d \u2264 0.01 d \u2192 MATCH"
+  },
+  "candidate_parameters": {
+    "tic_id": "178155732",
+    "period_days": 3.585010994184585,
+    "transit_depth_ppm": 186.73,
+    "planet_radius_earth": 1.8750662836124963,
+    "stellar_mass_solar": 1.204,
+    "stellar_radius_solar": 1.258,
+    "stellar_teff_k": 6354.0,
+    "cvs_score": 0.5740205860144234,
+    "cvs_verdict": "UNCERTAIN"
+  },
+  "archive_parameters": {
+    "planet_name": "396.02",
+    "period_days_archive": 3.58529,
+    "transit_depth_archive": 180.0,
+    "planet_radius_earth": 1.77141,
+    "semi_major_axis_au": null,
+    "stellar_teff_k": 6308.31,
+    "stellar_radius_solar": 1.28,
+    "stellar_mass_solar": null,
+    "discovery_method": "Transit (TESS)",
+    "disposition": "CP",
+    "extra_fields": {
+      "tmag": 5.9053,
+      "period_alias_factor": 1.0
+    }
+  },
+  "parameter_deltas": {
+    "period_delta_days": 0.00027901,
+    "period_delta_pct": -0.0078,
+    "depth_delta_ppm": -179999813.27,
+    "radius_delta_pct": 5.8516
+  },
+  "all_archive_entries_for_tic": [],
+  "all_toi_entries_for_tic": [
+    {
+      "toi": "396.01",
+      "tid": 178155732,
+      "pl_orbper": 5.9739124,
+      "pl_trandep": 232.5621027,
+      "pl_trandurh": 3.1235464,
+      "tfopwg_disp": "CP",
+      "ra": 42.984978,
+      "dec": -30.814061,
+      "st_tmag": 5.9053,
+      "st_teff": 6308.31,
+      "st_logg": 4.438,
+      "st_rad": 1.2845,
+      "pl_rade": 2.3917735
+    },
+    {
+      "toi": "396.02",
+      "tid": 178155732,
+      "pl_orbper": 3.58529,
+      "pl_trandep": 180.0,
+      "pl_trandurh": 2.495,
+      "tfopwg_disp": "CP",
+      "ra": 42.984978,
+      "dec": -30.814061,
+      "st_tmag": 5.9053,
+      "st_teff": 6308.31,
+      "st_logg": 4.438,
+      "st_rad": 1.28,
+      "pl_rade": 1.77141
+    },
+    {
+      "toi": "396.03",
+      "tid": 178155732,
+      "pl_orbper": 11.2304605,
+      "pl_trandep": 208.629137,
+      "pl_trandurh": 3.6009978,
+      "tfopwg_disp": "CP",
+      "ra": 42.984978,
+      "dec": -30.814061,
+      "st_tmag": 5.9053,
+      "st_teff": 6308.31,
+      "st_logg": 4.438,
+      "st_rad": 1.2845,
+      "pl_rade": 2.0754665
+    }
+  ]
+}

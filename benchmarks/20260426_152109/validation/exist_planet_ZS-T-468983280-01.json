@@ -1,0 +1,79 @@
+{
+  "schema": "Axiom-ZSpace Existing Planet Card v1.0",
+  "zspace_id": "ZS-T-468983280-01",
+  "timestamp_utc": "2026-04-26T17:55:07.395400+00:00",
+  "status": "KNOWN",
+  "match_source": "TOI",
+  "match_summary": {
+    "planet_name": "5489.01",
+    "period_delta_days": 4.662e-05,
+    "tolerance_days": 0.01,
+    "proof": "|P_candidate - P_archive| = 0.00004662 d \u2264 0.01 d \u2192 MATCH"
+  },
+  "candidate_parameters": {
+    "tic_id": "468983280",
+    "period_days": 3.1522597170876105,
+    "transit_depth_ppm": 749.42,
+    "planet_radius_earth": 1.2541267252764916,
+    "stellar_mass_solar": 0.41,
+    "stellar_radius_solar": 0.42,
+    "stellar_teff_k": 3547.0,
+    "cvs_score": 0.3222495845019625,
+    "cvs_verdict": "UNCERTAIN"
+  },
+  "archive_parameters": {
+    "planet_name": "5489.01",
+    "period_days_archive": 3.1522131,
+    "transit_depth_archive": 1039.7670237,
+    "planet_radius_earth": 1.4624574,
+    "semi_major_axis_au": null,
+    "stellar_teff_k": 3547.0,
+    "stellar_radius_solar": 0.415961,
+    "stellar_mass_solar": null,
+    "discovery_method": "Transit (TESS)",
+    "disposition": "PC",
+    "extra_fields": {
+      "tmag": 11.6923,
+      "period_alias_factor": 1.0
+    }
+  },
+  "parameter_deltas": {
+    "period_delta_days": 4.662e-05,
+    "period_delta_pct": 0.0015,
+    "depth_delta_ppm": -1039766274.28,
+    "radius_delta_pct": -14.2452
+  },
+  "all_archive_entries_for_tic": [],
+  "all_toi_entries_for_tic": [
+    {
+      "toi": "5489.01",
+      "tid": 468983280,
+      "pl_orbper": 3.1522131,
+      "pl_trandep": 1039.7670237,
+      "pl_trandurh": 1.4637784,
+      "tfopwg_disp": "PC",
+      "ra": 128.691294,
+      "dec": 11.489588,
+      "st_tmag": 11.6923,
+      "st_teff": 3547.0,
+      "st_logg": 4.81,
+      "st_rad": 0.415961,
+      "pl_rade": 1.4624574
+    },
+    {
+      "toi": "5489.02",
+      "tid": 468983280,
+      "pl_orbper": 4.9212788,
+      "pl_trandep": 884.5792337,
+      "pl_trandurh": 1.4072515,
+      "tfopwg_disp": "PC",
+      "ra": 128.691294,
+      "dec": 11.489588,
+      "st_tmag": 11.6923,
+      "st_teff": 3547.0,
+      "st_logg": 4.81,
+      "st_rad": 0.415961,
+      "pl_rade": 1.2783897
+    }
+  ]
+}

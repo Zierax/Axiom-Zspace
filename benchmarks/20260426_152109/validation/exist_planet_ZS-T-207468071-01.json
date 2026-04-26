@@ -1,0 +1,79 @@
+{
+  "schema": "Axiom-ZSpace Existing Planet Card v1.0",
+  "zspace_id": "ZS-T-207468071-01",
+  "timestamp_utc": "2026-04-26T15:57:33.898268+00:00",
+  "status": "KNOWN",
+  "match_source": "TOI",
+  "match_summary": {
+    "planet_name": "1836.01",
+    "period_delta_days": 6.468e-05,
+    "tolerance_days": 0.01,
+    "proof": "|P_candidate - P_archive| = 0.00006468 d \u2264 0.01 d \u2192 MATCH"
+  },
+  "candidate_parameters": {
+    "tic_id": "207468071",
+    "period_days": 10.190326519536903,
+    "transit_depth_ppm": 1097.73,
+    "planet_radius_earth": 5.946347081530572,
+    "stellar_mass_solar": 1.2518,
+    "stellar_radius_solar": 1.6454,
+    "stellar_teff_k": 6237.0,
+    "cvs_score": 0.6378676470588236,
+    "cvs_verdict": "UNCERTAIN"
+  },
+  "archive_parameters": {
+    "planet_name": "1836.01",
+    "period_days_archive": 20.3807824,
+    "transit_depth_archive": 2371.5221505,
+    "planet_radius_earth": 8.2227994,
+    "semi_major_axis_au": null,
+    "stellar_teff_k": 6351.0,
+    "stellar_radius_solar": 1.61988,
+    "stellar_mass_solar": null,
+    "discovery_method": "Transit (TESS)",
+    "disposition": "CP",
+    "extra_fields": {
+      "tmag": 9.29416,
+      "period_alias_factor": 0.5
+    }
+  },
+  "parameter_deltas": {
+    "period_delta_days": 6.468e-05,
+    "period_delta_pct": -50.0003,
+    "depth_delta_ppm": -2371521052.77,
+    "radius_delta_pct": -27.6846
+  },
+  "all_archive_entries_for_tic": [],
+  "all_toi_entries_for_tic": [
+    {
+      "toi": "1836.01",
+      "tid": 207468071,
+      "pl_orbper": 20.3807824,
+      "pl_trandep": 2371.5221505,
+      "pl_trandurh": 6.6590149,
+      "tfopwg_disp": "CP",
+      "ra": 245.907924,
+      "dec": 54.690077,
+      "st_tmag": 9.29416,
+      "st_teff": 6351.0,
+      "st_logg": 4.12,
+      "st_rad": 1.61988,
+      "pl_rade": 8.2227994
+    },
+    {
+      "toi": "1836.02",
+      "tid": 207468071,
+      "pl_orbper": 1.7727505,
+      "pl_trandep": 243.0,
+      "pl_trandurh": 1.519,
+      "tfopwg_disp": "FP",
+      "ra": 245.907924,
+      "dec": 54.690077,
+      "st_tmag": 9.29416,
+      "st_teff": 6351.0,
+      "st_logg": 4.12,
+      "st_rad": 1.62,
+      "pl_rade": 2.73549
+    }
+  ]
+}

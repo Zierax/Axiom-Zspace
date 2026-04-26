@@ -1,0 +1,64 @@
+{
+  "schema": "Axiom-ZSpace Existing Planet Card v1.0",
+  "zspace_id": "ZS-T-119585136-01",
+  "timestamp_utc": "2026-04-26T16:08:45.795003+00:00",
+  "status": "KNOWN",
+  "match_source": "TOI",
+  "match_summary": {
+    "planet_name": "5634.01",
+    "period_delta_days": 0.00038038,
+    "tolerance_days": 0.01,
+    "proof": "|P_candidate - P_archive| = 0.00038038 d \u2264 0.01 d \u2192 MATCH"
+  },
+  "candidate_parameters": {
+    "tic_id": "119585136",
+    "period_days": 2.2050972151363,
+    "transit_depth_ppm": 32155.41,
+    "planet_radius_earth": 10.56212892213977,
+    "stellar_mass_solar": 0.556,
+    "stellar_radius_solar": 0.54,
+    "stellar_teff_k": 3896.0,
+    "cvs_score": 0.2563393208798379,
+    "cvs_verdict": "UNCERTAIN"
+  },
+  "archive_parameters": {
+    "planet_name": "5634.01",
+    "period_days_archive": 2.2054776,
+    "transit_depth_archive": 28280.0,
+    "planet_radius_earth": 9.6722,
+    "semi_major_axis_au": null,
+    "stellar_teff_k": 3770.0,
+    "stellar_radius_solar": 0.53,
+    "stellar_mass_solar": null,
+    "discovery_method": "Transit (TESS)",
+    "disposition": "CP",
+    "extra_fields": {
+      "tmag": 14.9839,
+      "period_alias_factor": 1.0
+    }
+  },
+  "parameter_deltas": {
+    "period_delta_days": 0.00038038,
+    "period_delta_pct": -0.0172,
+    "depth_delta_ppm": -28279967844.59,
+    "radius_delta_pct": 9.2009
+  },
+  "all_archive_entries_for_tic": [],
+  "all_toi_entries_for_tic": [
+    {
+      "toi": "5634.01",
+      "tid": 119585136,
+      "pl_orbper": 2.2054776,
+      "pl_trandep": 28280.0,
+      "pl_trandurh": 1.633,
+      "tfopwg_disp": "CP",
+      "ra": 175.643637,
+      "dec": 20.965292,
+      "st_tmag": 14.9839,
+      "st_teff": 3770.0,
+      "st_logg": 4.71,
+      "st_rad": 0.53,
+      "pl_rade": 9.6722
+    }
+  ]
+}

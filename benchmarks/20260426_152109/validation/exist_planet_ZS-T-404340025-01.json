@@ -1,0 +1,64 @@
+{
+  "schema": "Axiom-ZSpace Existing Planet Card v1.0",
+  "zspace_id": "ZS-T-404340025-01",
+  "timestamp_utc": "2026-04-26T16:24:53.423069+00:00",
+  "status": "KNOWN",
+  "match_source": "TOI",
+  "match_summary": {
+    "planet_name": "834.01",
+    "period_delta_days": 0.00010021,
+    "tolerance_days": 0.01,
+    "proof": "|P_candidate - P_archive| = 0.00010021 d \u2264 0.01 d \u2192 MATCH"
+  },
+  "candidate_parameters": {
+    "tic_id": "404340025",
+    "period_days": 2.675451888732547,
+    "transit_depth_ppm": 12016.16,
+    "planet_radius_earth": 16.07168291085704,
+    "stellar_mass_solar": 1.167,
+    "stellar_radius_solar": 1.34415,
+    "stellar_teff_k": 6783.0,
+    "cvs_score": 0.6378676470588236,
+    "cvs_verdict": "UNCERTAIN"
+  },
+  "archive_parameters": {
+    "planet_name": "834.01",
+    "period_days_archive": 2.6755521,
+    "transit_depth_archive": 14340.9908648,
+    "planet_radius_earth": 16.3355194,
+    "semi_major_axis_au": null,
+    "stellar_teff_k": 6783.0,
+    "stellar_radius_solar": 1.3441499,
+    "stellar_mass_solar": null,
+    "discovery_method": "Transit (TESS)",
+    "disposition": "KP",
+    "extra_fields": {
+      "tmag": 10.7036,
+      "period_alias_factor": 1.0
+    }
+  },
+  "parameter_deltas": {
+    "period_delta_days": 0.00010021,
+    "period_delta_pct": -0.0037,
+    "depth_delta_ppm": -14340978848.64,
+    "radius_delta_pct": -1.6151
+  },
+  "all_archive_entries_for_tic": [],
+  "all_toi_entries_for_tic": [
+    {
+      "toi": "834.01",
+      "tid": 404340025,
+      "pl_orbper": 2.6755521,
+      "pl_trandep": 14340.9908648,
+      "pl_trandurh": 3.2277336,
+      "tfopwg_disp": "KP",
+      "ra": 195.828164,
+      "dec": -49.639773,
+      "st_tmag": 10.7036,
+      "st_teff": 6783.0,
+      "st_logg": 4.24271,
+      "st_rad": 1.3441499,
+      "pl_rade": 16.3355194
+    }
+  ]
+}
