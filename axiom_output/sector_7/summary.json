@@ -1,0 +1,14 @@
+{
+  "sector": 7,
+  "timestamp_utc": "2026-04-25T18:36:08.598198+00:00",
+  "total_targets": 0,
+  "processed": 0,
+  "new_discoveries": 0,
+  "known_planets": 0,
+  "false_positives": 0,
+  "failed": 0,
+  "discoveries": [],
+  "errors": [],
+  "elapsed_minutes": 0.0,
+  "rate_per_minute": 0
+}

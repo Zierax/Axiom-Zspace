@@ -1,0 +1,64 @@
+{
+  "schema": "Axiom-ZSpace Existing Planet Card v1.0",
+  "zspace_id": "ZS-T-22529346-01",
+  "timestamp_utc": "2026-04-25T20:00:18.774075+00:00",
+  "status": "KNOWN",
+  "match_source": "TOI",
+  "match_summary": {
+    "planet_name": "495.01",
+    "period_delta_days": 0.00036957,
+    "tolerance_days": 0.01,
+    "proof": "|P_candidate - P_archive| = 0.00036957 d \u2264 0.01 d \u2192 MATCH"
+  },
+  "candidate_parameters": {
+    "tic_id": "22529346",
+    "period_days": 1.2752941732432306,
+    "transit_depth_ppm": 15770.45,
+    "planet_radius_earth": 20.85540250251844,
+    "stellar_mass_solar": 1.45,
+    "stellar_radius_solar": 1.52253,
+    "stellar_teff_k": 6776.0,
+    "cvs_score": 1.0,
+    "cvs_verdict": "PLANET CANDIDATE"
+  },
+  "archive_parameters": {
+    "planet_name": "495.01",
+    "period_days_archive": 1.2749246,
+    "transit_depth_archive": 18699.0,
+    "planet_radius_earth": 22.0328,
+    "semi_major_axis_au": null,
+    "stellar_teff_k": 6459.0,
+    "stellar_radius_solar": 1.52,
+    "stellar_mass_solar": null,
+    "discovery_method": "Transit (TESS)",
+    "disposition": "KP",
+    "extra_fields": {
+      "tmag": 10.056,
+      "period_alias_factor": 1.0
+    }
+  },
+  "parameter_deltas": {
+    "period_delta_days": 0.00036957,
+    "period_delta_pct": 0.029,
+    "depth_delta_ppm": -18698984229.55,
+    "radius_delta_pct": -5.3438
+  },
+  "all_archive_entries_for_tic": [],
+  "all_toi_entries_for_tic": [
+    {
+      "toi": "495.01",
+      "tid": 22529346,
+      "pl_orbper": 1.2749246,
+      "pl_trandep": 18699.0,
+      "pl_trandurh": 2.783,
+      "tfopwg_disp": "KP",
+      "ra": 107.600231,
+      "dec": -39.09727,
+      "st_tmag": 10.056,
+      "st_teff": 6459.0,
+      "st_logg": 4.24006,
+      "st_rad": 1.52,
+      "pl_rade": 22.0328
+    }
+  ]
+}
