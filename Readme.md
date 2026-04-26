@@ -1,3 +1,6 @@
+> Before all else: I recognize that in a domain as complex and data-invariant as astrophysics, mathematical discrepancies or logical oversights may exist in these early results. Axiom-Zspace is a mission to build the first fully transparent, white-box system for exoplanet discovery. While it is a work in progress, I am committed to absolute transparency and invite the community to audit and correct any findings. I am open to technical collaborations under NDA to further refine these logical kernels. (Updated: 26/Apr/2026)
+
+
 # Axiom-Zspace v2.0: Deterministic Signal Deconvolution
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
