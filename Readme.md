@@ -64,4 +64,4 @@ While Axiom-Zspace provides the deterministic proof, I highly value the human-in
 ---
 
 **Contact & Collaboration:**
-For technical audits or partnerships, please reach out via [GitHub Issues] or contact me directly at `zs.01117875692@gmail.com`.
+For technical audits or partnerships, please reach out via [GitHub Issues](https://github.com/Zierax/Axiom-Zspace/issues) or contact me directly at `zs.01117875692@gmail.com`.
