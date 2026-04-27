@@ -13,8 +13,8 @@ Axiom-Zspace is a high-performance, white-box engine designed for large-scale as
 ---
 
 ## **April 26, 2026: Milestone Update**
-We have successfully completed the processing of significant portions of **TESS Sector 7 and Sector 11**.
-* **Result:** **2886 New Exoplanet Candidates** identified in 10-hour scanning. (Scans on going, 5000+ expected by end of April)
+We have successfully completed the processing of significant portions of **TESS Sector 7 and Sector 41,42**.
+* **Result:** **2886 New Exoplanet Candidates** identified in 24-hour scanning. (Scans on going, 5000+ expected by end of April)
 * **Verification:** Each candidate is backed by a deterministic mathematical trace for individual validation.
 
 ### **Performance Benchmark**
