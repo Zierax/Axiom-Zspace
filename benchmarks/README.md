@@ -1,6 +1,6 @@
 # Axiom-ZSpace Benchmark System
 
-This directory contains benchmark results for the Axiom-ZSpace exoplanet detection pipeline tested against confirmed planets from the NASA Exoplanet Archive.
+This directory contains benchmark results for the Axiom-ZSpace exoplanet detection pipeline tested against confirmed planets from the NASA Exoplanet Archive. 
 
 ## Purpose
 
