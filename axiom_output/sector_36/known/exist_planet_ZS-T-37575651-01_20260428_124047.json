@@ -1,0 +1,64 @@
+{
+  "schema": "Axiom-ZSpace Existing Planet Card v1.0",
+  "zspace_id": "ZS-T-37575651-01",
+  "timestamp_utc": "2026-04-28T12:40:47.768676+00:00",
+  "status": "KNOWN",
+  "match_source": "TOI",
+  "match_summary": {
+    "planet_name": "568.01",
+    "period_delta_days": 0.02365791,
+    "tolerance_days": 0.01,
+    "proof": "|P_candidate - P_archive| = 0.02365791 d \u2264 0.01 d \u2192 MATCH"
+  },
+  "candidate_parameters": {
+    "tic_id": "37575651",
+    "period_days": 9.620855614973262,
+    "transit_depth_ppm": 1491.6,
+    "planet_radius_earth": 4.212662484964726,
+    "stellar_mass_solar": 1.0,
+    "stellar_radius_solar": 1.0,
+    "stellar_teff_k": 5778.0,
+    "cvs_score": 0.905440859026115,
+    "cvs_verdict": "PLANET CANDIDATE"
+  },
+  "archive_parameters": {
+    "planet_name": "568.01",
+    "period_days_archive": 9.5971977,
+    "transit_depth_archive": 600.5813487,
+    "planet_radius_earth": 0.0,
+    "semi_major_axis_au": null,
+    "stellar_teff_k": 5780.0,
+    "stellar_radius_solar": 0.0,
+    "stellar_mass_solar": null,
+    "discovery_method": "Transit (TESS)",
+    "disposition": "FP",
+    "extra_fields": {
+      "tmag": 8.2866,
+      "period_alias_factor": 1.0
+    }
+  },
+  "parameter_deltas": {
+    "period_delta_days": 0.02365791,
+    "period_delta_pct": 0.2465,
+    "depth_delta_ppm": -600579857.1,
+    "radius_delta_pct": null
+  },
+  "all_archive_entries_for_tic": [],
+  "all_toi_entries_for_tic": [
+    {
+      "toi": "568.01",
+      "tid": 37575651,
+      "pl_orbper": 9.5971977,
+      "pl_trandep": 600.5813487,
+      "pl_trandurh": 2.9439152,
+      "tfopwg_disp": "FP",
+      "ra": 135.340486,
+      "dec": -28.324589,
+      "st_tmag": 8.2866,
+      "st_teff": 5780.0,
+      "st_logg": 4.438,
+      "st_rad": 0.0,
+      "pl_rade": 0.0
+    }
+  ]
+}

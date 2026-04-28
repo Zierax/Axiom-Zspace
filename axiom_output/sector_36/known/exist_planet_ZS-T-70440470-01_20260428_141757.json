@@ -1,0 +1,64 @@
+{
+  "schema": "Axiom-ZSpace Existing Planet Card v1.0",
+  "zspace_id": "ZS-T-70440470-01",
+  "timestamp_utc": "2026-04-28T14:17:57.860447+00:00",
+  "status": "KNOWN",
+  "match_source": "TOI",
+  "match_summary": {
+    "planet_name": "126.01",
+    "period_delta_days": 0.0005416,
+    "tolerance_days": 0.01,
+    "proof": "|P_candidate - P_archive| = 0.00054160 d \u2264 0.01 d \u2192 MATCH"
+  },
+  "candidate_parameters": {
+    "tic_id": "70440470",
+    "period_days": 3.0359433007087415,
+    "transit_depth_ppm": 14823.35,
+    "planet_radius_earth": 14.239537553609635,
+    "stellar_mass_solar": 1.09,
+    "stellar_radius_solar": 1.07224,
+    "stellar_teff_k": 5957.0,
+    "cvs_score": 1.0,
+    "cvs_verdict": "PLANET CANDIDATE"
+  },
+  "archive_parameters": {
+    "planet_name": "126.01",
+    "period_days_archive": 3.0354017,
+    "transit_depth_archive": 16196.2158157,
+    "planet_radius_earth": 14.1334903,
+    "semi_major_axis_au": null,
+    "stellar_teff_k": 5751.0,
+    "stellar_radius_solar": 1.07224,
+    "stellar_mass_solar": null,
+    "discovery_method": "Transit (TESS)",
+    "disposition": "KP",
+    "extra_fields": {
+      "tmag": 12.7923,
+      "period_alias_factor": 1.0
+    }
+  },
+  "parameter_deltas": {
+    "period_delta_days": 0.0005416,
+    "period_delta_pct": 0.0178,
+    "depth_delta_ppm": -16196200992.35,
+    "radius_delta_pct": 0.7503
+  },
+  "all_archive_entries_for_tic": [],
+  "all_toi_entries_for_tic": [
+    {
+      "toi": "126.01",
+      "tid": 70440470,
+      "pl_orbper": 3.0354017,
+      "pl_trandep": 16196.2158157,
+      "pl_trandurh": 2.8809533,
+      "tfopwg_disp": "KP",
+      "ra": 339.489275,
+      "dec": -35.154203,
+      "st_tmag": 12.7923,
+      "st_teff": 5751.0,
+      "st_logg": 4.35036,
+      "st_rad": 1.07224,
+      "pl_rade": 14.1334903
+    }
+  ]
+}
