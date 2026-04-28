@@ -1,0 +1,471 @@
+{
+  "schema": "Axiom-ZSpace Sovereign Logic Card v1.0",
+  "status": "NEW_DISCOVERY",
+  "network_mode": "ONLINE",
+  "network_error": null,
+  "tic_id": "75726564",
+  "zspace_id": "ZS-T-75726564-01",
+  "timestamp_utc": "2026-04-27T22:43:26.047076+00:00",
+  "sovereign_verdict": "SOVEREIGN_PASS",
+  "validation_declaration": "TIC 75726564 with P=1.542526 d was queried against the NASA Exoplanet Archive (pscomppars) and the TESS Object of Interest catalogue (toi). No entry was found within \u00b10.01 days of the candidate period. This signal is therefore classified as a NEW DISCOVERY CANDIDATE.",
+  "input_parameters": {
+    "tic_id": "75726564",
+    "period_days": 1.542526436124607,
+    "transit_depth": 0.025933847520310027,
+    "transit_depth_ppm": 25933.85,
+    "transit_duration_hrs": 4.0,
+    "stellar_mass_solar": 0.79,
+    "stellar_radius_solar": 0.805498,
+    "stellar_teff_k": 4855.0,
+    "stellar_logg": 4.52357,
+    "planet_radius_earth": 14.149093685876217,
+    "limb_dark_u1": 0.3,
+    "limb_dark_u2": 0.1
+  },
+  "detection_statistics": {
+    "bls_snr": 47.72797631261895,
+    "bls_fap": 1.1015099943278983e-10,
+    "cvs_score": 0.9817922754729047,
+    "cvs_verdict": "PLANET CANDIDATE",
+    "even_odd_delta_sigma": 0.0,
+    "shape_ratio": 1.0,
+    "secondary_snr": 0.0,
+    "centroid_sigma": 0.0
+  },
+  "cvs_score": 0.9817922754729047,
+  "cvs_verdict": "PLANET CANDIDATE",
+  "cvs_proof_chain": [],
+  "physical_summary": {
+    "orbital_period_days": 1.5425264,
+    "semi_major_axis_au": 0.0241526,
+    "planet_radius_earth": 14.1491,
+    "radius_ratio_k": 0.16103989,
+    "transit_depth_ppm": 25933.85,
+    "transit_duration_hours": 4.0,
+    "stellar_density_transit_gcc": 0.31814,
+    "stellar_density_tic_gcc": 2.131,
+    "density_ratio": 0.14929,
+    "geometric_transit_probability": 18.0071,
+    "impact_parameter_b": 0.0,
+    "ingress_duration_hrs": 0.5548,
+    "min_inclination_deg": 79.6261,
+    "ld_corrected_depth": 0.02935907,
+    "limb_dark_u1": 0.3,
+    "limb_dark_u2": 0.1
+  },
+  "proof_sections": {
+    "section_1_keplerian_dynamics": {
+      "section": "\u00a71 Keplerian Dynamics",
+      "formula": "a = (G\u00b7M_\u2605\u00b7P\u00b2 / 4\u03c0\u00b2)^(1/3)",
+      "result": 0.0241526,
+      "unit": "AU",
+      "steps": [
+        {
+          "label": "Gravitational parameter",
+          "equation": "\u03bc = G\u00b7M_\u2605",
+          "value": 1.04842307148e+20,
+          "unit": "m\u00b3/s\u00b2"
+        },
+        {
+          "label": "Orbital period squared",
+          "equation": "P\u00b2 = P\u00b2",
+          "value": 17762034797.3473,
+          "unit": "s\u00b2"
+        },
+        {
+          "label": "Semi-major axis cubed",
+          "equation": "a\u00b3 = \u03bc\u00b7P\u00b2 / 4\u03c0\u00b2",
+          "value": 4.717039893694757e+28,
+          "unit": "m\u00b3"
+        },
+        {
+          "label": "Semi-major axis",
+          "equation": "a = (\u03bcP\u00b2/4\u03c0\u00b2)^(1/3)",
+          "value": 3613182097.61,
+          "unit": "m"
+        },
+        {
+          "label": "Semi-major axis in AU",
+          "equation": "a [AU] = a [m] / 1 AU",
+          "value": 0.0241526,
+          "unit": "AU"
+        },
+        {
+          "label": "Kepler ratio check (SI units)",
+          "equation": "P\u00b2[s\u00b2] / a\u00b3[m\u00b3] vs 4\u03c0\u00b2/(GM_\u2605)",
+          "value": 0.0,
+          "unit": "s\u207b\u00b2m\u207b\u00b3",
+          "expected": 0.0,
+          "residual_pct": 0.0
+        },
+        {
+          "label": "Kepler ratio check (solar units)",
+          "equation": "P\u00b2[yr] / a\u00b3[AU] vs 1/M_\u2605[M\u2609]",
+          "value": 1.26587688,
+          "unit": "dimensionless",
+          "expected": 1.26582278,
+          "residual_pct": 0.004274
+        }
+      ],
+      "verdict": "PASS",
+      "proof": "Kepler III (IAU 2015) | G=6.674e-11 m\u00b3kg\u207b\u00b9s\u207b\u00b2, M_\u2605=0.7900 M\u2609, P=1.542526 d \u2192 a=0.024153 AU | SI residual=0.000000000%, solar residual=0.004274% \u2192 PASS",
+      "a_m": 3613182097.6129603,
+      "a_au": 0.024152630520114484
+    },
+    "section_2_geometric_consistency": {
+      "section": "\u00a72 Geometric Consistency",
+      "formula": "\u03b4 = (R_p/R_\u2605)\u00b2 = k\u00b2",
+      "result": 0.16103989,
+      "unit": "R_p/R_\u2605",
+      "steps": [
+        {
+          "label": "Radius ratio (k)",
+          "equation": "k = \u221a\u03b4",
+          "value": 0.16103989,
+          "unit": "dimensionless"
+        },
+        {
+          "label": "Geometric depth prediction",
+          "equation": "k\u00b2 = (R_p/R_\u2605)\u00b2",
+          "value": 0.02593385,
+          "unit": "dimensionless"
+        },
+        {
+          "label": "Measured transit depth",
+          "equation": "\u03b4 (measured)",
+          "value": 0.02593385,
+          "unit": "dimensionless"
+        },
+        {
+          "label": "Consistency residual",
+          "equation": "|\u03b4_meas - k\u00b2| / k\u00b2",
+          "value": 0.0,
+          "unit": "%"
+        },
+        {
+          "label": "Mean limb-darkened disk intensity",
+          "equation": "\u012a = 1 - u1/3 - u2/6",
+          "value": 0.883333,
+          "unit": "dimensionless",
+          "u1": 0.3,
+          "u2": 0.1
+        },
+        {
+          "label": "LD-corrected depth",
+          "equation": "\u03b4_LD = k\u00b2\u00b7I_cen / \u012a",
+          "value": 0.02935907,
+          "unit": "dimensionless"
+        },
+        {
+          "label": "Limb-darkening correction magnitude",
+          "equation": "|\u03b4_LD - k\u00b2| / k\u00b2",
+          "value": 13.2075,
+          "unit": "%"
+        },
+        {
+          "label": "Planet radius",
+          "equation": "R_p = k \u00b7 R_\u2605",
+          "value": 14.1491,
+          "unit": "R\u2295"
+        }
+      ],
+      "verdict": "PASS",
+      "proof": "Geom. consistency (IAU 2015) | \u03b4_measured=0.025934, k=\u221a\u03b4=0.161040, k\u00b2=0.025934 | residual=0.0000% | LD correction=13.2075% | R_p=14.1491 R\u2295 \u2192 PASS",
+      "k": 0.16103989418870726,
+      "R_p_earth": 14.149093685876217,
+      "delta_ld_corrected": 0.029359072664501922
+    },
+    "section_3_density_constraint": {
+      "section": "\u00a73 Stellar Density Constraint",
+      "formula": "\u03c1_\u2605 = (3\u03c0 / G\u00b7P\u00b2) \u00b7 (a/R_\u2605)\u00b3",
+      "result": 0.318138,
+      "unit": "g/cm\u00b3",
+      "steps": [
+        {
+          "label": "Transit duration (input)",
+          "equation": "T_dur",
+          "value": 4.0,
+          "unit": "hours",
+          "is_placeholder": false
+        },
+        {
+          "label": "a/R_\u2605 from transit geometry (b=0)",
+          "equation": "a/R_\u2605 = P\u00b7(1+k) / (\u03c0\u00b7T_dur)",
+          "value": 3.4204,
+          "unit": "dimensionless"
+        },
+        {
+          "label": "a/R_\u2605 from Kepler III (independent check)",
+          "equation": "a/R_\u2605 = a_Kepler / R_\u2605_TIC",
+          "value": 6.4477,
+          "unit": "dimensionless"
+        },
+        {
+          "label": "Consistency of a/R_\u2605 estimates",
+          "equation": "|(a/R_\u2605)_transit - (a/R_\u2605)_Kepler| / (a/R_\u2605)_Kepler",
+          "value": 46.951,
+          "unit": "%",
+          "note": null
+        },
+        {
+          "label": "Stellar density from transit (Seager & Mall\u00e9n-Ornelas 2003)",
+          "equation": "\u03c1_\u2605^transit = (3\u03c0/GP\u00b2)\u00b7(a/R_\u2605)\u00b3",
+          "value": 0.3181,
+          "unit": "g/cm\u00b3"
+        },
+        {
+          "label": "Stellar density from TIC (M_\u2605/V_\u2605)",
+          "equation": "\u03c1_\u2605^TIC = M_\u2605 / (4\u03c0R_\u2605\u00b3/3)",
+          "value": 2.131,
+          "unit": "g/cm\u00b3"
+        },
+        {
+          "label": "Solar density (reference)",
+          "equation": "\u03c1_\u2609 = 1.41 g/cm\u00b3",
+          "value": 1.41,
+          "unit": "g/cm\u00b3"
+        },
+        {
+          "label": "Density ratio (transit / TIC)",
+          "equation": "\u03c1^transit / \u03c1^TIC",
+          "value": 0.1493,
+          "unit": "dimensionless",
+          "eb_flag": true,
+          "note": null
+        },
+        {
+          "label": "Surface gravity (calculated)",
+          "equation": "log g = log10(G\u00b7M/R\u00b2) [cgs]",
+          "value": 4.5236,
+          "unit": "log(cm/s\u00b2)"
+        },
+        {
+          "label": "Surface gravity (TIC)",
+          "equation": "log g (TIC)",
+          "value": 4.5236,
+          "unit": "log(cm/s\u00b2)"
+        },
+        {
+          "label": "log g residual",
+          "equation": "|logg_calc - logg_TIC|",
+          "value": 0.0,
+          "unit": "dex"
+        }
+      ],
+      "verdict": "FAIL",
+      "proof": "Density (IAU 2015) | \u03c1^transit=0.3181 g/cm\u00b3, \u03c1^TIC=2.1310 g/cm\u00b3, ratio=0.1493 | logg_calc=4.524, logg_TIC=4.524, \u0394logg=0.000 dex | EB_density_flag=YES \u2192 FAIL",
+      "rho_transit_gcc": 0.3181384022852907,
+      "rho_tic_gcc": 2.130996944897059,
+      "density_ratio": 0.14929087676409544,
+      "is_eb_density_flag": true,
+      "a_over_Rs_transit": 3.4204333807598304
+    },
+    "section_4_transit_probability": {
+      "section": "\u00a74 Probability of Transit",
+      "formula": "P_tr = (R_\u2605 + R_p) / a  [circular orbit]",
+      "result": 0.18007099,
+      "unit": "dimensionless",
+      "steps": [
+        {
+          "label": "Stellar radius",
+          "equation": "R_\u2605",
+          "value": 0.805498,
+          "unit": "R\u2609"
+        },
+        {
+          "label": "Planet radius",
+          "equation": "R_p",
+          "value": 14.149094,
+          "unit": "R\u2295"
+        },
+        {
+          "label": "Semi-major axis (from Kepler III)",
+          "equation": "a",
+          "value": 0.0241526,
+          "unit": "AU"
+        },
+        {
+          "label": "Geometric transit probability",
+          "equation": "P_tr = (R_\u2605 + R_p) / a",
+          "value": 0.180071,
+          "unit": "dimensionless"
+        },
+        {
+          "label": "Geometric transit probability as percent",
+          "equation": "P_tr [%]",
+          "value": 18.0071,
+          "unit": "%"
+        },
+        {
+          "label": "Impact parameter estimate",
+          "equation": "b = \u221a[(1+k)\u00b2 - (a/R_\u2605\u00b7sin(\u03c0T/P))\u00b2]",
+          "value": 0.0,
+          "unit": "dimensionless"
+        },
+        {
+          "label": "Grazing transit check (b < 0.9 for non-grazing)",
+          "equation": "b < 0.9",
+          "value": 0.0,
+          "unit": "dimensionless",
+          "is_grazing": false
+        },
+        {
+          "label": "Ingress / Egress duration estimate",
+          "equation": "T_ingress \u2248 T_dur \u00b7 k / (1+k)",
+          "value": 0.5548,
+          "unit": "hours"
+        },
+        {
+          "label": "Minimum orbital inclination for transit",
+          "equation": "i_min = arccos[(R_\u2605+R_p)/a]",
+          "value": 79.6261,
+          "unit": "degrees"
+        }
+      ],
+      "verdict": "PASS",
+      "proof": "Transit probability (IAU 2015) | R_\u2605=0.8055 R\u2609, R_p=14.1491 R\u2295, a=0.024153 AU \u2192 P_tr=0.180071 (18.007%) | b=0.0000 | grazing=NO \u2192 PASS",
+      "P_tr": 0.18007099433702045,
+      "impact_parameter_b": 0.0,
+      "T_ingress_hrs": 0.5548126123650079,
+      "i_min_deg": 79.62610494920366,
+      "is_grazing": false
+    },
+    "section_5_false_positive_ruling": {
+      "section": "\u00a75 False-Positive Ruling",
+      "formula": "Logical conjunction of 9 independent FP discriminators",
+      "n_tests": 9,
+      "n_pass": 8,
+      "n_fail": 1,
+      "n_critical": 5,
+      "n_critical_pass": 5,
+      "tests": [
+        {
+          "test": "FP-1 BLS SNR",
+          "description": "BLS signal-to-noise exceeds detection threshold (7.1\u03c3)",
+          "value": 47.727976,
+          "threshold": 7.1,
+          "comparison": "47.7280 > 7.1",
+          "verdict": "PASS",
+          "weight": "critical"
+        },
+        {
+          "test": "FP-2 FAP",
+          "description": "False Alarm Probability below 1 in 10,000",
+          "value": 0.0,
+          "threshold": 0.0001,
+          "comparison": "0.0000 < 0.0001",
+          "verdict": "PASS",
+          "weight": "critical"
+        },
+        {
+          "test": "FP-3 Even/Odd \u0394\u03c3",
+          "description": "Even and odd transit depths are statistically identical (\u0394\u03c3 < 3.0 \u2192 not EB)",
+          "value": 0.0,
+          "threshold": 3.0,
+          "comparison": "0.0000 < 3.0",
+          "verdict": "PASS",
+          "weight": "critical"
+        },
+        {
+          "test": "FP-4 Shape Ratio (U vs V)",
+          "description": "Transit wings show higher residuals than centre \u2192 flat-bottomed U-shape \u2192 planetary occultation",
+          "value": 1.0,
+          "threshold": 1.0,
+          "comparison": "1.0000 > 1.0",
+          "verdict": "FAIL",
+          "weight": "major"
+        },
+        {
+          "test": "FP-5 Secondary Eclipse SNR",
+          "description": "No statistically significant secondary eclipse at phase 0.5 (would indicate EB)",
+          "value": 0.0,
+          "threshold": 3.0,
+          "comparison": "0.0000 < 3.0",
+          "verdict": "PASS",
+          "weight": "critical"
+        },
+        {
+          "test": "FP-6 Centroid Shift \u03c3",
+          "description": "No photocenter displacement during transit (would indicate background EB)",
+          "value": 0.0,
+          "threshold": 3.0,
+          "comparison": "0.0000 < 3.0",
+          "verdict": "PASS",
+          "weight": "major"
+        },
+        {
+          "test": "FP-7 Density Ratio",
+          "description": "Stellar density from transit ~ stellar density from TIC parameters (EB would diverge)",
+          "value": 0.149291,
+          "threshold": [
+            0.1,
+            5.0
+          ],
+          "comparison": "0.1 < 0.1493 < 5.0",
+          "verdict": "PASS",
+          "weight": "major"
+        },
+        {
+          "test": "FP-8 Impact Parameter",
+          "description": "Transit is not grazing (b < 0.9) \u2014 V-shaped grazing EB discriminator",
+          "value": 0.0,
+          "threshold": 0.9,
+          "comparison": "0.0000 < 0.9",
+          "verdict": "PASS",
+          "weight": "moderate"
+        },
+        {
+          "test": "FP-9 Catalog Multiplicity",
+          "description": "No known stellar multiplicity in external catalogs (SIMBAD/Gaia) \u2014 source: SIMBAD",
+          "value": 0.0,
+          "threshold": "is_multiple == False",
+          "comparison": "is_multiple=False, catalog_source=SIMBAD, classification=",
+          "verdict": "PASS",
+          "weight": "critical",
+          "catalog_offline": false
+        }
+      ],
+      "logical_closure": [
+        "All 5 critical FP tests PASSED \u2192 signal is statistically real (SNR=47.7\u03c3, FAP=1.1e-10) and periodic (\u0394\u03c3_eo=0.00 < 3.0)",
+        "Shape analysis: ratio=1.000 < 1 (V-shape \u2192 EB-LIKE)",
+        "Density constraint: ratio=0.149 \u2192 INCONSISTENT \u2014 possible EB",
+        "Total: 8/9 tests PASSED \u2192 Axiom verdict: SOVEREIGN_PASS"
+      ],
+      "overall_verdict": "SOVEREIGN_PASS",
+      "conflicts": [
+        {
+          "conflict_type": "SNR_DENSITY_CONFLICT",
+          "timestamp": "2026-04-27T22:43:26.046762+00:00",
+          "tic_id": "75726564",
+          "snr": 47.728,
+          "density_ratio": 0.1493,
+          "shape_ratio": null,
+          "resolution_latency_ms": 0.0584,
+          "overall_verdict": "SOVEREIGN_PASS"
+        },
+        {
+          "conflict_type": "SNR_SHAPE_CONFLICT",
+          "timestamp": "2026-04-27T22:43:26.046957+00:00",
+          "tic_id": "75726564",
+          "snr": 47.728,
+          "density_ratio": null,
+          "shape_ratio": 1.0,
+          "resolution_latency_ms": 0.2561,
+          "overall_verdict": "SOVEREIGN_PASS"
+        }
+      ],
+      "proof": "FP ruling | 8/9 PASS, 5/5 critical PASS | shape=1.000, eo_sigma=0.000, density_ratio=0.149 \u2192 SOVEREIGN_PASS"
+    }
+  },
+  "proof_integrity": {
+    "all_sections_pass": false,
+    "section_verdicts": {
+      "\u00a71_Kepler": "PASS",
+      "\u00a72_Geometry": "PASS",
+      "\u00a73_Density": "FAIL",
+      "\u00a74_Probability": "PASS",
+      "\u00a75_FP": "SOVEREIGN_PASS"
+    },
+    "truthimatics_seal": "TRUTHIMATICS-SOVEREIGN | ZSpace=ZS-T-75726564-01 | CVS=0.9818 | SOVEREIGN_PASS | WHITE-BOX | NO-ML | PHYSICS-DERIVED"
+  }
+}
