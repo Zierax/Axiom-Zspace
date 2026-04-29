@@ -62,7 +62,7 @@ While Axiom-Zspace provides the deterministic proof, I highly value the human-in
 * **Project Partner/Reference:** [Zooniverse Planet Hunters](https://www.zooniverse.org/projects/nora-dot-eisner/planet-hunters-tess/)
 * **Goal:** Bridging the gap between high-frequency algorithmic detection and collaborative human verification.
 
-Discussions:-
+#### **Discussions**
 * https://www.zooniverse.org/projects/nora-dot-eisner/planet-hunters-tess/talk/2110/3998656
 * https://www.zooniverse.org/projects/nora-dot-eisner/planet-hunters-tess/talk/2110/3995685
 * https://www.zooniverse.org/projects/nora-dot-eisner/planet-hunters-tess/talk/2110/3987225
