@@ -59,8 +59,13 @@ A special thank you to the following platforms for providing the generous free-t
 ### **Community & Validation Pathways**
 While Axiom-Zspace provides the deterministic proof, I highly value the human-in-the-loop validation approach. I am actively cross-referencing findings with community-driven projects.
 
-* **Project Partner/Reference:** [Zooniverse Planet Hunters](https://www.zooniverse.org/projects/nora-dot-eisner/planet-hunters-tess/talk/2110/3998656)
+* **Project Partner/Reference:** [Zooniverse Planet Hunters](https://www.zooniverse.org/projects/nora-dot-eisner/planet-hunters-tess/)
 * **Goal:** Bridging the gap between high-frequency algorithmic detection and collaborative human verification.
+
+Discussions:-
+* https://www.zooniverse.org/projects/nora-dot-eisner/planet-hunters-tess/talk/2110/3998656
+* https://www.zooniverse.org/projects/nora-dot-eisner/planet-hunters-tess/talk/2110/3995685
+* https://www.zooniverse.org/projects/nora-dot-eisner/planet-hunters-tess/talk/2110/3987225
 ---
 
 **Contact & Collaboration:**
