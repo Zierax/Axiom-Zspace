@@ -1,4 +1,4 @@
-> Before all else: I recognize that in a domain as complex and data-invariant as astrophysics, mathematical discrepancies or logical oversights may exist in these early results. Axiom-Zspace is a mission to build the first fully transparent, white-box system for exoplanet discovery. While it is a work in progress, I am committed to absolute transparency and invite the community to audit and correct any findings. I am open to technical collaborations under NDA to further refine these logical kernels. (Updated: 26/Apr/2026)
+> Before all else: I recognize that in a domain as complex and data-invariant as astrophysics, mathematical discrepancies or logical oversights may exist in these early results. Axiom-Zspace is a mission to build the first fully transparent, white-box system for exoplanet discovery. While it is a work in progress, I am committed to absolute transparency and invite the community to audit and correct any findings. I am open to technical collaborations under NDA to further refine these logical kernels. (Updated: 2/May/2026)
 
 
 # Axiom-Zspace v2.0: Deterministic Signal Deconvolution
@@ -12,10 +12,16 @@ Axiom-Zspace is a high-performance, white-box engine designed for large-scale as
 
 ---
 
-## **April 26, 2026: Milestone Update**
+## **April 26, 2026: First Milestone**
 We have successfully completed the processing of significant portions of **TESS Sector 7 and Sector 41,42**.
 * **Result:** **2886 New Exoplanet Candidates** identified in 24-hour scanning. (Scans on going, 5000+ expected by end of April)
 * **Verification:** Each candidate is backed by a deterministic mathematical trace for individual validation.
+
+## **May 2, 2026: Milestone Update**
+We have successfully completed the processing of significant portions of **TESS Sector 7,36,41,42,55,67**.
+* **Result:** **5845 New Exoplanet Candidates** identified (Still on going).
+* **Verification:** Each candidate is backed by a deterministic mathematical trace for individual validation.
+
 
 ### **Performance Benchmark**
 The following benchmark represents a stress test of the Axiom-Zspace kernel on a constrained environment.
@@ -39,7 +45,7 @@ This repository presents a **white-box analysis**. Unlike "black-box" neural net
 
 **Disclaimer:** These findings are strictly classified as **Candidates**. While each discovery is supported by a deterministic benchmark and a unique analytical proof, they require spectroscopic confirmation by the professional astronomical community. To facilitate this, every entry includes its **full analytical trace** for independent verification.
 
-I am a 17-year-old independent researcher currently in my final year of secondary school. As I am still in the learning phase of my journey, I invite astrophysicists, logic researchers, and data scientists to audit the underlying engine. My goal is to refine this framework through rigorous peer feedback, evolving it into a reliable, open-source tool for planetary discovery.
+I am a ***17-year-old independent researcher currently*** in my final year of secondary school. As I am still in the learning phase of my journey, I invite astrophysicists, logic researchers, and data scientists to audit the underlying engine. My goal is to refine this framework through rigorous peer feedback, evolving it into a reliable, open-source tool for planetary discovery.
 
 ---
 
