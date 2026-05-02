@@ -1,0 +1,64 @@
+{
+  "schema": "Axiom-ZSpace Existing Planet Card v1.0",
+  "zspace_id": "ZS-T-300293197-01",
+  "timestamp_utc": "2026-05-01T13:41:28.288420+00:00",
+  "status": "KNOWN",
+  "match_source": "TOI",
+  "match_summary": {
+    "planet_name": "211.01",
+    "period_delta_days": 0.01019093,
+    "tolerance_days": 0.01,
+    "proof": "|P_candidate - P_archive| = 0.01019093 d \u2264 0.01 d \u2192 MATCH"
+  },
+  "candidate_parameters": {
+    "tic_id": "300293197",
+    "period_days": 6.574056029232643,
+    "transit_depth_ppm": 2230.85,
+    "planet_radius_earth": 5.608898844881181,
+    "stellar_mass_solar": 1.0,
+    "stellar_radius_solar": 1.08871,
+    "stellar_teff_k": 5873.97,
+    "cvs_score": 0.8340756903641335,
+    "cvs_verdict": "PLANET CANDIDATE"
+  },
+  "archive_parameters": {
+    "planet_name": "211.01",
+    "period_days_archive": 6.5638651,
+    "transit_depth_archive": 2147.9618549,
+    "planet_radius_earth": 5.9264523,
+    "semi_major_axis_au": null,
+    "stellar_teff_k": 5873.97,
+    "stellar_radius_solar": 1.08871,
+    "stellar_mass_solar": null,
+    "discovery_method": "Transit (TESS)",
+    "disposition": "APC",
+    "extra_fields": {
+      "tmag": 9.4906,
+      "period_alias_factor": 1.0
+    }
+  },
+  "parameter_deltas": {
+    "period_delta_days": 0.01019093,
+    "period_delta_pct": 0.1553,
+    "depth_delta_ppm": -2147959624.05,
+    "radius_delta_pct": -5.3582
+  },
+  "all_archive_entries_for_tic": [],
+  "all_toi_entries_for_tic": [
+    {
+      "toi": "211.01",
+      "tid": 300293197,
+      "pl_orbper": 6.5638651,
+      "pl_trandep": 2147.9618549,
+      "pl_trandurh": 1.3516381,
+      "tfopwg_disp": "APC",
+      "ra": 110.279707,
+      "dec": -68.578366,
+      "st_tmag": 9.4906,
+      "st_teff": 5873.97,
+      "st_logg": 4.35182,
+      "st_rad": 1.08871,
+      "pl_rade": 5.9264523
+    }
+  ]
+}

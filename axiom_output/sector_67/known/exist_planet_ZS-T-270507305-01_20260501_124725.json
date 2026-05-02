@@ -1,0 +1,64 @@
+{
+  "schema": "Axiom-ZSpace Existing Planet Card v1.0",
+  "zspace_id": "ZS-T-270507305-01",
+  "timestamp_utc": "2026-05-01T12:47:25.550681+00:00",
+  "status": "KNOWN",
+  "match_source": "TOI",
+  "match_summary": {
+    "planet_name": "827.01",
+    "period_delta_days": 0.00122108,
+    "tolerance_days": 0.01,
+    "proof": "|P_candidate - P_archive| = 0.00122108 d \u2264 0.01 d \u2192 MATCH"
+  },
+  "candidate_parameters": {
+    "tic_id": "270507305",
+    "period_days": 1.227049515755013,
+    "transit_depth_ppm": 6674.55,
+    "planet_radius_earth": 11.353900015979367,
+    "stellar_mass_solar": 1.09,
+    "stellar_radius_solar": 1.2741,
+    "stellar_teff_k": 5957.0,
+    "cvs_score": 1.0,
+    "cvs_verdict": "PLANET CANDIDATE"
+  },
+  "archive_parameters": {
+    "planet_name": "827.01",
+    "period_days_archive": 1.2282706,
+    "transit_depth_archive": 7013.5398278,
+    "planet_radius_earth": 14.6178728,
+    "semi_major_axis_au": null,
+    "stellar_teff_k": 5848.0,
+    "stellar_radius_solar": 1.2740999,
+    "stellar_mass_solar": null,
+    "discovery_method": "Transit (TESS)",
+    "disposition": "APC",
+    "extra_fields": {
+      "tmag": 11.5746,
+      "period_alias_factor": 1.0
+    }
+  },
+  "parameter_deltas": {
+    "period_delta_days": 0.00122108,
+    "period_delta_pct": -0.0994,
+    "depth_delta_ppm": -7013533153.25,
+    "radius_delta_pct": -22.3286
+  },
+  "all_archive_entries_for_tic": [],
+  "all_toi_entries_for_tic": [
+    {
+      "toi": "827.01",
+      "tid": 270507305,
+      "pl_orbper": 1.2282706,
+      "pl_trandep": 7013.5398278,
+      "pl_trandurh": 2.0554176,
+      "tfopwg_disp": "APC",
+      "ra": 98.893269,
+      "dec": -79.715754,
+      "st_tmag": 11.5746,
+      "st_teff": 5848.0,
+      "st_logg": 4.33233,
+      "st_rad": 1.2740999,
+      "pl_rade": 14.6178728
+    }
+  ]
+}

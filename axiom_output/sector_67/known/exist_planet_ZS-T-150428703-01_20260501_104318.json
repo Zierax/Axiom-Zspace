@@ -1,0 +1,79 @@
+{
+  "schema": "Axiom-ZSpace Existing Planet Card v1.0",
+  "zspace_id": "ZS-T-150428703-01",
+  "timestamp_utc": "2026-05-01T10:43:18.334145+00:00",
+  "status": "KNOWN",
+  "match_source": "TOI",
+  "match_summary": {
+    "planet_name": "1225.01",
+    "period_delta_days": 0.26551491,
+    "tolerance_days": 0.01,
+    "proof": "|P_candidate - P_archive| = 0.26551491 d \u2264 0.01 d \u2192 MATCH"
+  },
+  "candidate_parameters": {
+    "tic_id": "150428703",
+    "period_days": 7.213712910986368,
+    "transit_depth_ppm": 6794.27,
+    "planet_radius_earth": 7.985365464950048,
+    "stellar_mass_solar": 0.97,
+    "stellar_radius_solar": 0.888163,
+    "stellar_teff_k": 5522.87,
+    "cvs_score": 0.8055591716796697,
+    "cvs_verdict": "PLANET CANDIDATE"
+  },
+  "archive_parameters": {
+    "planet_name": "1225.01",
+    "period_days_archive": 13.896396,
+    "transit_depth_archive": 748.5332881,
+    "planet_radius_earth": 2.4586343,
+    "semi_major_axis_au": null,
+    "stellar_teff_k": 5522.87,
+    "stellar_radius_solar": 0.888163,
+    "stellar_mass_solar": null,
+    "discovery_method": "Transit (TESS)",
+    "disposition": "PC",
+    "extra_fields": {
+      "tmag": 11.7582,
+      "period_alias_factor": 0.5
+    }
+  },
+  "parameter_deltas": {
+    "period_delta_days": 0.26551491,
+    "period_delta_pct": -48.0893,
+    "depth_delta_ppm": -748526493.83,
+    "radius_delta_pct": 224.7887
+  },
+  "all_archive_entries_for_tic": [],
+  "all_toi_entries_for_tic": [
+    {
+      "toi": "1225.01",
+      "tid": 150428703,
+      "pl_orbper": 13.896396,
+      "pl_trandep": 748.5332881,
+      "pl_trandurh": 3.5885605,
+      "tfopwg_disp": "PC",
+      "ra": 97.166308,
+      "dec": -64.596432,
+      "st_tmag": 11.7582,
+      "st_teff": 5522.87,
+      "st_logg": 4.67156,
+      "st_rad": 0.888163,
+      "pl_rade": 2.4586343
+    },
+    {
+      "toi": "1225.02",
+      "tid": 150428703,
+      "pl_orbper": 8.1213102,
+      "pl_trandep": 594.6443745,
+      "pl_trandurh": 3.1040945,
+      "tfopwg_disp": "PC",
+      "ra": 97.166308,
+      "dec": -64.596432,
+      "st_tmag": 11.7582,
+      "st_teff": 5522.87,
+      "st_logg": 4.67156,
+      "st_rad": 0.888163,
+      "pl_rade": 2.3157186
+    }
+  ]
+}
