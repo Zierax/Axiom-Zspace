@@ -1,0 +1,54 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:02:57Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_src",
+    "file": "purce_src",
+    "line": 119,
+    "symbol": "purce_src.bls_var_approx",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_src.bls_var_approx_1_5949d374",
+    "algorithm": "element_sub",
+    "math_intent": "Step 2/2 of 'bls_var_approx' implementing element_sub",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "mean_sq",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      },
+      {
+        "name": "_inter_bls_var_approx_0",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.subtract as element_sub kernel",
+      "original": "numpy.subtract"
+    }
+  ],
+  "dependencies": [
+    "purce_src.bls_var_approx_5ff84700"
+  ]
+}

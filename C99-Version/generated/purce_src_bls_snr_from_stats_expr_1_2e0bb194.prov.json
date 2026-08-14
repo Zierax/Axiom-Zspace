@@ -1,0 +1,54 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:02:57Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_src",
+    "file": "purce_src",
+    "line": 0,
+    "symbol": "purce_src.bls_snr_from_stats",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_src.bls_snr_from_stats_expr_1_2e0bb194",
+    "algorithm": "element_mul",
+    "math_intent": "Binary operation element_mul",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "n_in",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      },
+      {
+        "name": "n_out",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "_inter_expr_0",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "expr_decomposition",
+      "description": "Decomposed BinOp as element_mul",
+      "original": "element_mul"
+    }
+  ],
+  "dependencies": [
+    "purce_src.bls_snr_from_stats_d9ef598e"
+  ]
+}

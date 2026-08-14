@@ -1,0 +1,56 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:02:57Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_src",
+    "file": "purce_src",
+    "line": 54,
+    "symbol": "purce_src.bls_snr_from_stats",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_src.bls_snr_from_stats_2_a274d933",
+    "algorithm": "element_mul",
+    "math_intent": "Step 3/3 of 'bls_snr_from_stats' implementing element_mul",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "_inter_bls_snr_from_stats_0",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      },
+      {
+        "name": "_inter_bls_snr_from_stats_1",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.multiply as element_mul kernel",
+      "original": "numpy.multiply"
+    }
+  ],
+  "dependencies": [
+    "purce_src.bls_snr_from_stats_d9ef598e",
+    "purce_src.bls_snr_from_stats_expr_1_2e0bb194",
+    "purce_src.bls_snr_from_stats_1_2cf0f1dd"
+  ]
+}
