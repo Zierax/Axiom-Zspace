@@ -37,3 +37,7 @@ axiom_zspace
 # OS junk
 Thumbs.db
 .DS_Store
+# C99 engine artifacts
+C99-Version/bin/
+C99-Version/build/
+C99-Version/build_asan/

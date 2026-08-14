@@ -1,0 +1,54 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:02:57Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_src",
+    "file": "purce_src",
+    "line": 63,
+    "symbol": "purce_src.bls_fap_exponential",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_src.bls_fap_exponential_1_43abe5ec",
+    "algorithm": "element_add",
+    "math_intent": "Step 2/3 of 'bls_fap_exponential' implementing element_add",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "_inter_bls_fap_exponential_0",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      },
+      {
+        "name": "b",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "_inter_bls_fap_exponential_1",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.add as element_add kernel",
+      "original": "numpy.add"
+    }
+  ],
+  "dependencies": [
+    "purce_src.bls_fap_exponential_fe38b1bd"
+  ]
+}

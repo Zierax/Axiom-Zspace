@@ -1,0 +1,47 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:02:57Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_src",
+    "file": "purce_src",
+    "line": 46,
+    "symbol": "purce_src.bls_argmax",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_src.bls_argmax_53ed35a3",
+    "algorithm": "reduce_argmax",
+    "math_intent": "Function 'bls_argmax' composed of: reduce_argmax",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "arr",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.argmax as reduce_argmax kernel",
+      "original": "numpy.argmax"
+    }
+  ],
+  "dependencies": []
+}

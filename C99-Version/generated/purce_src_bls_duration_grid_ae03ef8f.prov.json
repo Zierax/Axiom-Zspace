@@ -1,0 +1,57 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:02:57Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_src",
+    "file": "purce_src",
+    "line": 26,
+    "symbol": "purce_src.bls_duration_grid",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_src.bls_duration_grid_ae03ef8f",
+    "algorithm": "alloc_linspace",
+    "math_intent": "Function 'bls_duration_grid' composed of: alloc_linspace",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "dur_min",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      },
+      {
+        "name": "dur_max",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      },
+      {
+        "name": "n_dur",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.linspace as alloc_linspace kernel",
+      "original": "numpy.linspace"
+    }
+  ],
+  "dependencies": []
+}
