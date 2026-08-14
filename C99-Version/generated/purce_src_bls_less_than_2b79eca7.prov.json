@@ -1,0 +1,52 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:02:57Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_src",
+    "file": "purce_src",
+    "line": 87,
+    "symbol": "purce_src.bls_less_than",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_src.bls_less_than_2b79eca7",
+    "algorithm": "element_less",
+    "math_intent": "Function 'bls_less_than' composed of: element_less",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "a",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      },
+      {
+        "name": "b",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.less as element_less kernel",
+      "original": "numpy.less"
+    }
+  ],
+  "dependencies": []
+}
