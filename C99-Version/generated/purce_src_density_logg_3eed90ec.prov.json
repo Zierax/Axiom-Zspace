@@ -1,0 +1,47 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:02:57Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_src",
+    "file": "purce_src",
+    "line": 544,
+    "symbol": "purce_src.density_logg",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_src.density_logg_3eed90ec",
+    "algorithm": "element_log10",
+    "math_intent": "Function 'density_logg' composed of: element_log10",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "g_cgs_max",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.log10 as element_log10 kernel",
+      "original": "numpy.log10"
+    }
+  ],
+  "dependencies": []
+}

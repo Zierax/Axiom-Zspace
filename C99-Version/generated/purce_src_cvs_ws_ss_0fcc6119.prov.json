@@ -1,0 +1,52 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:02:57Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_src",
+    "file": "purce_src",
+    "line": 694,
+    "symbol": "purce_src.cvs_ws_ss",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_src.cvs_ws_ss_0fcc6119",
+    "algorithm": "element_mul",
+    "math_intent": "Function 'cvs_ws_ss' composed of: element_mul",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "w_s",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      },
+      {
+        "name": "s_s",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.multiply as element_mul kernel",
+      "original": "numpy.multiply"
+    }
+  ],
+  "dependencies": []
+}
