@@ -1,0 +1,52 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:02:57Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_src",
+    "file": "purce_src",
+    "line": 185,
+    "symbol": "purce_src.kepler_denominator",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_src.kepler_denominator_ff600e16",
+    "algorithm": "element_mul",
+    "math_intent": "Function 'kepler_denominator' composed of: element_mul",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "four",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      },
+      {
+        "name": "pi_sq",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.multiply as element_mul kernel",
+      "original": "numpy.multiply"
+    }
+  ],
+  "dependencies": []
+}
