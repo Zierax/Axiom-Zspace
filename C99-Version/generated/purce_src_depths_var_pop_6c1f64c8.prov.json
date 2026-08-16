@@ -1,0 +1,47 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:02:57Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_src",
+    "file": "purce_src",
+    "line": 802,
+    "symbol": "purce_src.depths_var_pop",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_src.depths_var_pop_6c1f64c8",
+    "algorithm": "reduce_var",
+    "math_intent": "Function 'depths_var_pop' composed of: reduce_var",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "depths",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.var as reduce_var kernel",
+      "original": "numpy.var"
+    }
+  ],
+  "dependencies": []
+}
