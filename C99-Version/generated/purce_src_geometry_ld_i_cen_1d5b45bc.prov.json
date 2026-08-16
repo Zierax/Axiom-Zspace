@@ -1,0 +1,52 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:02:57Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_src",
+    "file": "purce_src",
+    "line": 375,
+    "symbol": "purce_src.geometry_ld_i_cen",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_src.geometry_ld_i_cen_1d5b45bc",
+    "algorithm": "element_max",
+    "math_intent": "Function 'geometry_ld_i_cen' composed of: element_max",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "one_minus_both",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      },
+      {
+        "name": "min_floor",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.maximum as element_max kernel",
+      "original": "numpy.maximum"
+    }
+  ],
+  "dependencies": []
+}
