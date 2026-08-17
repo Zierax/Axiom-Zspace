@@ -29,7 +29,7 @@ CHANGELOG.txt for release history (v2.x entries are legacy, not evidence).
 ## Where the numbers live
 
 ```
-evidence (versioned):    benchmarks_controlled/evidence/{OVERHARM_FIX2,PROBE_FPR68*}
+evidence (versioned):    benchmarks_controlled/evidence/{OVERHARM_FIX2,BIG400,PROBE_FPR68*}
                          benchmarks_real/evidence/REAL_FINAL
 threshold reference:     THRESHOLDS_REPORT.md            (generated)
 config source of truth:  config/production.yaml  →  thresholds.py

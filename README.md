@@ -56,15 +56,19 @@ Every tunable number lives in **one place** —
 
 | Benchmark | Result |
 |---|---|
-| Controlled: recall, 100-target suite | **52/100** (first-80 prefix 40/80; 32/80 pre-calibration baseline, archived) |
-| Controlled: contamination FPR | **0/80 (0%)** — all 80 false targets rejected |
-| Controlled: wrong-ephemeris certs (true set) | 1 (counted separately) |
+| **Controlled BIG400 (400 true + 400 false, 8 seeds)** | recall **41.2%** (165/400) · contamination FPR **4.25%** (17/400) · wrong-ephemeris 20 |
+| Controlled, fixed seed 20260814 (100+80) | recall 52/100 · **0/80 (0%) contamination FPR** (one-sample — see note) |
 | Real Kepler (12 true hosts / 12 quiet stars): recall@target | **41.7% (5/12)** — ≤0.01% period accuracy when matched |
 | Real Kepler: quiet-star certification (proxy FPR) | 33.3% (4/12) — honest interpretation in report §2.5 |
 | Coherent override (FP-2 bypass) | **OFF by default** — probes measured contamination FPR up to 62.5% when ON |
 
+> **FPR honesty:** 0/80 is the fixed-seed sample; across 8 fresh samples
+> (BIG400, 800 targets) the measured contamination FPR is **4.25%**, dominated
+> by high-SNR eclipsing binaries that pass every gate (pure noise: 0.6%).
+> Both numbers are committed evidence — see `docs/BENCHMARKS.md` §1.6.
+
 Evidence runs are versioned in the repo:
-`benchmarks_controlled/evidence/OVERHARM_FIX2`, `PROBE_FPR68*`, and
+`benchmarks_controlled/evidence/{OVERHARM_FIX2,BIG400,PROBE_FPR68*}` and
 `benchmarks_real/evidence/REAL_FINAL` — per-target JSONs, recomputable
 metrics, and the reports that derive from them. How to reproduce everything
 in two commands: [`docs/BENCHMARKS.md`](docs/BENCHMARKS.md).

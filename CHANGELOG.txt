@@ -16,6 +16,10 @@ as first-class citizens.
 - Controlled synthetic benchmark (benchmarks_controlled/): deterministic,
   seed-fixed injector with calibrated SNR targets; measured recall 52/100 and
   contamination FPR 0/80 (OVERHARM_FIX2).
+- BIG400 aggregated suite (benchmarks_controlled/evidence/BIG400): 400 true +
+  400 false targets across 8 deterministic seeds (20260816-20260823); measured
+  recall 41.2% and population contamination FPR 4.25% (EB-dominated leakage;
+  pure-noise FPR 0.6%) — the 800-target head-to-head evidence of this release.
 - Real-data Kepler benchmark (benchmarks_real/): blind pipeline on real
   long-cadence light curves vs NEA truth; sample pinned by offline snapshots;
   measured recall@target 41.7%, proxy FPR 33.3% with full honest interpretation
