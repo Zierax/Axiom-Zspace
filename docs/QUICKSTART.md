@@ -121,8 +121,9 @@ python benchmarks_real/run_real.py --n-true 12 --n-false 12 \
     --out benchmarks_real/runs/MY_REAL
 ```
 
-Measured values (52/100 recall, 0/80 contamination FPR, 41.7% real recall,
-33.3% quiet-star proxy FPR) and what they mean: `docs/BENCHMARKS.md`.
+Measured values (BIG400 800 targets: 41.2% recall, 4.25% contamination FPR;
+fixed-seed suite: 52/100 recall, 0/80 FPR; real: 41.7% recall@target, 33.3%
+quiet-star proxy FPR) and what they mean: `docs/BENCHMARKS.md`.
 
 ## 7. Reproducing the real benchmark sample
 

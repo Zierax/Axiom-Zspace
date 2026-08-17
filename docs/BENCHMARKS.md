@@ -189,8 +189,8 @@ Full per-target tables: `benchmarks_real/evidence/REAL_FINAL/`.
    ephemeris identity gate, but if the true period is outside the search band
    the candidate can still certify — a search-band limit, not a gate bug.
 4. **Small N.** 12+12 stars ⇒ wide confidence intervals; the controlled
-   benchmark (100+80) is the statistical backbone, this one is the
-   real-world sanity check.
+   benchmark (the 800-target BIG400 suite, plus the fixed-seed 100+80) is the
+   statistical backbone, this one is the real-world sanity check.
 5. **Period sub-harmonics remain the leading error class.** The `ladder`
    rejection helps; it does not eliminate alias ambiguity (see THRESHOLDS
    REPORT §6, `fp5c` evidence).

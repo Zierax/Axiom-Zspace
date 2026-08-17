@@ -43,7 +43,7 @@ meet them in the ARCHITECTURE walkthrough.
 | **TIC / KIC** | TESS Input Catalog / Kepler Input Catalog star identifiers. |
 | **Discovery card** | The output JSON (`Discovery_…json`) with detection params, audit results, proof chain, verdict, and enrichment (radius, Teq, a/R★…). |
 | **zspace_id** | Internal candidate identifier `ZS-T-‹TIC›-NN` (TIC + planet ordinal) glued to a target across outputs. |
-| **Contamination FPR** | Fraction of false targets wrongly certified (measured 0/80). |
+| **Contamination FPR** | Fraction of false targets wrongly certified (measured 4.25% across the 800-target BIG400 suite; 0/80 on the fixed-seed suite). |
 | **Recall@target** | Fraction of true targets certified with the period matching truth within the acceptance window (5% real, tighter controlled). |
 | **Proxy FPR** | Quiet-star certification rate used as a stand-in FPR (measured 33.3% — quiet stars are not guaranteed planet-free). |
 | **Wrong-ephemeris** | Certification at the right target but a *wrong* period (real signal, wrong harmonic); counted separately from contamination. |

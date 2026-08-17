@@ -52,7 +52,7 @@ Every tunable number lives in **one place** —
   real benchmark rehydrates from pinned snapshot JSONs + a one-time MAST
   download.
 
-## Measured results (balanced profile, 2026-08-16)
+## Measured results (balanced profile, 2026-08-16/17)
 
 | Benchmark | Result |
 |---|---|

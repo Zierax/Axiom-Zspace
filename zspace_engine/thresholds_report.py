@@ -21,8 +21,8 @@ BENCH_CMD = (
     "--true 100 --false 80 --out benchmarks_controlled/runs/<NAME> --seed 20260814"
 )
 METRICS_KNOWN = {
-    "conservative": "Contamination FPR 0/80 (0.0%) · Recall 52/100 (52/100 total; first-80 prefix 40/80) — measured, OVERHARM_FIX2",
-    "balanced":     "Contamination FPR 0/80 (0.0%) · Recall 52/100 (first-80 prefix 40/80 vs 32/80 pre-calibration baseline OVERHARM_FIX, archived) — measured, OVERHARM_FIX2",
+    "conservative": "Contamination FPR 0/80 (0.0%) on the fixed-seed suite · 4.25% (17/400) across the 800-target BIG400 suite · Recall 52/100 fixed-seed / 41.2% BIG400 — measured",
+    "balanced":     "Contamination FPR 0/80 (0.0%) on the fixed-seed suite · 4.25% (17/400) across the 800-target BIG400 suite · Recall 52/100 fixed-seed / 41.2% BIG400 — measured",
     "sensitive":    "UNMEASURED — every deviation requires a full benchmark re-run",
 }
 

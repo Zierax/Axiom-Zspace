@@ -42,7 +42,8 @@ fp_filters:
 # THRESHOLD CATALOG — every tunable number of the detection/validation
 # pipeline, per profile. Profiles trade false-positive rate vs recall:
 #
-#   conservative — FPR=0 priority (measured FPR 0/80; recall 52/100, OVERHARM_FIX2)
+#   conservative — FPR=0 priority (measured: FPR 0/80 fixed-seed suite; 4.25%
+#                   across the 800-target BIG400 suite; recall 52/100 fixed-seed, 41.2% BIG400)
 #   balanced     — default, identical measured values (current documented state)
 #   sensitive    — recall priority, accepts some FPR (EXPERIMENTAL —
 #                  MUST re-run the full benchmark before adopting)

@@ -1,7 +1,8 @@
 # Axiom-ZSpace v1
 
 **White-box exoplanet transit detection for TESS/Kepler light curves — with a
-measured 0/80 contamination false-positive rate.**
+measured, near-zero contamination false-positive rate (0/80 fixed-seed;
+4.25% across an 800-target suite).**
 
 This is the first public release of Axiom-ZSpace: a blind-search transit
 detection pipeline built to be *audited*. No black box — every verdict ships

@@ -7,7 +7,8 @@ here. Values come from ``config/production.yaml`` (section ``thresholds``),
 with per-profile sets so operators can choose their FPR/recall trade-off
 without touching code:
 
-    conservative — zero-false-positive priority (measured FPR = 0/80)
+    conservative — zero-false-positive priority (measured FPR 0/80 fixed-seed;
+                    4.25% across the 800-target BIG400 suite)
     balanced     — default; same measured values as above
     sensitive    — recall priority, accepts some FPR (EXPERIMENTAL, requires
                    a full benchmark re-run before use)
@@ -179,7 +180,7 @@ CATALOG: Dict[str, Dict[str, Any]] = {
         "evidence": "Measured: saturates at 0.5-1.0 for ALL candidates in red-noise-dominated spectra (truths AND noise) — it cannot separate; certification therefore depends on the coherent override or the raw SNR. 8 high-SNR truths with FAP≈1 died on this gate alone.",
         "pros_tight": "Strict firewall; nothing certifies on a weak null.",
         "cons_tight": "Frequent false rejection of genuine shallow-but-coherent signals (the reason the override exists).",
-        "pros_loose": "Accepts more signals without touching FPR if the coherent path stays off (override OFF measured FPR 0/80).",
+        "pros_loose": "Accepts more signals without touching FPR if the coherent path stays off (override OFF measured 0/80 fixed-seed; 4.25% across the 800-target BIG400 suite).",
         "cons_loose": "With override ON, pure-noise folds pass FAP 0.3-1.0 and certify → measured contamination FPR 12.5-62.5% (PROBE_FPR68 series).",
         "fpr_risk_loose": "LOW with override OFF, HIGH with override ON",
     },
@@ -203,7 +204,7 @@ CATALOG: Dict[str, Dict[str, Any]] = {
         "cons_tight": "Rejects grazing planets and noise-realized shallow transits (measured 0.48-0.99).",
         "pros_loose": "Recovers grazing/near-grazing and shallow signals.",
         "cons_loose": "Admits some V-shaped false dips; safe ONLY while density (FP-7) or even/odd (FP-3) critical gates still separate them (measured: yes).",
-        "fpr_risk_loose": "LOW at 0.4 (measured 0/80), grows below ~0.3",
+        "fpr_risk_loose": "LOW at 0.4 (measured 0/80 fixed-seed; 4.25% BIG400), grows below ~0.3",
     },
     "fp5_secondary_snr_max": {
         "name": "FP-5 secondary-eclipse SNR ceiling",
@@ -247,7 +248,7 @@ CATALOG: Dict[str, Dict[str, Any]] = {
         "cons_tight": "Rejects grazing and noise-realized planets (0.4-2.5 produced 5/8 measured false rejections).",
         "pros_loose": "Recovers grazing/near-grazing planets.",
         "cons_loose": "Beyond [0.15, 6.0] grazing-EB densities (9-590) enter → FPR grows; keep 5.0 hard cap.",
-        "fpr_risk_loose": "LOW to 5.0 (measured 0/80), HIGH beyond ~6",
+        "fpr_risk_loose": "LOW to 5.0 (measured 0/80 fixed-seed; 4.25% BIG400), HIGH beyond ~6",
     },
     "fp8_impact_max": {
         "name": "FP-8 impact-parameter cap",
@@ -286,8 +287,8 @@ CATALOG: Dict[str, Dict[str, Any]] = {
         "name": "FP-2 coherent multi-transit override",
         "unit": "flag", "direction": "flag", "weight": "meta",
         "purpose": "Let overwhelming repeated-observation evidence (≥3 consistent transits + SNR + no secondary) override the saturated power-FAP.",
-        "evidence": "Measured: ON caused FPR explosion (contamination FPR up to 62.5% on 8-target probes — PROBE_FPR68 series); OFF with widened gates gives 0/80 FPR. The dip-fraction discriminator at 0.6 is a coin-flip for real shallow transits (0.5-0.55 measured) — reliable only above per-transit SNR≈3.",
-        "pros_tight(OFF)": "FPR stays 0/80.",
+        "evidence": "Measured: ON caused FPR explosion (contamination FPR up to 62.5% on 8-target probes — PROBE_FPR68 series); OFF measured 0/80 fixed-seed and 4.25% across the 800-target BIG400 suite. The dip-fraction discriminator at 0.6 is a coin-flip for real shallow transits (0.5-0.55 measured) — reliable only above per-transit SNR≈3.",
+        "pros_tight(OFF)": "FPR stays 0/80 on the fixed-seed suite; 4.25% across BIG400.",
         "cons_tight(OFF)": "FAP-saturated truths stay rejected unless other gates pass (SYN100037).",
         "pros_loose(ON)": "Rescues FAP-saturated coherent signals.",
         "cons_loose(ON)": "Measured FPR explosion at dip-fraction 0.6; needs statistical (binomial) per-epoch test before re-enabling.",

@@ -1,6 +1,6 @@
 # Axiom-ZSpace Threshold Catalog — Reference Report
 
-_Generated 2026-08-17 00:15 UTC from `config/production.yaml` + `zspace_engine/thresholds.py` — single source of truth._
+_Generated 2026-08-17 03:25 UTC from `config/production.yaml` + `zspace_engine/thresholds.py` — single source of truth._
 
 ## 1. What this is
 
@@ -51,7 +51,7 @@ Profiles trade **false-positive rate (FPR)** against **recall**. Changing the ac
 ### `conservative`
 
 **Mode:** FPR=0 priority, measured  
-**Measured metrics:** Contamination FPR 0/80 (0.0%) · Recall 52/100 (52/100 total; first-80 prefix 40/80) — measured, OVERHARM_FIX2  
+**Measured metrics:** Contamination FPR 0/80 (0.0%) on the fixed-seed suite · 4.25% (17/400) across the 800-target BIG400 suite · Recall 52/100 fixed-seed / 41.2% BIG400 — measured  
 
 | key | value |
 |---|---|
@@ -80,7 +80,7 @@ Profiles trade **false-positive rate (FPR)** against **recall**. Changing the ac
 ### `balanced`
 
 **Mode:** default, measured  
-**Measured metrics:** Contamination FPR 0/80 (0.0%) · Recall 52/100 (first-80 prefix 40/80 vs 32/80 pre-calibration baseline OVERHARM_FIX, archived) — measured, OVERHARM_FIX2  
+**Measured metrics:** Contamination FPR 0/80 (0.0%) on the fixed-seed suite · 4.25% (17/400) across the 800-target BIG400 suite · Recall 52/100 fixed-seed / 41.2% BIG400 — measured  
 
 | key | value |
 |---|---|
@@ -157,7 +157,7 @@ Profiles trade **false-positive rate (FPR)** against **recall**. Changing the ac
 - **Values:** conservative `0.05` · balanced `0.05` · sensitive `0.1`
 - **Pros of tightening:** Strict firewall; nothing certifies on a weak null.
 - **Cons of tightening:** Frequent false rejection of genuine shallow-but-coherent signals (the reason the override exists).
-- **Pros of loosening:** Accepts more signals without touching FPR if the coherent path stays off (override OFF measured FPR 0/80).
+- **Pros of loosening:** Accepts more signals without touching FPR if the coherent path stays off (override OFF measured 0/80 fixed-seed; 4.25% across the 800-target BIG400 suite).
 - **Cons of loosening:** With override ON, pure-noise folds pass FAP 0.3-1.0 and certify → measured contamination FPR 12.5-62.5% (PROBE_FPR68 series).
 - **FPR risk when loosened:** LOW with override OFF, HIGH with override ON
 
@@ -183,7 +183,7 @@ Profiles trade **false-positive rate (FPR)** against **recall**. Changing the ac
 - **Cons of tightening:** Rejects grazing planets and noise-realized shallow transits (measured 0.48-0.99).
 - **Pros of loosening:** Recovers grazing/near-grazing and shallow signals.
 - **Cons of loosening:** Admits some V-shaped false dips; safe ONLY while density (FP-7) or even/odd (FP-3) critical gates still separate them (measured: yes).
-- **FPR risk when loosened:** LOW at 0.4 (measured 0/80), grows below ~0.3
+- **FPR risk when loosened:** LOW at 0.4 (measured 0/80 fixed-seed; 4.25% BIG400), grows below ~0.3
 
 ### FP-5 secondary-eclipse SNR ceiling  (`fp5_secondary_snr_max`)
 
@@ -231,7 +231,7 @@ Profiles trade **false-positive rate (FPR)** against **recall**. Changing the ac
 - **Cons of tightening:** Rejects grazing and noise-realized planets (0.4-2.5 produced 5/8 measured false rejections).
 - **Pros of loosening:** Recovers grazing/near-grazing planets.
 - **Cons of loosening:** Beyond [0.15, 6.0] grazing-EB densities (9-590) enter → FPR grows; keep 5.0 hard cap.
-- **FPR risk when loosened:** LOW to 5.0 (measured 0/80), HIGH beyond ~6
+- **FPR risk when loosened:** LOW to 5.0 (measured 0/80 fixed-seed; 4.25% BIG400), HIGH beyond ~6
 
 ### FP-8 impact-parameter cap  (`fp8_impact_max`)
 
@@ -273,7 +273,7 @@ Profiles trade **false-positive rate (FPR)** against **recall**. Changing the ac
 
 - **Unit:** flag · **Direction:** flag · **Weight:** meta
 - **Purpose:** Let overwhelming repeated-observation evidence (≥3 consistent transits + SNR + no secondary) override the saturated power-FAP.
-- **Measured evidence:** Measured: ON caused FPR explosion (contamination FPR up to 62.5% on 8-target probes — PROBE_FPR68 series); OFF with widened gates gives 0/80 FPR. The dip-fraction discriminator at 0.6 is a coin-flip for real shallow transits (0.5-0.55 measured) — reliable only above per-transit SNR≈3.
+- **Measured evidence:** Measured: ON caused FPR explosion (contamination FPR up to 62.5% on 8-target probes — PROBE_FPR68 series); OFF measured 0/80 fixed-seed and 4.25% across the 800-target BIG400 suite. The dip-fraction discriminator at 0.6 is a coin-flip for real shallow transits (0.5-0.55 measured) — reliable only above per-transit SNR≈3.
 - **Values:** conservative `False` · balanced `False` · sensitive `True`
 - **Pros of tightening:** —
 - **Cons of tightening:** —

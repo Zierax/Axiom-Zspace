@@ -10,8 +10,8 @@ re-measure.
 
 | Scope | Status |
 |---|---|
-| Single-target blind pipeline (TIC-level: detection → audits → validation → card) | **Measured** — controlled 100+80 and real 12+12 benches |
-| Certified-candidate FPR on the controlled false set | **Measured** — 0/80, balanced profile, override OFF |
+| Single-target blind pipeline (TIC-level: detection → audits → validation → card) | **Measured** — controlled BIG400 (400+400, 8 seeds) + fixed-seed 100+80 + real 12+12 benches |
+| Certified-candidate FPR on the controlled false set | **Measured** — 4.25% across 800 targets (0/80 on the fixed-seed suite), balanced profile, override OFF |
 | Threshold catalog | **Measured** — values carry evidence strings in THRESHOLDS_REPORT.md |
 
 ## 2. What is NOT measured (operational caveats — read before trusting batch output)
@@ -60,7 +60,7 @@ python run_pipeline.py --sectors 1-50 --max-targets 200   # capped trial
 2. **Quiet-star certifications** — a ~33% proxy-FPR was measured on 12 quiet
    stars; treat unconfirmed candidates as candidates, not planets, until
    follow-up.
-3. **Shallow-signal misses** — recall is 52/100 controlled, 41.7% real; the
+3. **Shallow-signal misses** — recall is 41.2% controlled (BIG400; 52/100 on the fixed-seed suite), 41.7% real; the
    pipeline is calibrated for *precision-first* science at SNR ≥ ~5.5, not
    completeness.
 4. **Override temptation** — enabling `coherent_override_enabled` "to catch
