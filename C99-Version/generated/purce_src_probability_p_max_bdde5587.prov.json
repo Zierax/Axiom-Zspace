@@ -1,0 +1,52 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:02:57Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_src",
+    "file": "purce_src",
+    "line": 583,
+    "symbol": "purce_src.probability_p_max",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_src.probability_p_max_bdde5587",
+    "algorithm": "element_max",
+    "math_intent": "Function 'probability_p_max' composed of: element_max",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "P_sec",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      },
+      {
+        "name": "one",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.maximum as element_max kernel",
+      "original": "numpy.maximum"
+    }
+  ],
+  "dependencies": []
+}

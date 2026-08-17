@@ -1,0 +1,52 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:02:57Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_src",
+    "file": "purce_src",
+    "line": 613,
+    "symbol": "purce_src.probability_one_plus_k",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_src.probability_one_plus_k_92c81f69",
+    "algorithm": "element_add",
+    "math_intent": "Function 'probability_one_plus_k' composed of: element_add",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "k",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      },
+      {
+        "name": "one",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.add as element_add kernel",
+      "original": "numpy.add"
+    }
+  ],
+  "dependencies": []
+}
