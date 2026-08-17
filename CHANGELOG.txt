@@ -1,0 +1,109 @@
+================================================================================
+AXIOM-ZSPACE CHANGELOG
+================================================================================
+
+v1.0 — public release (2026-08-17)
+===============================================================================
+
+First public release (github.com/Zierax/Axiom-Zspace). Re-release of the
+internal v2.0/v2.1 lineage with the benchmark harness and measured calibration
+as first-class citizens.
+
+- Threshold catalog consolidated: single source of truth in
+  config/production.yaml + zspace_engine/thresholds.py with three profiles
+  (conservative / balanced / sensitive); THRESHOLDS_REPORT.md generated from
+  live config (zspace_engine/thresholds_report.py).
+- Controlled synthetic benchmark (benchmarks_controlled/): deterministic,
+  seed-fixed injector with calibrated SNR targets; measured recall 52/100 and
+  contamination FPR 0/80 (OVERHARM_FIX2).
+- Real-data Kepler benchmark (benchmarks_real/): blind pipeline on real
+  long-cadence light curves vs NEA truth; sample pinned by offline snapshots;
+  measured recall@target 41.7%, proxy FPR 33.3% with full honest interpretation
+  in docs/BENCHMARKS.md section 2.5.
+- FP-2 coherent override measured as FPR explosion on pure noise (PROBE_FPR68
+  series) -> OFF by default in all measured profiles.
+- Period-prior selection in BLSDetector with harmonic ladder and power-floor
+  guard (benchmark ground-truth search without losing blindness).
+- Reproducibility discipline: tests assert seed determinism, calibrated
+  thresholds, circuit-breaker invariant; 101-test suite green offline and with
+  network.
+- Repository hygiene: pre-v1 scratch, credentials-bearing scripts and
+  experiment history moved to archive/ (git-ignored hard rule); generated run
+  outputs and caches git-ignored.
+
+LEGACY ENTRIES (v2.x, historical)
+===============================================================================
+
+The entries below describe the internal v2.x development lineage that v1.0
+re-releases. IMPORTANT: no batch/sector-scale outputs from that lineage were
+preserved in this repository, and the large-scale numbers those entries once
+mentioned were never re-verified against artifacts. The ONLY measured evidence
+shipped in v1.0 is the controlled + real benchmarks under benchmarks_*/
+(see README). Treat this section as development history, not evidence.
+
+===============================================================================
+v2.1 — Physical Invariant Audit (2026-05-23)
+===============================================================================
+
+CRITICAL FIXES
+--------------
+- Shape ratio proof string contradiction fixed: "U-shape → V-SHAPE/EB" resolved.
+  Now correctly reports "U-shape → PLANET-LIKE" (ratio>1.05), "NEUTRAL SHAPE"
+  (ratio≈1), or "V-shape → EB/ARTIFACT" (ratio<0.95).
+- Even/odd eb_flagged proof: now correctly reports "INSUFFICIENT_DATA" when
+  n_transits < 4 instead of falsely claiming "PASS" with "Δσ=0.00 > 3.0".
+
+DATA INTEGRITY
+--------------
+- Sector aggregate regeneration script created at
+  scripts/regenerate_sector_aggregates.py. NOTE: the sector output files this
+  script targets (discoveries.json / summary.json per sector) are NOT part of
+  this repository — they were not preserved; the script ships for internal use.
+
+CONFIGURATION
+-------------
+- Config path resolution hardened: load_config() now searches
+  config/production.yaml and config.yaml in the working directory before
+  falling back to defaults.
+- URL corrected: IAU 2015 reference updated to official URL in config.
+- Consolidated config: Axiom-Zspace/config.yaml and config/production.yaml
+  now in sync (run_mcmc defaults to false for production speed).
+- Removed stale URL reference to juliaastro.org.
+
+PIPELINE OUTPUT
+---------------
+- discoveries.json verdict field now uses full 4-tier CVS classification
+  (PLANET_CANDIDATE, LIKELY_CANDIDATE, AMBIGUOUS, FALSE_POSITIVE) instead
+  of the old binary PLANET_CANDIDATE/LIKELY_CANDIDATE scheme.
+- CVS verdict in sector processor now uses engine's _classify() method for
+  consistency with core threshold definitions.
+- FITS cache logging: duplicate "Cached FITS for sector N" messages
+  eliminated with sector deduplication.
+
+CODE QUALITY
+------------
+- 42 issues documented in results-audit.txt (archived locally in archive/;
+  the audit document itself is not part of this repository).
+
+KNOWN ISSUES (deferred, historical — not re-measured in v1.0)
+--------------------------------------------------------------
+- Benchmark could not be re-run in audit environment (no pip/root).
+- Sector processing at the time used placeholder scores for depth, limb,
+  stellar components (s_depth=1.0, s_limb=1.0, s_stellar=1.0) — auditors were
+  not run in batch mode.
+- High average period error from BLS harmonic aliasing in batch mode.
+- Per-sector processing failures from the flux-scatter threshold.
+- Cross-sector duplicate handling and FITS cache size limits were deferred.
+
+===============================================================================
+v2.0 — FP Reduction (2026-04-22)
+===============================================================================
+
+- Initial production release of the internal lineage.
+- BLS SNR threshold lowered from 7.1 to 5.5, with hard physical filters doing
+  EB rejection.
+- NOTE: the batch-sector candidate counts and benchmark percentages originally
+  reported in this entry were not preserved as artifacts and are not claimed
+  by v1.0.
+
+===============================================================================

@@ -1,0 +1,39 @@
+# v1 release — never commit scratch, secrets, binaries or run artifacts
+
+# secrets / credentials (hard rule)
+*.key
+*.pem
+*id_rsa*
+get_models*.ps1
+openai_api_key*
+.env
+.env.*
+!.env.example
+
+# archive of pre-v1 history & scratch (kept on disk, never pushed)
+/archive/
+
+# run outputs & caches (regenerated per run)
+runs/
+benchmarks_controlled/runs/
+benchmarks_real/runs/
+benchmarks_real/cache/
+axiom_output/
+.cache/
+Discovery_*.json
+**/__pycache__/
+*.pyc
+.pytest_cache/
+
+# logs & scratch
+*.log
+axiom_pipeline*
+
+# build artifacts
+axiom_zspace
+*.exe
+*.out
+
+# OS junk
+Thumbs.db
+.DS_Store

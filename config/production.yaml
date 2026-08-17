@@ -1,0 +1,192 @@
+# Axiom-ZSpace Production Configuration (v1.0)
+# Physical constants, detection thresholds, FP filters, and system settings
+
+# Physical constants (IAU 2015 Resolution B3)
+# Source: https://www.iau.org/static/resolutions/IAU2015_English.pdf
+constants:
+  G_SI: 6.67430e-11      # m³ kg⁻¹ s⁻² (Gravitational constant)
+  M_SUN: 1.9884e30       # kg (Solar mass)
+  R_SUN: 6.957e8         # m (Solar radius)
+
+# Detection thresholds
+detection:
+  bls_snr_threshold: 5.5           # Minimum SNR for BLS detection (lowered from 7.1 with hard filters doing EB rejection)
+  fap_threshold: 0.05              # False Alarm Probability threshold (5% — config-tunable; default relaxed from 1e-4)
+  cvs_planet_threshold: 0.80       # Composite Vitality Score threshold for planet classification (must match zspace_engine/core.py THRESHOLD_PLANET)
+  snr_ref: 15.0                    # SNR at which S_P (periodicity score) saturates to 1.0
+
+# V2.0 False Positive Filter Configuration
+fp_filters:
+  # Stellar Density Constraint: reject if a/R★ mismatch > threshold
+  density_mismatch_threshold: 0.20   # 20% tolerance
+  
+  # Transit Shape: V-shape vs U-shape discrimination
+  ingress_fraction_threshold: 0.45   # > this = V-shape (EB candidate)
+  
+  # MCMC Posterior Validation (computationally expensive)
+  run_mcmc: false                    # Enable MCMC by default?
+  mcmc_nwalkers: 32                  # Number of MCMC walkers
+  mcmc_nsteps: 500                   # Number of MCMC steps
+  mcmc_burnin: 200                   # Burn-in steps to discard
+  
+  # Centroid Analysis
+  use_tpf_centroids: false           # Download TPF for pixel-level analysis?
+  centroid_sigma_threshold: 3.0      # σ threshold for centroid shift flagging
+  
+  # Multi-Sector Consistency
+  check_multi_sector: false          # Check transit across sectors?
+  multi_sector_period_tol: 0.005     # Relative period tolerance
+  multi_sector_depth_tol: 0.30       # Relative depth tolerance
+
+# ─────────────────────────────────────────────────────────────────────────
+# THRESHOLD CATALOG — every tunable number of the detection/validation
+# pipeline, per profile. Profiles trade false-positive rate vs recall:
+#
+#   conservative — FPR=0 priority (measured FPR 0/80; recall 52/100, OVERHARM_FIX2)
+#   balanced     — default, identical measured values (current documented state)
+#   sensitive    — recall priority, accepts some FPR (EXPERIMENTAL —
+#                  MUST re-run the full benchmark before adopting)
+#
+# Full rationale (measured evidence, pros/cons of every value) in
+# THRESHOLDS_REPORT.md (auto-generated via:
+#   python -m zspace_engine.thresholds_report)
+# ─────────────────────────────────────────────────────────────────────────
+thresholds:
+  profile: balanced
+
+  conservative:            # FPR=0 priority — measured: 0 FP / 80 false targets
+    fp1_snr_min: 5.5           # BLS SNR floor (σ) — noise folds reach 6-8σ, later gates veto
+    fp2_fap_max: 0.05          # power-FAP ceiling — saturates at 0.5-1.0 under red noise; firewall
+    fp3_eo_sigma_max: 3.0      # even/odd depth Δσ — truths 0.05-2.0, EBs 4-30
+    fp4_shape_min: 0.4         # U/V shape floor — truths measure 0.48-0.99 under noise
+    fp5_secondary_snr_max: 3.0 # phase-0.5 eclipse SNR — planets ≤2.2, EBs 5-90
+    fp5b_secondary_ratio_max: 0.30  # eclipse depth ratio — 0.30-0.35 borderline truths exist
+    fp5c_alias_band: [0.20, 0.90]   # alias-eclipse asymmetric ratio band
+    fp5c_alias_min_snr: 15.0   # alias eclipse SNR floor
+    fp7_density_band: [0.2, 5.0]    # transit/TIC density — truths 0.38-4.0, false ≤0.2 or ≥9.4
+    fp8_impact_max: 0.9        # grazing b cap — moderate weight, does NOT gate-break
+    fp10_min_transits: 2
+    verdict_max_fail_pass: 2        # ≤2 non-critical fails → SOVEREIGN_PASS
+    verdict_max_fail_conditional: 3 # ≤3 → CONDITIONAL_PASS
+    density_conflict_low: 0.5
+    density_conflict_high: 2.0
+    density_conflict_snr_min: 10.0
+    ladder_k: 20
+    ladder_min_relative_snr: 0.05
+    detector_frequency_factor: 20.0
+    detector_period_min: 0.5
+    detector_period_max: 13.5
+    coherent_override_enabled: false  # OFF — measured contamination FPR up to 62.5% on 8-target probes when ON (PROBE_FPR68 series)
+    coherent_min_snr: 6.5
+    coherent_min_transits: 3
+    coherent_min_dip_fraction: 0.6
+    ev_odd_sigma_eb: 3.0
+    ev_odd_pvalue_eb: 0.01
+    ingress_fraction_vshape: 0.45
+    secondary_ratio_veto: 0.30
+    context_secondary_snr: 3.0
+    context_density_mismatch: 0.20
+    cvs_w_periodicity: 0.97
+    cvs_w_depth: 0.83
+    cvs_w_limb: 0.61
+    cvs_w_secondary: 0.31
+    no_detection_snr_floor: 5.5
+
+  balanced:                # DEFAULT — current documented/measured state (same values)
+    fp1_snr_min: 5.5
+    fp2_fap_max: 0.05
+    fp3_eo_sigma_max: 3.0
+    fp4_shape_min: 0.4
+    fp5_secondary_snr_max: 3.0
+    fp5b_secondary_ratio_max: 0.30
+    fp5c_alias_band: [0.20, 0.90]
+    fp5c_alias_min_snr: 15.0
+    fp7_density_band: [0.2, 5.0]
+    fp8_impact_max: 0.9
+    fp10_min_transits: 2
+    verdict_max_fail_pass: 2
+    verdict_max_fail_conditional: 3
+    density_conflict_low: 0.5
+    density_conflict_high: 2.0
+    density_conflict_snr_min: 10.0
+    ladder_k: 20
+    ladder_min_relative_snr: 0.05
+    detector_frequency_factor: 20.0
+    detector_period_min: 0.5
+    detector_period_max: 13.5
+    coherent_override_enabled: false
+    coherent_min_snr: 6.5
+    coherent_min_transits: 3
+    coherent_min_dip_fraction: 0.6
+    ev_odd_sigma_eb: 3.0
+    ev_odd_pvalue_eb: 0.01
+    ingress_fraction_vshape: 0.45
+    secondary_ratio_veto: 0.30
+    context_secondary_snr: 3.0
+    context_density_mismatch: 0.20
+    cvs_w_periodicity: 0.97
+    cvs_w_depth: 0.83
+    cvs_w_limb: 0.61
+    cvs_w_secondary: 0.31
+    no_detection_snr_floor: 5.5
+
+  sensitive:               # EXPERIMENTAL — recall priority. UNMEASURED: re-run the
+    fp1_snr_min: 5.0       #       full benchmark (--true 100 --false 80) before use.
+    fp2_fap_max: 0.10
+    fp3_eo_sigma_max: 3.0
+    fp4_shape_min: 0.3
+    fp5_secondary_snr_max: 3.0
+    fp5b_secondary_ratio_max: 0.35
+    fp5c_alias_band: [0.20, 0.90]
+    fp5c_alias_min_snr: 15.0
+    fp7_density_band: [0.15, 6.0]
+    fp8_impact_max: 0.95
+    fp10_min_transits: 2
+    verdict_max_fail_pass: 3
+    verdict_max_fail_conditional: 4
+    density_conflict_low: 0.4
+    density_conflict_high: 2.5
+    density_conflict_snr_min: 10.0
+    ladder_k: 20
+    ladder_min_relative_snr: 0.05
+    detector_frequency_factor: 20.0
+    detector_period_min: 0.5
+    detector_period_max: 13.5
+    coherent_override_enabled: true   # WARNING: measured FPR explosion (PROBE_FPR68 series)
+    coherent_min_snr: 6.5
+    coherent_min_transits: 3
+    coherent_min_dip_fraction: 0.55   # still unsafe without a binomial significance test
+    ev_odd_sigma_eb: 3.0
+    ev_odd_pvalue_eb: 0.01
+    ingress_fraction_vshape: 0.45
+    secondary_ratio_veto: 0.30
+    context_secondary_snr: 3.0
+    context_density_mismatch: 0.25
+    cvs_w_periodicity: 0.97
+    cvs_w_depth: 0.83
+    cvs_w_limb: 0.61
+    cvs_w_secondary: 0.31
+    no_detection_snr_floor: 5.0
+
+# Network settings
+network:
+  api_timeout_seconds: 30          # Timeout for API requests
+  max_retry_attempts: 2            # Maximum retry attempts for failed requests
+  period_match_tolerance_days: 0.001  # Tolerance for period matching in days
+
+# FITS Cache settings
+fits_cache:
+  enabled: true                    # Enable local FITS caching
+  cache_dir: ".cache/fits"         # Cache directory path
+  max_cache_size_gb: 50            # Maximum cache size in GB (0 = unlimited)
+
+# Output settings
+output:
+  base_directory: "axiom_output"   # Base directory for all outputs
+  preserve_timestamps: true        # Add timestamps to prevent overwrites
+
+# Logging configuration
+logging:
+  level: "INFO"                    # Logging level: DEBUG | INFO | WARNING | ERROR
+  file: "axiom_pipeline.log"       # Log file path
+  console: true                    # Enable console logging

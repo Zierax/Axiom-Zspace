@@ -1,0 +1,486 @@
+[
+  {
+    "kind": "true_planet",
+    "subkind": "real_kepler_confirmed",
+    "tic_id": "KIC8478994",
+    "label_period": 13.36702,
+    "detected": true,
+    "period_found": 7.958303378864127,
+    "period_error_pct": 40.46314452387947,
+    "snr": 51.08378252535913,
+    "cvs": 0.6378676470588236,
+    "sovereign_verdict": "SOVEREIGN_PASS",
+    "validation_status": "OFFLINE_NEW_DISCOVERY",
+    "ladder_rank": 2,
+    "n_candidates_tested": 2,
+    "error": null,
+    "processing_time_sec": 9.803685903549194,
+    "white_ppm": 272.2247314453125,
+    "target_snr": null,
+    "injected_depth": null,
+    "cvs_verdict": "UNCERTAIN",
+    "ephemeris_resolution": "FUNDAMENTAL",
+    "ephemeris_physical_period": 7.958303,
+    "ephemeris_pattern": {
+      "own": 1,
+      "at_2p": null,
+      "at_3p": null
+    },
+    "ephemeris_evidence": "3P outside search window \u2192 cannot verify sub-harmonic \u2192 fundamental",
+    "kepid": 8478994,
+    "nea_period": 13.36702,
+    "pl_rade": "0.30980000",
+    "known_rows": [
+      {
+        "koi_period": "39.79220077",
+        "koi_pdisposition": "CANDIDATE",
+        "kepler_name": "Kepler-37 d"
+      },
+      {
+        "koi_period": "21.30181863",
+        "koi_pdisposition": "CANDIDATE",
+        "kepler_name": "Kepler-37 c"
+      },
+      {
+        "koi_period": "13.3669309",
+        "koi_pdisposition": "CANDIDATE",
+        "kepler_name": "Kepler-37 b"
+      },
+      {
+        "koi_period": "51.20690303",
+        "koi_pdisposition": "FALSE POSITIVE",
+        "kepler_name": "Kepler-37 e"
+      }
+    ],
+    "matched_target": false,
+    "match_known": "none"
+  },
+  {
+    "kind": "true_planet",
+    "subkind": "real_kepler_confirmed",
+    "tic_id": "KIC9285568",
+    "label_period": 2.55314213,
+    "detected": true,
+    "period_found": 2.5531890382965083,
+    "period_error_pct": 0.0018372771322543288,
+    "snr": 15.439401358769212,
+    "cvs": 0.9243378022206956,
+    "sovereign_verdict": "SOVEREIGN_PASS",
+    "validation_status": "OFFLINE_NEW_DISCOVERY",
+    "ladder_rank": 2,
+    "n_candidates_tested": 2,
+    "error": null,
+    "processing_time_sec": 59.32748222351074,
+    "white_ppm": 562.0973989456468,
+    "target_snr": null,
+    "injected_depth": null,
+    "cvs_verdict": "PLANET CANDIDATE",
+    "ephemeris_resolution": "FUNDAMENTAL",
+    "ephemeris_physical_period": 2.553189,
+    "ephemeris_pattern": {
+      "own": 1,
+      "at_2p": 3,
+      "at_3p": 3
+    },
+    "ephemeris_evidence": "own fold 1 dip; 3P fold shows 3 dip(s) equal+spaced; 2P fold shows 3 dip(s) equal \u2192 P_best is fundamental",
+    "kepid": 9285568,
+    "nea_period": 2.55314213,
+    "pl_rade": "1.31000000",
+    "known_rows": [
+      {
+        "koi_period": "2.55315031",
+        "koi_pdisposition": "CANDIDATE",
+        "kepler_name": "Kepler-1575 b"
+      }
+    ],
+    "matched_target": true,
+    "match_known": "planet"
+  },
+  {
+    "kind": "true_planet",
+    "subkind": "real_kepler_confirmed",
+    "tic_id": "KIC9650989",
+    "label_period": 3.42392993,
+    "detected": true,
+    "period_found": 9.084245050393813,
+    "period_error_pct": 165.31632469458313,
+    "snr": 7.377076496593247,
+    "cvs": null,
+    "sovereign_verdict": null,
+    "validation_status": "FALSE_POSITIVE",
+    "ladder_rank": null,
+    "n_candidates_tested": 20,
+    "error": "No ladder candidate certified by sovereign validator",
+    "processing_time_sec": 51.08462357521057,
+    "white_ppm": 1937.0866062210575,
+    "target_snr": null,
+    "injected_depth": null,
+    "kepid": 9650989,
+    "nea_period": 3.42392993,
+    "pl_rade": "1.44607340",
+    "known_rows": [
+      {
+        "koi_period": "3.42390809",
+        "koi_pdisposition": "CANDIDATE",
+        "kepler_name": "Kepler-1905 b"
+      }
+    ],
+    "matched_target": false,
+    "match_known": "none"
+  },
+  {
+    "kind": "true_planet",
+    "subkind": "real_kepler_confirmed",
+    "tic_id": "KIC9649706",
+    "label_period": 1.569066502,
+    "detected": true,
+    "period_found": 1.569123509271052,
+    "period_error_pct": 0.0036331966159045856,
+    "snr": 25.99164197054932,
+    "cvs": 0.8996948326674974,
+    "sovereign_verdict": "SOVEREIGN_PASS",
+    "validation_status": "OFFLINE_NEW_DISCOVERY",
+    "ladder_rank": 1,
+    "n_candidates_tested": 1,
+    "error": null,
+    "processing_time_sec": 56.906376123428345,
+    "white_ppm": 1154.5810650948436,
+    "target_snr": null,
+    "injected_depth": null,
+    "cvs_verdict": "PLANET CANDIDATE",
+    "ephemeris_resolution": "FUNDAMENTAL",
+    "ephemeris_physical_period": 1.569124,
+    "ephemeris_pattern": {
+      "own": 1,
+      "at_2p": 3,
+      "at_3p": 3
+    },
+    "ephemeris_evidence": "own fold 1 dip; 3P fold shows 3 dip(s) equal+spaced; 2P fold shows 3 dip(s) equal \u2192 P_best is fundamental",
+    "kepid": 9649706,
+    "nea_period": 1.569066502,
+    "pl_rade": "1.58000000",
+    "known_rows": [
+      {
+        "koi_period": "1.569066598",
+        "koi_pdisposition": "CANDIDATE",
+        "kepler_name": "Kepler-1072 b"
+      }
+    ],
+    "matched_target": true,
+    "match_known": "planet"
+  },
+  {
+    "kind": "true_planet",
+    "subkind": "real_kepler_confirmed",
+    "tic_id": "KIC7269974",
+    "label_period": 4.309397,
+    "detected": true,
+    "period_found": 4.5665468179551425,
+    "period_error_pct": 5.967187937317978,
+    "snr": 36.383683744013545,
+    "cvs": 0.9430147058823528,
+    "sovereign_verdict": "SOVEREIGN_PASS",
+    "validation_status": "OFFLINE_NEW_DISCOVERY",
+    "ladder_rank": 2,
+    "n_candidates_tested": 2,
+    "error": null,
+    "processing_time_sec": 54.38237500190735,
+    "white_ppm": 1131.276927512388,
+    "target_snr": null,
+    "injected_depth": null,
+    "cvs_verdict": "PLANET CANDIDATE",
+    "ephemeris_resolution": "P_TRUE/3_ALIAS",
+    "ephemeris_physical_period": 13.69964,
+    "ephemeris_pattern": {
+      "own": 1,
+      "at_2p": 3,
+      "at_3p": 1
+    },
+    "ephemeris_evidence": "own fold 1 dip; 3P fold restores 1 dip (SNR=53.4) \u2192 P_true = 3*P",
+    "kepid": 7269974,
+    "nea_period": 4.309397,
+    "pl_rade": "1.71500000",
+    "known_rows": [
+      {
+        "koi_period": "13.69942266",
+        "koi_pdisposition": "CANDIDATE",
+        "kepler_name": "Kepler-160 c"
+      },
+      {
+        "koi_period": "4.309381978",
+        "koi_pdisposition": "CANDIDATE",
+        "kepler_name": "Kepler-160 b"
+      }
+    ],
+    "matched_target": false,
+    "match_known": "none"
+  },
+  {
+    "kind": "true_planet",
+    "subkind": "real_kepler_confirmed",
+    "tic_id": "KIC5088400",
+    "label_period": 8.82713457,
+    "detected": true,
+    "period_found": 9.804789382573572,
+    "period_error_pct": 11.075562571530755,
+    "snr": 10.114965606368703,
+    "cvs": null,
+    "sovereign_verdict": null,
+    "validation_status": "FALSE_POSITIVE",
+    "ladder_rank": null,
+    "n_candidates_tested": 20,
+    "error": "No ladder candidate certified by sovereign validator",
+    "processing_time_sec": 76.57085275650024,
+    "white_ppm": 8970.405099053232,
+    "target_snr": null,
+    "injected_depth": null,
+    "kepid": 5088400,
+    "nea_period": 8.82713457,
+    "pl_rade": "1.96000000",
+    "known_rows": [
+      {
+        "koi_period": "8.82715783",
+        "koi_pdisposition": "CANDIDATE",
+        "kepler_name": "Kepler-1556 b"
+      }
+    ],
+    "matched_target": false,
+    "match_known": "none"
+  },
+  {
+    "kind": "true_planet",
+    "subkind": "real_kepler_confirmed",
+    "tic_id": "KIC11134879",
+    "label_period": 4.301662003,
+    "detected": true,
+    "period_found": 4.301903477048307,
+    "period_error_pct": 0.0056135058528263195,
+    "snr": 24.92867307441502,
+    "cvs": 0.9430147058823528,
+    "sovereign_verdict": "SOVEREIGN_PASS",
+    "validation_status": "OFFLINE_NEW_DISCOVERY",
+    "ladder_rank": 1,
+    "n_candidates_tested": 1,
+    "error": null,
+    "processing_time_sec": 61.61953544616699,
+    "white_ppm": 3881.0472755440637,
+    "target_snr": null,
+    "injected_depth": null,
+    "cvs_verdict": "PLANET CANDIDATE",
+    "ephemeris_resolution": "FUNDAMENTAL",
+    "ephemeris_physical_period": 4.301903,
+    "ephemeris_pattern": {
+      "own": 1,
+      "at_2p": 3,
+      "at_3p": 3
+    },
+    "ephemeris_evidence": "own fold 1 dip; 3P fold shows 3 dip(s) equal+spaced; 2P fold shows 3 dip(s) equal \u2192 P_best is fundamental",
+    "kepid": 11134879,
+    "nea_period": 4.301662003,
+    "pl_rade": "2.45000000",
+    "known_rows": [
+      {
+        "koi_period": "4.30165843",
+        "koi_pdisposition": "CANDIDATE",
+        "kepler_name": "Kepler-570 b"
+      }
+    ],
+    "matched_target": true,
+    "match_known": "planet"
+  },
+  {
+    "kind": "true_planet",
+    "subkind": "real_kepler_confirmed",
+    "tic_id": "KIC5351250",
+    "label_period": 12.56093,
+    "detected": true,
+    "period_found": 7.381876896739553,
+    "period_error_pct": 41.23144626441233,
+    "snr": 47.13651283477242,
+    "cvs": 0.9430147058823528,
+    "sovereign_verdict": "SOVEREIGN_PASS",
+    "validation_status": "OFFLINE_NEW_DISCOVERY",
+    "ladder_rank": 1,
+    "n_candidates_tested": 1,
+    "error": null,
+    "processing_time_sec": 57.727548122406006,
+    "white_ppm": 4016.27617604094,
+    "target_snr": null,
+    "injected_depth": null,
+    "cvs_verdict": "PLANET CANDIDATE",
+    "ephemeris_resolution": "FUNDAMENTAL",
+    "ephemeris_physical_period": 7.381877,
+    "ephemeris_pattern": {
+      "own": 1,
+      "at_2p": null,
+      "at_3p": null
+    },
+    "ephemeris_evidence": "3P outside search window \u2192 cannot verify sub-harmonic \u2192 fundamental",
+    "kepid": 5351250,
+    "nea_period": 12.56093,
+    "pl_rade": "2.79000000",
+    "known_rows": [
+      {
+        "koi_period": "7.381980206",
+        "koi_pdisposition": "CANDIDATE",
+        "kepler_name": "Kepler-150 c"
+      },
+      {
+        "koi_period": "12.56096618",
+        "koi_pdisposition": "CANDIDATE",
+        "kepler_name": "Kepler-150 d"
+      },
+      {
+        "koi_period": "30.8261043",
+        "koi_pdisposition": "CANDIDATE",
+        "kepler_name": "Kepler-150 e"
+      },
+      {
+        "koi_period": "3.42806306",
+        "koi_pdisposition": "CANDIDATE",
+        "kepler_name": "Kepler-150 b"
+      },
+      {
+        "koi_period": "93.803766",
+        "koi_pdisposition": "FALSE POSITIVE",
+        "kepler_name": ""
+      }
+    ],
+    "matched_target": false,
+    "match_known": "planet"
+  },
+  {
+    "kind": "true_planet",
+    "subkind": "real_kepler_confirmed",
+    "tic_id": "KIC7447200",
+    "label_period": 7.972513,
+    "detected": true,
+    "period_found": 7.972644185313584,
+    "period_error_pct": 0.0016454700492014585,
+    "snr": 88.8751406443414,
+    "cvs": 0.8075273585587907,
+    "sovereign_verdict": "SOVEREIGN_PASS",
+    "validation_status": "OFFLINE_NEW_DISCOVERY",
+    "ladder_rank": 1,
+    "n_candidates_tested": 1,
+    "error": null,
+    "processing_time_sec": 56.062270641326904,
+    "white_ppm": 5676.615400542681,
+    "target_snr": null,
+    "injected_depth": null,
+    "cvs_verdict": "PLANET CANDIDATE",
+    "ephemeris_resolution": "FUNDAMENTAL",
+    "ephemeris_physical_period": 7.972644,
+    "ephemeris_pattern": {
+      "own": 1,
+      "at_2p": null,
+      "at_3p": null
+    },
+    "ephemeris_evidence": "3P outside search window \u2192 cannot verify sub-harmonic \u2192 fundamental",
+    "kepid": 7447200,
+    "nea_period": 7.972513,
+    "pl_rade": "3.62000000",
+    "known_rows": [
+      {
+        "koi_period": "7.972510087",
+        "koi_pdisposition": "CANDIDATE",
+        "kepler_name": "Kepler-210 c"
+      },
+      {
+        "koi_period": "2.453236139",
+        "koi_pdisposition": "CANDIDATE",
+        "kepler_name": "Kepler-210 b"
+      }
+    ],
+    "matched_target": true,
+    "match_known": "planet"
+  },
+  {
+    "kind": "true_planet",
+    "subkind": "real_kepler_confirmed",
+    "tic_id": "KIC8073705",
+    "label_period": 10.60052251,
+    "detected": true,
+    "period_found": 11.558105963268083,
+    "period_error_pct": 9.033360877869445,
+    "snr": 11.379248852177213,
+    "cvs": 0.8070964158905533,
+    "sovereign_verdict": "SOVEREIGN_PASS",
+    "validation_status": "OFFLINE_NEW_DISCOVERY",
+    "ladder_rank": 1,
+    "n_candidates_tested": 1,
+    "error": null,
+    "processing_time_sec": 89.2914719581604,
+    "white_ppm": 7039.540872213491,
+    "target_snr": null,
+    "injected_depth": null,
+    "cvs_verdict": "PLANET CANDIDATE",
+    "ephemeris_resolution": "FUNDAMENTAL",
+    "ephemeris_physical_period": 11.558106,
+    "ephemeris_pattern": {
+      "own": 0
+    },
+    "ephemeris_evidence": "own fold has 0 dips (need exactly 1 to test sub-harmonics) \u2192 no resolution",
+    "kepid": 8073705,
+    "nea_period": 10.60052251,
+    "pl_rade": "0.96000000",
+    "matched_target": false
+  },
+  {
+    "kind": "true_planet",
+    "subkind": "real_kepler_confirmed",
+    "tic_id": "KIC4814502",
+    "label_period": 4.943290234,
+    "detected": true,
+    "period_found": 6.139448350637403,
+    "period_error_pct": 24.197610498574733,
+    "snr": 44.36378265967448,
+    "cvs": null,
+    "sovereign_verdict": null,
+    "validation_status": "FALSE_POSITIVE",
+    "ladder_rank": null,
+    "n_candidates_tested": 7,
+    "error": "No ladder candidate certified by sovereign validator",
+    "processing_time_sec": 64.7364137172699,
+    "white_ppm": 8008.680691797561,
+    "target_snr": null,
+    "injected_depth": null,
+    "kepid": 4814502,
+    "nea_period": 4.943290234,
+    "pl_rade": "1.17984089",
+    "matched_target": false
+  },
+  {
+    "kind": "true_planet",
+    "subkind": "real_kepler_confirmed",
+    "tic_id": "KIC4736569",
+    "label_period": 10.13202575,
+    "detected": true,
+    "period_found": 10.131848857147352,
+    "period_error_pct": 0.0017458784354988034,
+    "snr": 13.493952259385638,
+    "cvs": 0.8864796320280212,
+    "sovereign_verdict": "SOVEREIGN_PASS",
+    "validation_status": "OFFLINE_NEW_DISCOVERY",
+    "ladder_rank": 1,
+    "n_candidates_tested": 1,
+    "error": null,
+    "processing_time_sec": 43.28992462158203,
+    "white_ppm": 9353.414830150623,
+    "target_snr": null,
+    "injected_depth": null,
+    "cvs_verdict": "PLANET CANDIDATE",
+    "ephemeris_resolution": "FUNDAMENTAL",
+    "ephemeris_physical_period": 10.131849,
+    "ephemeris_pattern": {
+      "own": 1,
+      "at_2p": null,
+      "at_3p": null
+    },
+    "ephemeris_evidence": "3P outside search window \u2192 cannot verify sub-harmonic \u2192 fundamental",
+    "kepid": 4736569,
+    "nea_period": 10.13202575,
+    "pl_rade": "2.19000000",
+    "matched_target": true
+  }
+]

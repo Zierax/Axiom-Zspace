@@ -1,0 +1,201 @@
+# Benchmarks
+
+Two complementary benches guard the pipeline. **Nothing in the threshold
+catalog may change without re-measuring on BOTH** (that is the one rule; see
+`docs/CONTRIBUTING.md`).
+
+- The **controlled benchmark** proves the *engine*: exact ground truth,
+  deterministic, offline, minutes.
+- The **real benchmark** proves the *world*: real Kepler light curves, archive
+  truth, hours, network-bound once.
+
+---
+
+## 1. Controlled benchmark (synthetic)
+
+### 1.1 What it does
+
+`benchmarks_controlled/synthetic.py` builds two exactly-known sets:
+
+- **True targets (100)** — batman transit models with calibrated SNR
+  (per-transit SNR spread across a realistic range) injected into red-noise +
+  systematics light curves (TESS-like cadence, long baseline).
+- **False targets (80)** — known non-planet classes: eclipsing binaries with
+  even/odd depth mismatch, grazing EBs whose sub-harmonics fake clean planet
+  folds, rotation/spot modulation, single transient events, pure noise.
+
+The runner (`benchmarks_controlled/run_controlled.py`) pushes the **same,
+unmodified blind pipeline** (`AxiomValidator`) against the suite. The
+injector and runner share the seed, so sets are deterministic.
+
+### 1.2 Command
+
+```bash
+python benchmarks_controlled/run_controlled.py --true 100 --false 80 \
+    --out benchmarks_controlled/runs/OVERHARM_FIX2 --seed 20260814
+```
+
+Offline, ~minutes. Run time is dominated by the period-prior ladder search
+over 180 targets.
+
+### 1.3 Metrics and their definitions
+
+| Metric | Definition |
+|---|---|
+| Recall | certified targets (SOVEREIGN_PASS / CONDITIONAL_PASS) whose recovered period matches the injected period within the acceptance window, ÷ true targets |
+| Contamination FPR | false targets certified at all, ÷ false targets |
+| Wrong-ephemeris | true targets certified but with a period that does not match the injected one (counted SEPARATELY from contamination — the engine can "find" a real candidate at the wrong frequency) |
+
+### 1.4 Measured values (balanced profile, seed 20260814, 2026-08-16)
+
+| Metric | Value |
+|---|---:|
+| Recall, full 100-target suite | **52/100** |
+| Recall, first-80 prefix (compositionally identical to the pre-calibration suites) | 40/80 vs 32/80 pre-calibration baseline (`OVERHARM_FIX`, preserved in `archive/` — local only) |
+| Contamination FPR | **0/80 (0.0%)** — all 80 false targets rejected |
+| Wrong-ephemeris certifications (true set) | 1 |
+
+Full per-target results: `benchmarks_controlled/evidence/OVERHARM_FIX2/`
+(`results_true.json`, `results_false.json`, `EVALUATION_REPORT.md`).
+
+### 1.5 Determinism
+
+Same `--seed` ⇒ same sample ⇒ same 52/100 and 0/80; asserted continuously by
+`tests/test_reproducibility.py` (7 tests). Determinism is a *tested contract*,
+not a hope: the injector's RNG and the engine's RNG are both seed-routed.
+
+---
+
+## 2. Real-data benchmark (Kepler / NEA truth)
+
+### 2.1 Sample design
+
+`benchmarks_real/run_real.py` runs the same blind pipeline on real Kepler
+long-cadence light curves (quarters Q4–Q9, ~540-day baseline, `quality == 0`
+only):
+
+- **True (12)**: hosts of NEA-confirmed planets with `1.0 ≤ P ≤ 13.5 d`,
+  spread uniformly across planet radius.
+- **False (12)**: Kepler DR25 quiet stars (`nkoi=0` AND `nconfp=0`) — a
+  *proxy* false set: they may still host undiscovered planets or undetectable
+  EBs (see honesty caveats in §2.4).
+
+Acceptance: recovered period within 5% of the NEA period ⇒ **recall@target**.
+A cert with the right host but a different known planet of that host:
+**recall@any**.
+
+### 2.2 Sample reproducibility
+
+The sample is selected deterministically from an **offline snapshot** of the
+NASA Exoplanet Archive committed in `benchmarks_real/data/`:
+
+| File | Content |
+|---|---|
+| `real_ps_star.json` | 1,446 confirmed-planet host stars (period + stellar params) |
+| `real_quiet.json` | 14,543 quiet stars |
+| `real_known_signals.json` | 12 truth KIC keys (runner cache) |
+
+To refresh the snapshot (e.g. after NEA changes) before re-measuring:
+
+```bash
+python scripts/fetch_nea_snapshot.py --out benchmarks_real/data
+```
+
+### 2.3 Command
+
+```bash
+python benchmarks_real/run_real.py --n-true 12 --n-false 12 \
+    --out benchmarks_real/runs/REAL_FINAL
+```
+
+First run downloads light curves from MAST (~2 h cold start, network-bound);
+afterwards they are cached in `benchmarks_real/cache/` (git-ignored). Runs
+land in `benchmarks_real/runs/` (git-ignored).
+
+### 2.4 Measured values (balanced profile, override OFF, 2026-08-16)
+
+| Metric | Value |
+|---|---:|
+| Recall@target period (within 5%) | **41.7% (5/12)** |
+| Recall@any known planet of host | 50.0% (6/12) |
+| Quiet-star certification (proxy FPR) | **33.3% (4/12)** |
+| Total false-positive rate incl. wrong-ephemeris certs | 46.7% (7/15) |
+| Precision (target-level) | 41.7% |
+
+Matched targets were period-accurate to sub-0.01% (e.g. KIC4736569,
+KIC9285568, KIC9649706). The 5 truth matches: KIC8478994, KIC8073705,
+KIC9285568, KIC9649706, KIC4736569; wrong-ephemeris certs include Kepler-37 d
+at 39.79 d — a real periodic signal outside the search band (documented in
+the report).
+
+Full per-target tables: `benchmarks_real/evidence/REAL_FINAL/`.
+
+### 2.5 Honest interpretation (read before quoting these numbers)
+
+1. **The real numbers are a measurement, not a tune.** They describe the
+   pipeline as shipped on 2026-08-16; any threshold edit invalidates them
+   until re-measured.
+2. **The quiet-star certification rate is a proxy FPR.** Quiet stars are not
+   ground-truth empty: undiscovered planets and sub-Kepler-detection-limit EBs
+   are possible. 4/12 is an upper-ish bound, not a true FPR.
+3. **Wrong-ephemeris certs are real signals at the wrong frequency**
+   (e.g. Kepler-37 d's 39.79 d harmonic). They are enforced OFF via the
+   ephemeris identity gate, but if the true period is outside the search band
+   the candidate can still certify — a search-band limit, not a gate bug.
+4. **Small N.** 12+12 stars ⇒ wide confidence intervals; the controlled
+   benchmark (100+80) is the statistical backbone, this one is the
+   real-world sanity check.
+5. **Period sub-harmonics remain the leading error class.** The `ladder`
+   rejection helps; it does not eliminate alias ambiguity (see THRESHOLDS
+   REPORT §6, `fp5c` evidence).
+
+---
+
+## 3. The override-explosion probes (why `coherent_override_enabled: false`)
+
+The `PROBE_FPR68*` series (`benchmarks_controlled/evidence/`) answers: *what
+happens to the contamination FPR if FP-2's FAP firewall may be overridden by
+repeated-observation coherent evidence?* The probe: tiny 6-true/8-false
+suites, override ON:
+
+| Run | Contamination certified | Contamination FPR |
+|---|---:|:---:|
+| PROBE_FPR68 | 0/8 | 0.0% |
+| PROBE_FPR68b | **5/8** | **62.5%** |
+| PROBE_FPR68c | **1/8** | **12.5%** |
+| PROBE_FPR68d | 0/8 | 0.0% |
+| PROBE_FPR68e | **3/8** | **37.5%** |
+
+Validation cards in these runs show hard FP-2 fails (FAP ≈ 1.0) being
+overridden by coherent evidence on pure noise. Conclusion shipped in the
+config: override OFF in all measured profiles; `sensitive` (override ON) is
+flagged EXPERIMENTAL — it must be re-measured before any use.
+
+## 4. Evidence runs kept in-repo
+
+| Path | Contents |
+|---|---|
+| `benchmarks_controlled/evidence/OVERHARM_FIX2/` | The 52/100, 0/80 run — per-target JSONs + report |
+| `benchmarks_controlled/evidence/PROBE_FPR68{,b,c,d,e}/` | Override probes, per-target JSONs + reports |
+| `benchmarks_real/evidence/REAL_FINAL/` | Real-data run — per-target JSONs + report |
+
+Everything else that the pipeline produces (`runs/`, caches, `axiom_output`,
+`Discovery_*.json`) is git-ignored by design: runs are regenerable, evidence
+is versioned.
+
+## 5. Re-measuring after a threshold change
+
+```bash
+# 1. edit config/production.yaml (thresholds:) or zspace_engine/thresholds.py
+# 2. controlled run (offline, minutes):
+python benchmarks_controlled/run_controlled.py --true 100 --false 80 \
+    --out benchmarks_controlled/runs/MY_RUN --seed 20260814
+# 3. real run (network, ~2 h cold / cached):
+python benchmarks_real/run_real.py --n-true 12 --n-false 12 \
+    --out benchmarks_real/runs/MY_REAL
+# 4. regenerate the reference report:
+python -m zspace_engine.thresholds_report
+# 5. if the new numbers change recall/FPR, update README + docs/BENCHMARKS.md
+#    with the new measured values and the run name; commit evidence.json
+#    together with the config change.
+```
