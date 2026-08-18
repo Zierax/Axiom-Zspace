@@ -1,0 +1,47 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:06:53Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_test",
+    "file": "purce_test",
+    "line": 731,
+    "symbol": "purce_test.depths_chi2_reduced",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_test.depths_chi2_reduced_7e1fb243",
+    "algorithm": "reduce_mean",
+    "math_intent": "Function 'depths_chi2_reduced' composed of: reduce_mean",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "ratio",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.mean as reduce_mean kernel",
+      "original": "numpy.mean"
+    }
+  ],
+  "dependencies": []
+}
