@@ -1,0 +1,52 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:06:53Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_test",
+    "file": "purce_test",
+    "line": 716,
+    "symbol": "purce_test.depths_resid_sq",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_test.depths_resid_sq_3d829989",
+    "algorithm": "element_power",
+    "math_intent": "Function 'depths_resid_sq' composed of: element_power",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "resid",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      },
+      {
+        "name": "_const_0",
+        "dtype": "FLOAT64",
+        "shape": "scalar"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.power as element_power kernel",
+      "original": "numpy.power"
+    }
+  ],
+  "dependencies": []
+}

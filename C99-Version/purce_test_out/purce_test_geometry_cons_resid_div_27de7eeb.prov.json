@@ -1,0 +1,52 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:06:53Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_test",
+    "file": "purce_test",
+    "line": 284,
+    "symbol": "purce_test.geometry_cons_resid_div",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_test.geometry_cons_resid_div_27de7eeb",
+    "algorithm": "element_div",
+    "math_intent": "Function 'geometry_cons_resid_div' composed of: element_div",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "diff_abs",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      },
+      {
+        "name": "k_sq_max",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.divide as element_div kernel",
+      "original": "numpy.divide"
+    }
+  ],
+  "dependencies": []
+}

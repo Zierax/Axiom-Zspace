@@ -1,0 +1,47 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:06:53Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_test",
+    "file": "purce_test",
+    "line": 696,
+    "symbol": "purce_test.depths_std_sqrt",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_test.depths_std_sqrt_149dc9d5",
+    "algorithm": "element_sqrt",
+    "math_intent": "Function 'depths_std_sqrt' composed of: element_sqrt",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "sample_var",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.sqrt as element_sqrt kernel",
+      "original": "numpy.sqrt"
+    }
+  ],
+  "dependencies": []
+}

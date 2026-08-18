@@ -1,0 +1,52 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:06:53Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_test",
+    "file": "purce_test",
+    "line": 711,
+    "symbol": "purce_test.depths_resid",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_test.depths_resid_1cc49286",
+    "algorithm": "element_sub",
+    "math_intent": "Function 'depths_resid' composed of: element_sub",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "depths",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      },
+      {
+        "name": "mu",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.subtract as element_sub kernel",
+      "original": "numpy.subtract"
+    }
+  ],
+  "dependencies": []
+}
