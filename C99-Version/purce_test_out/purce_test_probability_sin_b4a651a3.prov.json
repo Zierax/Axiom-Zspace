@@ -1,0 +1,47 @@
+{
+  "purce_version": "0.1.0",
+  "generated_at": "2026-08-17T23:06:53Z",
+  "target_profile": "generic-c99",
+  "source": {
+    "module": "purce_test",
+    "file": "purce_test",
+    "line": 482,
+    "symbol": "purce_test.probability_sin",
+    "commit": "unknown"
+  },
+  "ir_node": {
+    "node_id": "purce_test.probability_sin_b4a651a3",
+    "algorithm": "element_sin",
+    "math_intent": "Function 'probability_sin' composed of: element_sin",
+    "effects": [
+      "PURE"
+    ],
+    "inputs": [
+      {
+        "name": "sin_arg",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "dtype": "FLOAT64",
+        "shape": "array"
+      }
+    ]
+  },
+  "memory": {
+    "stack_usage_bytes": 256,
+    "heap_usage_bytes": null,
+    "reentrant": true
+  },
+  "reductions": [
+    {
+      "rule": "numpy_op_extraction",
+      "description": "Extracted numpy.sin as element_sin kernel",
+      "original": "numpy.sin"
+    }
+  ],
+  "dependencies": []
+}
