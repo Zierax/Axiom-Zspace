@@ -48,6 +48,11 @@ Every tunable number lives in **one place** —
   (`THRESHOLDS_REPORT.md`).
 - **Determinism as a contract**: same seed ⇒ same results, asserted by
   `tests/test_reproducibility.py`.
+- **Dual sovereign engine**: the verdict engine also ships as a
+  **dependency-free C99 binary** whose math kernels are machine-generated
+  from a strict numpy subset by [**Purce**](https://github.com/Zierax/Purce),
+  differentially verified against the Python reference (148/148 kernels,
+  90/90 cards) — selectable with `--engine {python,c99}`.
 - **Offline-first**: the engine and the test suite run without network; the
   real benchmark rehydrates from pinned snapshot JSONs + a one-time MAST
   download.
@@ -82,15 +87,17 @@ in two commands: [`docs/BENCHMARKS.md`](docs/BENCHMARKS.md).
 pip install -r requirements.txt          # Python ≥ 3.10
 
 python run_pipeline.py --synthetic       # offline self-test (no internet)
+python run_pipeline.py --synthetic --engine c99   # same, C99 sovereign engine
 python -m pytest tests/ -q               # 101 tests, ~5 min, offline-green
 
 python run_pipeline.py --tic 260128333   # single TIC, end-to-end
 python run_pipeline.py --sector 42       # whole sector (heavy; see PRODUCTION.md)
 ```
 
-CLI: `--tic ID` · `--synthetic` · `--sector N` / `--sectors A-B` ·
-`--max-targets N` · `--output DIR` · `--mcmc` · `--tpf-centroids` ·
-`--multi-sector` (full reference: [`docs/QUICKSTART.md`](docs/QUICKSTART.md)).
+CLI: `--tic ID` · `--synthetic` · `--engine {python,c99}` · `--sector N` /
+`--sectors A-B` · `--max-targets N` · `--output DIR` · `--mcmc` ·
+`--tpf-centroids` · `--multi-sector` (full reference:
+[`docs/QUICKSTART.md`](docs/QUICKSTART.md)).
 
 ## Documentation
 
@@ -104,16 +111,19 @@ CLI: `--tic ID` · `--synthetic` · `--sector N` / `--sectors A-B` ·
 | [`docs/PRODUCTION.md`](docs/PRODUCTION.md) | batch operation, config, measured-vs-unmeasured scope |
 | [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) | the one rule + claim discipline + review checklist |
 | [`docs/GLOSSARY.md`](docs/GLOSSARY.md) | every acronym and metric |
+| [`docs/C99_ENGINE.md`](docs/C99_ENGINE.md) | the C99 sovereign engine (Purce, verification, build) |
 | `THRESHOLDS_REPORT.md` (root) | every threshold value, its evidence, pros/cons — auto-generated |
 | `CHANGELOG.txt` | release history (v2.x entries are labeled LEGACY — history, not evidence) |
 
 ## Repository layout
 
 ```
-run_pipeline.py          CLI entry point
+run_pipeline.py          CLI entry point (+ c99_bridge.py — Python↔C99 adapter)
 zspace_engine/           the engine: ingestion, detectors, ephemeris,
                          auditors, context, validator, core, report,
                          thresholds, sector processor, output organizer
+C99-Version/             the C99 sovereign engine (Purce-generated kernels,
+                         zspace_core, zspace_card CLI, verification harnesses)
 benchmarks_controlled/   synthetic benchmark (injector + runner) + evidence
 benchmarks_real/         real Kepler benchmark (pinned NEA snapshots) + evidence
 tests/                   the 101-test suite (+ validator demo helper)

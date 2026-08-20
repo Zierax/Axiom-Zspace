@@ -87,6 +87,7 @@ def validate_candidate(
     stellar: dict,
     run_dir: Path,
     return_unvalidated: bool = False,
+    engine: str = "python",
 ):
     """Run auditors + sovereign validator for one BLS candidate.
 
@@ -221,10 +222,52 @@ def validate_candidate(
             result["sovereign_verdict"] = card.get("sovereign_verdict")
         except Exception:
             pass
+
+    if engine == "c99":
+        from c99_bridge import run_c99_sovereign
+        cand_dict = {
+            "period_days": cand.period_best,
+            "transit_depth": cand.transit_depth,
+            "transit_duration_hrs": cand.transit_duration * 24,
+            "t0_days": cand.t0,
+            "stellar_mass_solar": stellar.get("st_mass", 0.6) or 0.6,
+            "stellar_radius_solar": stellar.get("st_rad", 0.6) or 0.6,
+            "stellar_teff_k": stellar.get("st_teff", 3900.0) or 3900.0,
+            "stellar_logg": stellar.get("st_logg", 4.66) or 4.66,
+            "planet_radius_earth": bls_rp,
+            "bls_snr": cand.snr,
+            "bls_fap": cand.fap_power,
+            "even_odd_delta_sigma": eo_sigma,
+            "shape_ratio": shape_r,
+            "secondary_snr": sec.secondary_snr,
+            "secondary_depth_ratio": sec.secondary_ratio,
+            "alias_secondary_ratio": _alias_secondary,
+            "coherent_evidence": coherent_evidence,
+            "centroid_sigma": 0.0,
+            "limb_dark_u1": 0.45,
+            "limb_dark_u2": 0.15,
+            "s_periodicity": s_p,
+            "s_depth": float(dc.s_depth),
+            "s_limb": float(limb.s_limb),
+            "s_stellar": 0.5,
+        }
+        try:
+            c99_card = run_c99_sovereign(cand_dict, time_arr, flux_arr)
+            sv = c99_card.get("sovereign_verdict")
+            result["sovereign_verdict"] = sv
+            result["sovereign_verdict_c99"] = sv
+            result["validation_status"] = (
+                "OFFLINE_NEW_DISCOVERY"
+                if sv in ("SOVEREIGN_PASS", "CONDITIONAL_PASS") else "FALSE_POSITIVE"
+            )
+            result["c99_error"] = None
+        except Exception as e:
+            result["sovereign_verdict_c99"] = None
+            result["c99_error"] = str(e)
     return cand, result
 
 
-def evaluate_target(target, run_dir: Path) -> Dict:
+def evaluate_target(target, run_dir: Path, engine: str = "python") -> Dict:
     """Run the full pipeline on a SyntheticTarget. Blind: no period prior."""
     tic_id = target.tic_id
     res = {
@@ -233,6 +276,7 @@ def evaluate_target(target, run_dir: Path) -> Dict:
         "period_found": None, "period_error_pct": None, "snr": None,
         "cvs": None, "sovereign_verdict": None, "validation_status": None,
         "ladder_rank": None, "n_candidates_tested": 0,
+        "sovereign_verdict_c99": None, "c99_error": None,
         "error": None, "processing_time_sec": 0.0,
         "white_ppm": target.meta.get("white_ppm"),
         "target_snr": target.meta.get("target_snr"),
@@ -291,7 +335,7 @@ def evaluate_target(target, run_dir: Path) -> Dict:
         resolver = EphemerisResolver()
         for cand in ladder:
             n_tested += 1
-            _, cand_res = validate_candidate(tic_id, cand, time_arr, flux_arr, target.stellar, run_dir)
+            _, cand_res = validate_candidate(tic_id, cand, time_arr, flux_arr, target.stellar, run_dir, engine=engine)
             if first_status is None:
                 first_status = cand_res["validation_status"]
             if cand_res["validation_status"] in CERTIFIED and certified is None:
@@ -330,6 +374,7 @@ def evaluate_target(target, run_dir: Path) -> Dict:
                     if resolved_cand is not None:
                         _, rcand_res = validate_candidate(
                             tic_id, resolved_cand, time_arr, flux_arr, target.stellar, run_dir,
+                            engine=engine,
                         )
                         # Adopt ONLY when the fundamental re-validates; otherwise
                         # keep the original verdict (zero regression).
@@ -345,6 +390,8 @@ def evaluate_target(target, run_dir: Path) -> Dict:
                         "snr": resolved_cand.snr,
                         "cvs": rcand_res["cvs"],
                         "cvs_verdict": rcand_res["cvs_verdict"],
+                        "sovereign_verdict_c99": rcand_res.get("sovereign_verdict_c99"),
+                        "c99_error": rcand_res.get("c99_error"),
                         "validation_status": rcand_res["validation_status"],
                         "sovereign_verdict": rcand_res.get("sovereign_verdict"),
                         "ladder_rank": n_tested,
@@ -359,6 +406,8 @@ def evaluate_target(target, run_dir: Path) -> Dict:
                         "snr": cand.snr,
                         "cvs": cand_res["cvs"],
                         "cvs_verdict": cand_res["cvs_verdict"],
+                        "sovereign_verdict_c99": cand_res.get("sovereign_verdict_c99"),
+                        "c99_error": cand_res.get("c99_error"),
                         "validation_status": cand_res["validation_status"],
                         "sovereign_verdict": cand_res.get("sovereign_verdict"),
                         "ladder_rank": n_tested,
@@ -372,9 +421,12 @@ def evaluate_target(target, run_dir: Path) -> Dict:
                 break
 
         res["n_candidates_tested"] = n_tested
-        if certified is None:
+        if engine == "c99":
             # Nothing certified: report the first (highest-power) candidate's
             # sovereign outcome for honest FALSE_POSITIVE accounting.
+            res["sovereign_verdict_c99"] = cand_res.get("sovereign_verdict_c99")
+            res["c99_error"] = cand_res.get("c99_error")
+        if certified is None:
             if target.label_period:
                 res["period_error_pct"] = abs(bls.period_best - target.label_period) / target.label_period * 100.0
             res["validation_status"] = first_status or "UNCERTAIN"
@@ -598,6 +650,8 @@ def main() -> None:
     parser.add_argument("--false", type=int, default=80)
     parser.add_argument("--out", default=None, help="run dir (optional)")
     parser.add_argument("--seed", type=int, default=20260814)
+    parser.add_argument("--engine", choices=["python", "c99"], default="python",
+                        help="sovereign engine: python reference or c99 binary (default: python)")
     args = parser.parse_args()
 
     run_dir = Path(args.out) if args.out else (
@@ -615,10 +669,10 @@ def main() -> None:
     true_results, false_results = [], []
     for i, t in enumerate(true_targets, 1):
         logger.info(f"[true {i}/{len(true_targets)}] {t.tic_id} P={t.label_period:.3f} snr={t.meta.get('target_snr'):.1f}")
-        true_results.append(evaluate_target(t, run_dir))
+        true_results.append(evaluate_target(t, run_dir, engine=args.engine))
     for i, t in enumerate(false_targets, 1):
         logger.info(f"[false {i}/{len(false_targets)}] {t.tic_id} kind={t.subkind}")
-        false_results.append(evaluate_target(t, run_dir))
+        false_results.append(evaluate_target(t, run_dir, engine=args.engine))
 
     (run_dir / "results_true.json").write_text(
         json.dumps(true_results, indent=2), encoding="utf-8")

@@ -35,6 +35,29 @@ as first-class citizens.
   experiment history moved to archive/ (git-ignored hard rule); generated run
   outputs and caches git-ignored.
 
+v1.1 — C99 sovereign engine (2026-08-17)
+===============================================================================
+
+Dual-engine release: the sovereign validator now ships as a dependency-free
+C99 binary in addition to the Python reference.
+
+- C99-Version/ — self-contained C99 engine (no external libraries): math
+  kernels machine-generated from a strict numpy subset by
+  github.com/Zierax/Purce (148 kernels), sovereign logic (§1-§6, FP gate
+  engine, CVS) reimplemented in zspace_core.c, CLI zspace_card.c emitting the
+  discovery card JSON from key=value candidate + CSV light curve.
+- Differential verification: 148/148 kernels match Python to 1e-9 on
+  randomized inputs; 90/90 full-card parity tests (numeric fields to 2e-3
+  plus per-test FP verdicts) — C99-Version/tests/.
+- Integration: run_pipeline.py --engine {python,c99} (card gains
+  c99_sovereign_card section); benchmarks_controlled/run_controlled.py
+  --engine c99; c99_bridge.py Python-to-binary adapter (Windows via WSL).
+- Measured agreement on the controlled sample: C99 vs Python produce
+  identical BIG400 metrics (recall 41.2%, FPR 4.25%, F1 0.548) and identical
+  per-target validation_status — see docs/BENCHMARKS.md §1.7.
+- Purce generation notes (known-limits workarounds) documented in
+  purce_src/zspace_kernels.py header and docs/C99_ENGINE.md.
+
 LEGACY ENTRIES (v2.x, historical)
 ===============================================================================
 
