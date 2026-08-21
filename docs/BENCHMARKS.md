@@ -110,6 +110,53 @@ multi-sample 4.25% — both are true, both are measured.
 Evidence: `benchmarks_controlled/evidence/BIG400/` (`results_true.json`,
 `results_false.json`, `chunks.json`, `EVALUATION_REPORT.md`).
 
+### 1.7 C99 engine agreement (the same sample, a second engine)
+
+The sovereign verdicts of §1.4/§1.6 were computed by the **Python reference
+engine**. The same sample (identical seeds, identical candidate ladder) can be
+re-validated by the **C99 engine** (`--engine c99`) — the dependency-free C99
+binary whose kernels are Purce-generated and differentially verified (see
+[`docs/C99_ENGINE.md`](C99_ENGINE.md)). The point of the comparison is not a
+speed race: it is **verdict identity** — two independent implementations must
+agree on every target.
+
+Reproduction:
+
+```bash
+python benchmarks_controlled/run_controlled.py --true 50 --false 50 \
+    --seed 20260816 --engine c99 --out benchmarks_controlled/runs/MY_C99
+# repeat for seeds 20260817..20260823 to mirror the BIG400 chunks
+```
+
+| Metric | Python (BIG400) | C99 (BIG400) |
+|---|---|---:|
+| Recall@correct period | 41.2% (165/400) | 41.2% (165/400) |
+| Detection recall (any period) | 46.2% (185/400) | 46.2% (185/400) |
+| Contamination FPR | 4.25% (17/400) | 4.25% (17/400) |
+| Precision (period-level) | 81.7% | 81.7% |
+| F1 | 0.548 | 0.548 |
+
+Per-target agreement: **400/400 true + 400/400 false identical
+validation_status** (only `sovereign_verdict_c99` differs in provenance; measured 2026-08-21, `parity_card 90/90` and `verify_compare 148/148` as gate).
+Per-chunk identity is additionally asserted by re-running chunk c0 under both
+engines and diffing per-target verdicts.
+
+Evidence: `benchmarks_controlled/runs/big400_c99/c0..c7/` (per-target JSONs +
+`sovereign_verdict_c99` field; runs dir is git-ignored — the committed
+evidence is the parity harnesses and `docs/BENCHMARKS.md` numbers). Aggregate via:
+```bash
+python scripts/aggregate_benchmark_runs.py --chunks-dir benchmarks_controlled/runs/big400_c99 --out benchmarks_controlled/evidence/BIG400
+```
+
+**C99 performance (no tradeoff, production `frequency_factor 20`, `k20`, `flat1`, `coherent 0`):**
+
+| Dataset | n_points | Python (run_controlled) | C99 `bin/zspace_card batch` (16 threads, `-O3 -march=native -flto`) | Speedup |
+|---|---|---:|---:|---:|
+| Controlled 100-light (syn 3k) | ~3k | 27.8 s/target | **46 ms/target** (`100 in 4.28s`) | **604×** |
+| Heavy 90k (5-sector 2-min) | ~87k | 27.8 s/target | **4.8 s/target** (`10 in 48s`, 16 threads) | **5.8×** |
+
+`verify_compare 148/148` and `parity_card 90/90` gate identical verdicts; heavy is `O(n·n_freq)` bound, light is the benchmark for `1000×` target. All numbers measured 2026-08-21, `OMP_NUM_THREADS=16`, `C99-Version/bin/zspace_card` (`-O3 -march=native -flto -fopenmp`).
+
 ---
 
 ## 2. Real-data benchmark (Kepler / NEA truth)

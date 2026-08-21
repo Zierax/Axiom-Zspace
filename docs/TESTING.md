@@ -68,7 +68,29 @@ numbers.
    suite should stay ~5 min so it is cheap to run before every push.
 5. **Update `docs/TESTING.md`** (this map) when you add a file.
 
-## 5. Before pushing code
+## 5. The C99 engine verification (separate from pytest)
+
+The C99 sovereign engine (`C99-Version/`, see
+[`docs/C99_ENGINE.md`](C99_ENGINE.md)) is guarded by its own differential
+harnesses — they are not part of the 101-test pytest suite because they
+require a C toolchain (WSL on Windows):
+
+```bash
+cd C99-Version
+make bin/verify_kernels && python tests/verify_compare.py   # 148/148 kernels vs Python
+python tests/parity_card.py                                  # 90/90 full-card parity
+```
+
+- `tests/gen_verify_kernels.py` + `verify_compare.py` run **every generated
+  kernel** on randomized inputs against its Python original (rel. tol 1e-9).
+- `tests/parity_card.py` runs the actual `zspace_card` binary against the
+  Python `ProofEngine` on synthetic candidates and light curves, comparing
+  every numeric field and per-test FP verdict (rel. tol 2e-3, abs 0.02).
+
+A rebuild of the kernels (Purce re-run) must re-pass both before any
+`--engine c99` result is quoted.
+
+## 6. Before pushing code
 
 ```bash
 python -m pytest tests/ -q          # 101 passed, 0 failed

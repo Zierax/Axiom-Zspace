@@ -19,6 +19,13 @@ regression suite. Every contribution is judged against those three.
 5. update README/docs numbers to the **new measured values** and cite the
    run name; commit evidence JSONs together with the config change.
 
+> **The C99 engine mirrors the same catalog.** `C99-Version/src/zspace_core.c`
+> embeds the thresholds as a compile-time catalog; if a threshold changes, the
+> C99 engine must be rebuilt and its verification re-run
+> (`make bin/verify_kernels && python tests/verify_compare.py`, then
+> `python tests/parity_card.py`) before `--engine c99` numbers are quoted —
+> see [`docs/C99_ENGINE.md`](C99_ENGINE.md).
+
 A PR that ships a threshold change without the two measurements will be
 rejected. That is not bureaucracy — it is what makes the repo's numbers
 meaningful.
@@ -64,6 +71,8 @@ python -m zspace_engine.thresholds_report     # if thresholds touched
    - benchmark numbers → `docs/BENCHMARKS.md` + root README table + CHANGELOG;
    - new test file → `docs/TESTING.md` (suite map);
    - new CLI surface → `docs/QUICKSTART.md` + `run_pipeline.py --help`;
+   - C99 engine / kernels / verification → `docs/C99_ENGINE.md` +
+     `docs/TESTING.md` §5;
    - new module → `docs/ARCHITECTURE.md` module register.
 
 ## Code style

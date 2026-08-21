@@ -16,6 +16,7 @@ CHANGELOG.txt for release history (v2.x entries are legacy, not evidence).
 | [`PRODUCTION.md`](PRODUCTION.md) | operators | batch/sector operation, config knobs, measured-vs-unmeasured scope |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | contributors | the one rule (measure before you tune), claim discipline, review checklist |
 | [`GLOSSARY.md`](GLOSSARY.md) | everyone | every acronym and metric defined |
+| [`C99_ENGINE.md`](C99_ENGINE.md) | developers | the C99 sovereign engine: Purce-generated kernels, differential verification, parity, build & CLI contract |
 | [`VALIDATION_IMPROVEMENTS.md`](VALIDATION_IMPROVEMENTS.md) | historians | pre-v1 validation-fix writeup (legacy history) |
 
 ## Generated / root documents
@@ -42,10 +43,13 @@ snapshot cache:          benchmarks_real/data/*.json    (regenerate via scripts/
 ```bash
 pip install -r requirements.txt
 python run_pipeline.py --synthetic                    # offline self-test
+python run_pipeline.py --synthetic --engine c99       # same, C99 sovereign engine
 python run_pipeline.py --tic 260128333                # single target
 python -m pytest tests/ -q                            # 101 tests
 python benchmarks_controlled/run_controlled.py --true 100 --false 80 \
     --out benchmarks_controlled/runs/MY --seed 20260814
+python benchmarks_controlled/run_controlled.py --true 50 --false 50 \
+    --seed 20260816 --engine c99 --out benchmarks_controlled/runs/MY_C99
 python benchmarks_real/run_real.py --n-true 12 --n-false 12 \
     --out benchmarks_real/runs/MY
 python -m zspace_engine.thresholds_report             # regenerate reference report

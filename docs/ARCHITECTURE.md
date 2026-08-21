@@ -34,47 +34,44 @@ light curve (TESS/Kepler FITS, or synthetic, or raw arrays)
         │
         ▼
 [1] ingestion.py        fetch / cache / quality mask / sigma-clip /
-                        normalize / Savitzky-Golay flatten
+                        normalize / Savitzky-Golay flatten (single flat1, window 3.0d or 0.75*P, x∈[-1,1] QR)
         │
         ▼
-[2] detectors.py        BLS periodogram (frequency + duration grid), FAP
-                        under a self-calibrating exponential-tail noise model,
-                        period-prior peak selection, harmonic rejection
+[2] detectors.py        BLS periodogram (freq grid n_freqs=max(int((fmax-fmin)/df),2000) df=1/(baseline*20), duration grid 0.25-8h)
+                        FAP exponential-tail (cut 98%, MAD), top_candidates ladder (k20, min_rel 0.05, filters τ/P>0.15, alias log<0.10)
         │
         ▼
-[3] ephemeris.py        fold-based period/t0/duration refinement; alias
-                        comparator; EphemerisResolver with harmonics ladder
+[3] auditors+validator  FOR EACH ladder candidate (power order, prepend global if |log|<0.05 miss):
+                        extract depths → even/odd → depth_cons → secondary (flat1) → fold/bin 200 → ingress/egress →
+                        eph_resolve → sovereign_validate (11 gates, coherent 0, FAP 0.05) → first SOVEREIGN/CONDITIONAL certifies
+                        else first_status
+        │
+        ▼                 (if certified: alias 2P/3P check, eph physical_period)
+[4] ephemeris.py        fold-based refinement already inside loop; global eph identity gate
         │
         ▼
-[4] auditors.py         physical-invariant audits on the folded transit:
-                        even/odd depth (Welch t-test), per-transit depth
-                        consistency, U/V limb shape ratio, ingress/egress
-                        duration ratio, secondary-eclipse search, MCMC
-                        posterior fit (optional), stellar-density consistency
+[5] context.py          stellar metadata (TIC), centroid-shift (optional), multi-sector (optional)
         │
         ▼
-[5] context.py          stellar metadata (TIC), centroid-shift test (TPF,
-                        optional), secondary-eclipse context, multi-sector
-                        consistency (optional)
+[6] core.py / report.py CVS (w=0.97,0.83,0.61,0.31) 0.80/0.55/0.35 tiers; enrichment
         │
         ▼
-[6] validator.py        ProofEngine: let the FP gates vote; circuit breaker;
-                        external-catalog cross-check (SIMBAD/Gaia); ephemeris
-                        identity gate against archive truth; conflict
-                        detection & logging; final verdict
-        │
-        ▼
-[7] core.py / report.py CVS (Composite Vitality Score) classification into 4
-                        tiers; enrichment (orbital mechanics, equilibrium
-                        temperature, planet radius); discovery card JSON
-        │
-        ▼
-    output_organizer.py route by verdict → axiom_output/… (kept / rejected)
+    output_organizer.py route by verdict → axiom_output/… 
 ```
 
-Stages 1–7 all run inside a single `AxiomValidator.process_*` call
-(`run_pipeline.py` orchestrates it), or batch-wise via `SectorProcessor`
-(which loops the same engine per target).
+Production paths diverge:
+- `benchmarks_controlled/run_controlled.py:evaluate_target` = ingest→BLS.run→top_candidates→ladder validate loop→(if certified) eph resolve→re-validate.
+- `C99-Version/src/zspace_batch.c:run_target` = normalize→flat1(3.0d)→BLS.search(freq20)→top_candidates(k20)→ladder validate (flat1, coherent 0)→OFFLINE_NEW_DISCOVERY else FALSE/NO_DETECTION.
+- `C99-Version/src/zspace_card.c:pipeline` = flat1→BLS→flat2(P)→audits(flat2) (double flatten).
+- `zspace_engine/sector_processor.py:process_sector` = ingest→BLS.run **single peak, NO ladder** →CVS→hard_filters→validator (crippled, no alias ladder).
+
+> **Dual engine.** The sovereign gate engine (§6) also exists as a
+> dependency-free **C99 binary** (`C99-Version/`) whose math kernels are
+> machine-generated from a strict numpy subset by
+> [Purce](https://github.com/Zierax/Purce). Both engines are differentially
+> verified (148/148 kernels, 90/90 cards) and agree on the controlled
+> benchmark; `--engine {python,c99}` selects which one computes the
+> discovery-card verdict. See [`docs/C99_ENGINE.md`](C99_ENGINE.md).
 
 ---
 
@@ -88,6 +85,7 @@ Stages 1–7 all run inside a single `AxiomValidator.process_*` call
 | `auditors.py` | `TransitAuditor` (`even_odd_test`, `depth_consistency_score`, `limb_shape_score`, `secondary_eclipse_test`, `ingress_egress_test`), `MCMCValidator`, result dataclasses | Physics audits; per-audit result dataclasses feeding the proof chain |
 | `context.py` | `TICMetadataFetcher`, `StellarContextAuditor`, `StellarDensityFilter`, `CentroidShiftTest`, `SecondaryEclipseSearch`, `MultiSectorConsistencyCheck` | Stellar parameters, density-ratio gate, centroid (TPF), context flags |
 | `validator.py` | `ProofEngine`, `AxiomValidator`, `ArchiveQueryEngine`, `PeriodComparator`, `check_external_catalogs` | The gate engine (see §6); verdict assembly; archive cross-checks; per-target `ValidationResult` |
+| `C99-Version/` | `zspace_core.c`, `zspace_card.c`, `purce_src/zspace_kernels.py` (+ `c99_bridge.py` at root) | The C99 sovereign engine: Purce-generated kernels, identical gate logic, JSON card CLI — see [`docs/C99_ENGINE.md`](C99_ENGINE.md) |
 | `core.py` | `CompositeVitalityScore`, `VitalityMatrix`, `apply_hard_filters`, `OrbitalMechanics`, planet radius / equilibrium-temperature helpers | CVS scoring + 4-tier classification (§7); hard physical filters (SNR, depth, radius sanity) |
 | `chi_squared.py` | `chi2`-based goodness-of-fit analysis | Used by auditors for model-vs-data quality assessment |
 | `report.py` | `TruthimaticsReport` | Discovery card JSON with full proof chain |
