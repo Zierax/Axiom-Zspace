@@ -52,7 +52,7 @@ Every tunable number lives in **one place** —
   **dependency-free C99 binary** whose math kernels are machine-generated
   from a strict numpy subset by [**Purce**](https://github.com/Zierax/Purce),
   differentially verified against the Python reference (148/148 kernels,
-  90/90 cards) — selectable with `--engine {python,c99}`.
+  90/90 cards) — selectable with `--engine {python,c99}` (`python` default for reference, `c99` **recommended for batch**: `46 ms/TIC` light `604×` / `4.8 s/TIC` heavy `5.8×`, `docs/BENCHMARKS.md:151`).
 - **Offline-first**: the engine and the test suite run without network; the
   real benchmark rehydrates from pinned snapshot JSONs + a one-time MAST
   download.

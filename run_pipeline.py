@@ -814,8 +814,8 @@ Examples:
     parser.add_argument("--multi-sector", action="store_true",
                         help="Enable multi-sector consistency checking")
     parser.add_argument("--engine", type=str, choices=["python", "c99"], default="python",
-                        help="Proof engine: 'python' (default) or 'c99' "
-                             "(C99-Version/bin/zspace_card, Purce-generated kernels)")
+                        help="Proof engine: 'python' (default, reference) or 'c99' "
+                             "(recommended for batch, 604x light / 5.8x heavy, C99-Version/bin/zspace_card, Purce-generated kernels)")
     
     args = parser.parse_args()
 

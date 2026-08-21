@@ -157,6 +157,8 @@ python scripts/aggregate_benchmark_runs.py --chunks-dir benchmarks_controlled/ru
 
 `verify_compare 148/148` and `parity_card 90/90` gate identical verdicts; heavy is `O(n·n_freq)` bound, light is the benchmark for `1000×` target. All numbers measured 2026-08-21, `OMP_NUM_THREADS=16`, `C99-Version/bin/zspace_card` (`-O3 -march=native -flto -fopenmp`).
 
+> **Statistical & performance recommendation (no tradeoff):** `BIG400` is the versioned anchor (Python+C parity). `BIG2000` (1000+1000, 20 chunks, seeds 20260816–35) is the **statistical extension** — same 41.2% recall, but Wilson interval `±2.4%→±1.1%` and per-class FPR `eb 20%→±5.6%` (vs `±12%` at n40) — not new science, just tighter evidence. For **batch production, `--engine c99` is recommended (not default, to keep Python as reference) — average `46 ms/TIC` light / `4.8 s/TIC` heavy** (`docs/C99_ENGINE.md:118`). Python remains default for single-target reference and verification.
+
 ---
 
 ## 2. Real-data benchmark (Kepler / NEA truth)

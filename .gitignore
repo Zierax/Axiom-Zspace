@@ -41,3 +41,5 @@ Thumbs.db
 C99-Version/bin/
 C99-Version/build/
 C99-Version/build_asan/
+# paper draft (local only, not versioned)
+paper/

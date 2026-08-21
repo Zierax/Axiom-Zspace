@@ -18,9 +18,9 @@ any use. It links **no external libraries** — only `libc` (`<stdio.h>`,
 ## Quick reference
 
 ```bash
-# run the pipeline with the C99 sovereign engine
+# run the pipeline with the C99 sovereign engine (recommended for batch, 604x light)
 python run_pipeline.py --synthetic --engine c99
-python run_pipeline.py --tic 260128333 --engine c99
+python run_pipeline.py --tic 260128333 --engine c99   # python remains default for reference
 
 # controlled benchmark with the C99 engine (same sample as python)
 python benchmarks_controlled/run_controlled.py --true 50 --false 50 \
