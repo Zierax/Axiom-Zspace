@@ -1,9 +1,10 @@
-# Axiom-ZSpace Documentation
+# Axiom-ZSpace Documentation — v1.1.0 Professional
 
-The documentation hub. Read in this order for a full picture: **Quickstart →
-Architecture → Benchmarks → Testing → Production → Contributing**. Use the
-Glossary for terminology, THRESHOLDS_REPORT.md for every tunable number, and
-CHANGELOG.txt for release history (v2.x entries are legacy, not evidence).
+> **Dual-Engine · Differentially Verified · Measured · Deterministic**
+
+The documentation hub for Axiom-ZSpace v1.1.0 (C99 Sovereign Validator, 148/148 kernels, 90/90 cards, BIG400 400/400 parity, 604× light). Read in this order for a full picture: **Quickstart → Architecture → Benchmarks → Testing → Production → Contributing → C99 Engine**. Use the Glossary for terminology, THRESHOLDS_REPORT.md for every tunable number, and CHANGELOG.txt for release history (v2.x entries are legacy, not evidence).
+
+**Cite:** `Axiom-ZSpace Collaboration (2026). Axiom-ZSpace v1.1.0 — Dual-Engine C99 Sovereign Validator. https://github.com/Zierax/Axiom-Zspace/releases/tag/v1.1.0` · **License:** MIT · **Paper:** `paper/main.tex` (JOSS-ready)
 
 ## Reading map
 

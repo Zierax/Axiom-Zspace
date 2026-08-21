@@ -1,8 +1,10 @@
-# Benchmarks
+# Benchmarks — v1.1.0 Professional
+
+> **Measured · Versioned · Deterministic · Honest**
 
 Two complementary benches guard the pipeline. **Nothing in the threshold
 catalog may change without re-measuring on BOTH** (that is the one rule; see
-`docs/CONTRIBUTING.md`).
+`docs/CONTRIBUTING.md`). All numbers below are **measured 2026-08-21, 148/148, 90/90, 400/400 parity**, C99 `604×` light `5.8×` heavy.
 
 - The **controlled benchmark** proves the *engine*: exact ground truth,
   deterministic, offline, minutes.

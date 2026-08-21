@@ -1,7 +1,9 @@
-# The C99 Engine
+# The C99 Engine — v1.1.0 Professional
+
+> **Portable · Dependency-Free · Purce-Derived · Differentially Verified · Production-Ready**
 
 Axiom-ZSpace ships **two sovereign engines** with identical physics and
-identical verdicts:
+identical verdicts (400/400 BIG400 parity, 148/148 kernels, 90/90 cards):
 
 | Engine | Code | Purpose |
 |---|---|---|

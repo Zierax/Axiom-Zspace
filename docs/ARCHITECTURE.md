@@ -1,9 +1,11 @@
-# Architecture
+# Architecture — v1.1.0 Professional
+
+> **Deterministic · Single-Source Thresholds · Dual-Engine Parity · Measured**
 
 This is the reference document for how Axiom-ZSpace works: the stages a light
 curve goes through, the modules and classes that implement each stage, the
 decision rules, and the data contracts between them. It is written to be
-readable top-to-bottom; `docs/GLOSSARY.md` defines every acronym used here.
+readable top-to-bottom; `docs/GLOSSARY.md` defines every acronym used here. All diagrams reflect the **production C99 path** (`flat1` `freq20` `ladder k20` `coherent 0`).
 
 ---
 

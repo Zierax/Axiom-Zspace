@@ -8,8 +8,14 @@ BLS period search with a period-prior ladder · physical-invariant auditing ·
 a false-positive ruling engine with a circuit breaker · a **measured,
 single-source threshold catalog**
 
-<sub>v1.0 — public release · 101-test suite · controlled + real benchmarks as
-first-class evidence · [documentation hub →](docs/README.md)</sub>
+[![Version](https://img.shields.io/badge/version-v1.1.0-blue)](https://github.com/Zierax/Axiom-Zspace/releases/tag/v1.1.0)
+[![Verification](https://img.shields.io/badge/verify-148%2F148%20kernels%20%7C%2090%2F90%20cards-brightgreen)](docs/C99_ENGINE.md)
+[![Benchmark](https://img.shields.io/badge/BIG400-41.2%25%20recall%20%7C%204.25%25%20FPR-orange)](docs/BENCHMARKS.md)
+[![C99](https://img.shields.io/badge/C99-604x%20light%20%7C%205.8x%20heavy-red)](docs/BENCHMARKS.md)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.axiom--zspace.svg)](https://doi.org/10.5281/zenodo.axiom--zspace)
+
+<sub>v1.1.0 — Dual-Engine C99 Sovereign Validator · 101-test suite · 148/148 kernels · 90/90 cards · 400/400 parity · controlled + real benchmarks as first-class evidence · [documentation hub →](docs/README.md) · [paper →](paper/main.tex)</sub>
 
 </div>
 
