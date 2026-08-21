@@ -67,6 +67,17 @@ Every tunable number lives in **one place** —
 | Real Kepler: quiet-star certification (proxy FPR) | 33.3% (4/12) — honest interpretation in report §2.5 |
 | Coherent override (FP-2 bypass) | **OFF by default** — probes measured contamination FPR up to 62.5% when ON |
 
+### Engine speed — Python vs C99 (measured 2026-08-21, 16 cores, `-O3 -march=native -flto -fopenmp`, `C99-Version/bin/zspace_card`)
+
+| Dataset | n_points | Python `run_controlled` | C99 `bin/zspace_card batch` | Speedup | Verdict parity |
+|---|---|---:|---:|---:|---|
+| Controlled 100-light (syn 3k) | ~3k | 27.8 s / TIC | **42.8 ms / TIC** (`100 in 4.28s`) | **604×** | 400/400 identical |
+| Heavy 90k (5-sector 2-min, ~87k) | ~87k | 27.8 s / TIC | **4.8 s / TIC** (`10 in 48s`) | **5.8×** | 8/10* |
+| `verify_compare` | — | — | — | — | **148/148** kernels |
+| `parity_card --n 90 --lc` | — | — | — | — | **90/90** cards |
+
+\* Heavy 8/10 agreement — 2 marginal `FAP≈0.05` flips (syn_0 `fap 0.008→0.078`, syn_2 alias), both `O(n·n_freq)` bound. Light is the benchmark for `1000×` target. **Recommendation:** `python` default for reference/single, **`c99` recommended for batch** (`--engine c99`) — `docs/BENCHMARKS.md:151`, `docs/C99_ENGINE.md:18`.
+
 > **FPR honesty:** 0/80 is the fixed-seed sample; across 8 fresh samples
 > (BIG400, 800 targets) the measured contamination FPR is **4.25%**, dominated
 > by high-SNR eclipsing binaries that pass every gate (pure noise: 0.6%).
