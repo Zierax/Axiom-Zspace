@@ -24,33 +24,72 @@ from pathlib import Path
 from typing import Optional, Sequence
 
 _ROOT = Path(__file__).resolve().parent
+_BIN_MAKE = _ROOT / "C99-Version" / "bin" / "zspace_card"
+_BIN_MAKE_EXE = _ROOT / "C99-Version" / "bin" / "zspace_card.exe"
 _BIN = _ROOT / "C99-Version" / "build" / "zspace_card"
 _BIN_C99 = _ROOT / "C99-Version" / "build" / "zspace_card.exe"
-_LINUX_BIN = "/mnt/d/Axioms/Axiom-Zspace-CODE/C99-Version/build/zspace_card"
-_WSL_CD = "cd /mnt/d/Axioms/Axiom-Zspace-CODE/C99-Version/build &&"
+# Derived WSL paths (computed dynamically from _ROOT, not hardcoded)
+def _path_to_wsl_posix(p: Path | str) -> str:
+    """Convert a Windows or POSIX path to WSL POSIX; handles any drive letter A-Z."""
+    s = str(p).replace("\\", "/")
+    # Already WSL absolute
+    if s.startswith("/mnt/"):
+        return s
+    if s.startswith("/"):
+        return s
+    # Windows drive letter e.g. D:/...
+    if len(s) >= 2 and s[1] == ":" and s[0].isalpha():
+        drive = s[0].lower()
+        rest = s[2:]
+        if not rest.startswith("/"):
+            rest = "/" + rest
+        return f"/mnt/{drive}{rest}"
+    return s
+
+_LINUX_BIN = _path_to_wsl_posix(_BIN)
+_WSL_BUILD_DIR = _path_to_wsl_posix(_BIN.parent)
+_WSL_CD = f"cd {_WSL_BUILD_DIR} &&"
 
 def _is_wsl() -> bool:
-    return os.name == "posix" and Path("/proc/version").exists() and "microsoft" in Path("/proc/version").read_text(errors="ignore").lower()
+    try:
+        return os.name == "posix" and Path("/proc/version").exists() and "microsoft" in Path("/proc/version").read_text(errors="ignore").lower()
+    except OSError:
+        return False
 
 def _wsl_prefix() -> str:
     return "" if _is_wsl() else f"{_WSL_CD} "
 
 
 def _find_binary() -> Optional[str]:
-    if _BIN.exists():
-        return str(_BIN)
-    if _BIN_C99.exists():
-        return str(_BIN_C99)
+    for cand in (_BIN_MAKE, _BIN_MAKE_EXE, _BIN, _BIN_C99):
+        if cand.exists():
+            return str(cand)
     return None
 
 
 def _to_wsl(p: str) -> str:
-    p = p.replace("\\", "/")
-    for drive, mount in (("D:", "/mnt/d"), ("C:", "/mnt/c"), ("E:", "/mnt/e")):
-        if p.startswith(drive):
-            return mount + p[len(drive):]
-    return p
+    # Prefer wslpath when available (handles any mount, spaces, etc.)
+    try:
+        # Use wsl wslpath -a if not inside WSL and wsl is available
+        if not _is_wsl() and os.name != "posix":
+            proc = subprocess.run(["wsl", "wslpath", "-a", str(p)], capture_output=True, text=True, timeout=5)
+            if proc.returncode == 0 and proc.stdout.strip():
+                return proc.stdout.strip()
+    except (OSError, subprocess.SubprocessError, subprocess.TimeoutExpired):
+        pass
+    return _path_to_wsl_posix(p)
 
+
+def _wsl_bin_posix() -> str:
+    """Return the POSIX path of the C99 binary as seen inside WSL."""
+    # Prefer bin/ over build/ when both exist inside WSL
+    for cand in (_BIN_MAKE, _BIN):
+        wsl = _path_to_wsl_posix(cand)
+        # Quick existence check inside WSL is not possible here; return first candidate
+        # that exists on Windows side
+        if cand.exists():
+            return wsl
+    return _LINUX_BIN
 
 def _run(cand_path: str, lc_path: Optional[str]) -> dict:
     quote = shlex.quote
@@ -62,13 +101,13 @@ def _run(cand_path: str, lc_path: Optional[str]) -> dict:
             args.append(lc_path)
         proc = subprocess.run(args, capture_output=True, text=True, timeout=600)
     elif _is_wsl():
-        args = ["/mnt/d/Axioms/Axiom-Zspace-CODE/C99-Version/build/zspace_card",
-                cand_path]
+        wsl_bin = _wsl_bin_posix()
+        args = [wsl_bin, cand_path]
         if lc_path:
             args.append(lc_path)
         proc = subprocess.run(args, capture_output=True, text=True, timeout=600)
     else:
-        cmd = f"{_WSL_CD} {_LINUX_BIN} {quote(_to_wsl(cand_path))}"
+        cmd = f"{_WSL_CD} {_wsl_bin_posix()} {quote(_to_wsl(cand_path))}"
         if lc_path:
             cmd += f" {quote(_to_wsl(lc_path))}"
         proc = subprocess.run(["wsl", "bash", "-lc", cmd],
@@ -118,12 +157,12 @@ def run_c99_bls(
             capture_output=True, text=True, timeout=600)
     elif _is_wsl():
         proc = subprocess.run(
-            ["/mnt/d/Axioms/Axiom-Zspace-CODE/C99-Version/build/zspace_card",
+            [_wsl_bin_posix(),
              "bls", lc_path, str(period_min), str(period_max)],
             capture_output=True, text=True, timeout=600)
     else:
         quote = shlex.quote
-        cmd = (f"{_WSL_CD} {_LINUX_BIN} bls "
+        cmd = (f"{_WSL_CD} {_wsl_bin_posix()} bls "
                f"{quote(_to_wsl(lc_path))} {period_min} {period_max}")
         proc = subprocess.run(["wsl", "bash", "-lc", cmd],
                               capture_output=True, text=True, timeout=600)
@@ -174,11 +213,11 @@ def run_c99_audit(
                               capture_output=True, text=True, timeout=600)
     elif _is_wsl():
         proc = subprocess.run(
-            ["/mnt/d/Axioms/Axiom-Zspace-CODE/C99-Version/build/zspace_card"] + args,
+            [_wsl_bin_posix()] + args,
             capture_output=True, text=True, timeout=600)
     else:
         quote = shlex.quote
-        cmd = (f"{_WSL_CD} {_LINUX_BIN} "
+        cmd = (f"{_WSL_CD} {_wsl_bin_posix()} "
                + " ".join(quote(_to_wsl(a)) if a == lc_path else a
                           for a in args))
         proc = subprocess.run(["wsl", "bash", "-lc", cmd],
@@ -221,11 +260,11 @@ def run_c99_flatten(
                               capture_output=True, text=True, timeout=600)
     elif _is_wsl():
         proc = subprocess.run(
-            ["/mnt/d/Axioms/Axiom-Zspace-CODE/C99-Version/build/zspace_card"] + args,
+            [_wsl_bin_posix()] + args,
             capture_output=True, text=True, timeout=600)
     else:
         quote = shlex.quote
-        cmd = (f"{_WSL_CD} {_LINUX_BIN} flatten "
+        cmd = (f"{_WSL_CD} {_wsl_bin_posix()} flatten "
                + " ".join(quote(_to_wsl(a)) if a in (in_path, out_path) else a
                           for a in args[1:]))
         proc = subprocess.run(["wsl", "bash", "-lc", cmd],

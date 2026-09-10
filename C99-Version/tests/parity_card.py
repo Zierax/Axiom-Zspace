@@ -107,17 +107,58 @@ def run_c(lines, lc_path=None):
             if k == "lc":
                 continue
             fh.write(f"{k}={v}\n")
-    # Run binary directly (we're in WSL/Linux); convert paths to /mnt/ form.
-    def to_wsl(p):
+    def _path_to_wsl(p):
         if not p: return ""
-        p = p.replace("\\", "/")
-        if p.startswith("D:/"): return p.replace("D:/", "/mnt/d/")
-        if p.startswith("C:/"): return p.replace("C:/", "/mnt/c/")
-        return p
+        s = p.replace("\\", "/")
+        if s.startswith("/mnt/"): return s
+        if s.startswith("/"): return s
+        if len(s) >= 2 and s[1] == ":" and s[0].isalpha():
+            return f"/mnt/{s[0].lower()}{s[2:]}"
+        return s
+    def _is_wsl_host():
+        try:
+            return os.name == "posix" and os.path.exists("/proc/version") and "microsoft" in open("/proc/version", errors="ignore").read().lower()
+        except OSError:
+            return False
     bin_path = os.path.join(ROOT, "bin", "zspace_card")
-    p = subprocess.run(
-        [bin_path, cand, to_wsl(lc_path) if lc_path else ""],
-        capture_output=True, text=True, timeout=120)
+    bin_exe = bin_path + ".exe"
+    # Windows exe takes precedence
+    if os.path.exists(bin_exe):
+        bin_use = bin_exe
+        p = subprocess.run(
+            [bin_use, cand, lc_path if lc_path else ""],
+            capture_output=True, text=True, timeout=120)
+    elif _is_wsl_host():
+        p = subprocess.run(
+            [bin_path, cand, lc_path if lc_path else ""],
+            capture_output=True, text=True, timeout=120)
+    elif os.name == "nt":
+        # Windows host with ELF binary — run via WSL
+        wsl_bin = _path_to_wsl(bin_path)
+        wsl_cand = _path_to_wsl(cand)
+        wsl_lc = _path_to_wsl(lc_path) if lc_path else ""
+        cmd = f"{shlex.quote(wsl_bin)} {shlex.quote(wsl_cand)}"
+        if wsl_lc:
+            cmd += f" {shlex.quote(wsl_lc)}"
+        p = subprocess.run(
+            ["wsl", "bash", "-lc", cmd],
+            capture_output=True, text=True, timeout=120)
+    else:
+        # Generic POSIX fallback — try direct, else via wsl
+        try:
+            p = subprocess.run(
+                [bin_path, cand, _path_to_wsl(lc_path) if lc_path else ""],
+                capture_output=True, text=True, timeout=120)
+        except OSError:
+            wsl_bin = _path_to_wsl(bin_path)
+            wsl_cand = _path_to_wsl(cand)
+            wsl_lc = _path_to_wsl(lc_path) if lc_path else ""
+            cmd = f"{shlex.quote(wsl_bin)} {shlex.quote(wsl_cand)}"
+            if wsl_lc:
+                cmd += f" {shlex.quote(wsl_lc)}"
+            p = subprocess.run(
+                ["wsl", "bash", "-lc", cmd],
+                capture_output=True, text=True, timeout=120)
     if p.returncode != 0:
         raise RuntimeError(p.stderr[:2000])
     out = json.loads(p.stdout)

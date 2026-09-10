@@ -1,9 +1,9 @@
-# The C99 Engine — v1.1.0 Professional
+# The C99 Engine — v1.1.1 Professional
 
 > **Portable · Dependency-Free · Purce-Derived · Differentially Verified · Production-Ready**
 
 Axiom-ZSpace ships **two sovereign engines** with identical physics and
-identical verdicts (400/400 BIG400 parity, 148/148 kernels, 90/90 cards):
+identical verdicts (BIG400 Python 400/400; 148/148 validator kernels, 90/90 cards; full BIG400 C99 per-target JSONs not yet versioned — see §How the engines stay identical):
 
 | Engine | Code | Purpose |
 |---|---|---|
@@ -14,13 +14,14 @@ The C99 engine is **not a wrapper** around the Python code: its math kernels
 are machine-generated from a strict numpy subset by
 [**Purce**](https://github.com/Zierax/Purce), compiled with a stock C99
 compiler, and **differentially verified** against the Python reference before
-any use. It links **no external libraries** — only `libc` (`<stdio.h>`,
-`<stdlib.h>`, `<string.h>`, `<math.h>`).
+any use. It links **no external libraries** — only `libc`+`libm`
+(`<stdio.h>`, `<stdlib.h>`, `<string.h>`, `<math.h>`) plus OpenMP runtime
+(`libgomp`/`libomp`) when built with `-fopenmp`.
 
 ## Quick reference
 
 ```bash
-# run the pipeline with the C99 sovereign engine (recommended for batch, 604x light)
+# run the pipeline with the C99 sovereign engine (recommended for batch, 650x light, 40.6x per-core)
 python run_pipeline.py --synthetic --engine c99
 python run_pipeline.py --tic 260128333 --engine c99   # python remains default for reference
 
@@ -29,11 +30,10 @@ python benchmarks_controlled/run_controlled.py --true 50 --false 50 \
     --seed 20260816 --engine c99 --out benchmarks_controlled/runs/MY_C99
 
 # build + verify the C99 engine (requires WSL with gcc on Windows)
-cd C99-Version
-make bin/zspace_card                       # build the CLI binary
-make bin/verify_kernels                    # build the differential verifier
-python tests/verify_compare.py             # 148/148 kernels vs Python
-python tests/parity_card.py                # 90/90 full-card parity
+cd C99-Version && make bin/zspace_card                       # build the CLI binary
+cd C99-Version && make bin/verify_kernels                    # build the differential verifier
+cd C99-Version && python tests/verify_compare.py             # 148/148 validator kernels vs Python
+cd C99-Version && python tests/parity_card.py --n 90 --lc --seed 20260817  # 90/90 full-card parity (45 LC+45 no-LC)
 ```
 
 ## Repository layout (`C99-Version/`)

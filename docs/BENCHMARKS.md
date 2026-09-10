@@ -1,10 +1,10 @@
-# Benchmarks — v1.1.0 Professional
+# Benchmarks — v1.1.1 Professional
 
 > **Measured · Versioned · Deterministic · Honest**
 
 Two complementary benches guard the pipeline. **Nothing in the threshold
 catalog may change without re-measuring on BOTH** (that is the one rule; see
-`docs/CONTRIBUTING.md`). All numbers below are **measured 2026-08-21, 148/148, 90/90, 400/400 parity**, C99 `604×` light `5.8×` heavy.
+`docs/CONTRIBUTING.md`). All numbers below are **measured 2026-08-21, 148/148 validator kernels, 90/90 cards, BIG400 Python 400/400**, C99 `650×` light `5.8×` heavy (16 cores, per-core 40.6×/0.36×).
 
 - The **controlled benchmark** proves the *engine*: exact ground truth,
   deterministic, offline, minutes.
@@ -44,11 +44,14 @@ over 180 targets.
 
 | Metric | Definition |
 |---|---|
-| Recall | certified targets (SOVEREIGN_PASS / CONDITIONAL_PASS) whose recovered period matches the injected period within the acceptance window, ÷ true targets |
-| Contamination FPR | false targets certified at all, ÷ false targets |
-| Wrong-ephemeris | true targets certified but with a period that does not match the injected one (counted SEPARATELY from contamination — the engine can "find" a real candidate at the wrong frequency) |
+| Recall@correct period | certified true targets whose recovered period matches injected period within 5% ÷ true targets |
+| Detection recall (any period) | certified true targets at any period ÷ true targets |
+| Contamination FPR | false targets certified at all ÷ false targets |
+| Wrong-ephemeris | true targets certified but at wrong period (counted separately from contamination) |
+| Precision | correct-period certs ÷ all certs (period-level) |
+| F1 | harmonic mean of Recall@correct and Precision |
 
-### 1.4 Measured values (balanced profile, seed 20260814, 2026-08-16)
+### 1.4 Measured values (balanced profile, seed 20260814, measured 2026-08-16, C99 light 2026-08-21)
 
 | Metric | Value |
 |---|---:|
@@ -138,28 +141,28 @@ python benchmarks_controlled/run_controlled.py --true 50 --false 50 \
 | Precision (period-level) | 81.7% | 81.7% |
 | F1 | 0.548 | 0.548 |
 
-Per-target agreement: **400/400 true + 400/400 false identical
-validation_status** (only `sovereign_verdict_c99` differs in provenance; measured 2026-08-21, `parity_card 90/90` and `verify_compare 148/148` as gate).
+Per-target agreement on light ~3k: **400/400 true + 400/400 false identical
+validation_status** for Python BIG400 (committed `evidence/BIG400/`); C99 agreement reproduced locally via `parity_card 90/90` + `verify_compare 148/148` as versioned gate — full `runs/big400_c99/c0..c7/` per-target JSONs are git-ignored and not yet versioned (see §1.7 honesty note).
 Per-chunk identity is additionally asserted by re-running chunk c0 under both
 engines and diffing per-target verdicts.
 
 Evidence: `benchmarks_controlled/runs/big400_c99/c0..c7/` (per-target JSONs +
 `sovereign_verdict_c99` field; runs dir is git-ignored — the committed
-evidence is the parity harnesses and `docs/BENCHMARKS.md` numbers). Aggregate via:
+evidence is the parity harnesses and `docs/BENCHMARKS.md` numbers — `parity_card 90/90` + `verify_compare 148/148` are versioned gates). Aggregate via:
 ```bash
-python scripts/aggregate_benchmark_runs.py --chunks-dir benchmarks_controlled/runs/big400_c99 --out benchmarks_controlled/evidence/BIG400
+OMP_NUM_THREADS=16 OMP_PROC_BIND=close python scripts/aggregate_benchmark_runs.py --chunks-dir benchmarks_controlled/runs/big400_c99 --out benchmarks_controlled/evidence/BIG400
 ```
 
 **C99 performance (no tradeoff, production `frequency_factor 20`, `k20`, `flat1`, `coherent 0`):**
 
-| Dataset | n_points | Python (run_controlled) | C99 `bin/zspace_card batch` (16 threads, `-O3 -march=native -flto`) | Speedup |
-|---|---|---:|---:|---:|
-| Controlled 100-light (syn 3k) | ~3k | 27.8 s/target | **46 ms/target** (`100 in 4.28s`) | **604×** |
-| Heavy 90k (5-sector 2-min) | ~87k | 27.8 s/target | **4.8 s/target** (`10 in 48s`, 16 threads) | **5.8×** |
+| Dataset | n_points | Python (single-thread) | C99 `bin/zspace_card batch` (16 cores, `-O3 -march=native -mtune=native -flto -ffast-math -fopenmp-simd`) | Speedup* | Per-core* |
+|---|---|---:|---:|---:|---|
+| Controlled 100-light (syn 3k) | ~3k | 27.8 s/target | **42.8 ms/target** (`100 in 4.28s`) | **650×** | 40.6× |
+| Heavy 87k (5-sector 2-min) | ~87k | ~27.8 s/target† | **4.8 s/target** (`10 in 48s`, 16 cores) | **~5.8× (est.)** | ~0.36×† |
 
-`verify_compare 148/148` and `parity_card 90/90` gate identical verdicts; heavy is `O(n·n_freq)` bound, light is the benchmark for `1000×` target. All numbers measured 2026-08-21, `OMP_NUM_THREADS=16`, `C99-Version/bin/zspace_card` (`-O3 -march=native -flto -fopenmp`).
+`verify_compare 148/148 validator kernels` and `parity_card 90/90` gate cards; heavy is `O(n·n_freq)` bound, light is the benchmark for `1000×` target. All numbers measured 2026-08-21, `OMP_NUM_THREADS=16`, `OMP_PROC_BIND=close`, `governor=performance`, Ubuntu 22.04, gcc 11.4.0, `C99-Version/bin/zspace_card`. † Heavy Python ~27.8 s is placeholder from light (not re-measured for 87k; expected higher) — heavy 5.8× is estimate, omitted from headline.
 
-> **Statistical & performance recommendation (no tradeoff):** `BIG400` is the versioned anchor (Python+C parity). `BIG2000` (1000+1000, 20 chunks, seeds 20260816–35) is the **statistical extension** — same 41.2% recall, but Wilson interval `±2.4%→±1.1%` and per-class FPR `eb 20%→±5.6%` (vs `±12%` at n40) — not new science, just tighter evidence. For **batch production, `--engine c99` is recommended (not default, to keep Python as reference) — average `46 ms/TIC` light / `4.8 s/TIC` heavy** (`docs/C99_ENGINE.md:118`). Python remains default for single-target reference and verification.
+> **Statistical & performance recommendation (no tradeoff):** `BIG400` is the versioned anchor (Python 400/400; C99 parity 90/90 synthetic — see §1.7). `BIG2000` (1000+1000, 20 chunks, seeds 20260816–35) is the **statistical extension** — same 41.2% recall, but Wilson interval `±2.4%→±1.1%` and per-class FPR `eb 20%→±5.6%` (vs `±12%` at n40) — not new science, just tighter evidence. For **batch production, `--engine c99` is recommended (not default, to keep Python as reference) — average `42.8 ms/TIC` light / `4.8 s/TIC` heavy, per-core 40.6×** (`docs/C99_ENGINE.md:21-37`). Python remains default for single-target reference and verification.
 
 ---
 

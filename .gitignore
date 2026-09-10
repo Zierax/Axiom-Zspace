@@ -41,5 +41,13 @@ Thumbs.db
 C99-Version/bin/
 C99-Version/build/
 C99-Version/build_asan/
-# paper draft (local only, not versioned)
-paper/
+C99-Version/tests/tmp/
+# paper draft — JOSS paper is versioned with tag, MNRAS also versioned for companion
+paper/*
+!paper/JOSS/
+!paper/JOSS/*
+!paper/references.bib
+!paper/MNRAS/
+!paper/MNRAS/*
+!paper/MNRAS/**
+!paper/MNRAS/figures/

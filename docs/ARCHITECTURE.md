@@ -1,4 +1,4 @@
-# Architecture — v1.1.0 Professional
+# Architecture — v1.1.1 Professional
 
 > **Deterministic · Single-Source Thresholds · Dual-Engine Parity · Measured**
 
@@ -71,8 +71,7 @@ Production paths diverge:
 > dependency-free **C99 binary** (`C99-Version/`) whose math kernels are
 > machine-generated from a strict numpy subset by
 > [Purce](https://github.com/Zierax/Purce). Both engines are differentially
-> verified (148/148 kernels, 90/90 cards) and agree on the controlled
-> benchmark; `--engine {python,c99}` selects which one computes the
+> verified (148/148 validator kernels, 90/90 synthetic cards; BIG400 Python 400/400, full BIG400 C99 per-target JSONs not yet versioned — see `C99_ENGINE.md`) and agree on 90/90 cards; `--engine {python,c99}` selects which one computes the
 > discovery-card verdict. See [`docs/C99_ENGINE.md`](C99_ENGINE.md).
 
 ---

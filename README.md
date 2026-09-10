@@ -8,14 +8,14 @@ BLS period search with a period-prior ladder · physical-invariant auditing ·
 a false-positive ruling engine with a circuit breaker · a **measured,
 single-source threshold catalog**
 
-[![Version](https://img.shields.io/badge/version-v1.1.0-blue)](https://github.com/Zierax/Axiom-Zspace/releases/tag/v1.1.0)
+[![Version](https://img.shields.io/badge/version-v1.1.1-blue)](https://github.com/Zierax/Axiom-Zspace/releases/tag/v1.1.1)
 [![Verification](https://img.shields.io/badge/verify-148%2F148%20kernels%20%7C%2090%2F90%20cards-brightgreen)](docs/C99_ENGINE.md)
 [![Benchmark](https://img.shields.io/badge/BIG400-41.2%25%20recall%20%7C%204.25%25%20FPR-orange)](docs/BENCHMARKS.md)
-[![C99](https://img.shields.io/badge/C99-604x%20light%20%7C%205.8x%20heavy-red)](docs/BENCHMARKS.md)
+[![C99](https://img.shields.io/badge/C99-650x%20light%20%7C%205.8x%20heavy-red)](docs/BENCHMARKS.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22255875.svg)](https://doi.org/10.5281/zenodo.22255875)
 
-<sub>v1.1.0 — Dual-Engine C99 Sovereign Validator · 101-test suite · 148/148 kernels · 90/90 cards · 400/400 parity · controlled + real benchmarks as first-class evidence · [documentation hub →](docs/README.md) · [paper →](paper/main.tex)</sub>
+<sub>v1.1.1 — Dual-Engine C99 Sovereign Validator · 101-test suite · 148/148 kernels · 90/90 cards · 400/400 parity · controlled + real benchmarks as first-class evidence · [documentation hub →](docs/README.md) · [paper →](paper/JOSS/paper.md)</sub>
 
 </div>
 
@@ -57,8 +57,8 @@ Every tunable number lives in **one place** —
 - **Dual sovereign engine**: the verdict engine also ships as a
   **dependency-free C99 binary** whose math kernels are machine-generated
   from a strict numpy subset by [**Purce**](https://github.com/Zierax/Purce),
-  differentially verified against the Python reference (148/148 kernels,
-  90/90 cards) — selectable with `--engine {python,c99}` (`python` default for reference, `c99` **recommended for batch**: `46 ms/TIC` light `604×` / `4.8 s/TIC` heavy `5.8×`, `docs/BENCHMARKS.md:151`).
+  differentially verified against the Python reference (148/148 validator kernels,
+  90/90 cards) — selectable with `--engine {python,c99}` (`python` default for reference, `c99` **recommended for batch**: `42.8 ms/TIC` light `650×` / `4.8 s/TIC` heavy `5.8×`, 16 cores, `-O3 -march=native -flto -fopenmp`, per-core 40.6×/0.36×, `docs/BENCHMARKS.md:151`).
 - **Offline-first**: the engine and the test suite run without network; the
   real benchmark rehydrates from pinned snapshot JSONs + a one-time MAST
   download.
@@ -73,16 +73,18 @@ Every tunable number lives in **one place** —
 | Real Kepler: quiet-star certification (proxy FPR) | 33.3% (4/12) — honest interpretation in report §2.5 |
 | Coherent override (FP-2 bypass) | **OFF by default** — probes measured contamination FPR up to 62.5% when ON |
 
-### Engine speed — Python vs C99 (measured 2026-08-21, 16 cores, `-O3 -march=native -flto -fopenmp`, `C99-Version/bin/zspace_card`)
+### Engine speed — Python vs C99 (measured 2026-08-21, 16 cores, Ubuntu 22.04, gcc 11.4, `-O3 -march=native -mtune=native -flto -ffast-math -fopenmp-simd`, `C99-Version/bin/zspace_card`, `OMP_NUM_THREADS=16`)
 
-| Dataset | n_points | Python `run_controlled` | C99 `bin/zspace_card batch` | Speedup | Verdict parity |
-|---|---|---:|---:|---:|---|
-| Controlled 100-light (syn 3k) | ~3k | 27.8 s / TIC | **42.8 ms / TIC** (`100 in 4.28s`) | **604×** | 400/400 identical |
-| Heavy 90k (5-sector 2-min, ~87k) | ~87k | 27.8 s / TIC | **4.8 s / TIC** (`10 in 48s`) | **5.8×** | 8/10* |
-| `verify_compare` | — | — | — | — | **148/148** kernels |
-| `parity_card --n 90 --lc` | — | — | — | — | **90/90** cards |
+| Dataset | n_points | Python `run_controlled` (single-thread) | C99 `bin/zspace_card batch` (16 cores) | Speedup | Per-core | Verdict parity |
+|---|---|---:|---:|---:|---|---|
+| Controlled 100-light (syn 3k) | ~3k | 27.8 s / TIC | **42.8 ms / TIC** (`100 in 4.28s`) | **650×** | 40.6× | 90/90 cards; BIG400 Python 400/400 |
+| Heavy 90k (5-sector 2-min, ~87k) | ~87k | ~27.8 s / TIC* | **4.8 s / TIC** (`10 in 48s`) | **5.8×** | 0.36× | 8/10† |
+| `verify_compare` | — | — | — | — | — | **148/148** validator kernels |
+| `parity_card --n 90 --lc --seed 20260817` | — | — | — | — | — | **90/90** cards |
 
-\* Heavy 8/10 agreement — 2 marginal `FAP≈0.05` flips (syn_0 `fap 0.008→0.078`, syn_2 alias), both `O(n·n_freq)` bound. Light is the benchmark for `1000×` target. **Recommendation:** `python` default for reference/single, **`c99` recommended for batch** (`--engine c99`) — `docs/BENCHMARKS.md:151`, `docs/C99_ENGINE.md:18`.
+\* Heavy Python ~27.8 s is placeholder from light (not re-measured for 87k; expected higher, `O(n·n_freq)`). † Heavy 8/10 — 2 marginal `FAP≈0.05` flips (`fap 0.008→0.078`, alias).
+
+\* Heavy 8/10 agreement — 2 marginal `FAP≈0.05` flips (syn_0 `fap 0.008→0.078`, syn_2 alias), both `O(n·n_freq)` bound. Light is the benchmark for `1000×` target. Heavy pre-binned 87k→3k recovers light speed. **Recommendation:** `python` default for reference/single, **`c99` recommended for batch** (`--engine c99`) — `docs/BENCHMARKS.md:151`, `docs/C99_ENGINE.md:18`. Per-core: light 40.6×, heavy 0.36×.
 
 > **FPR honesty:** 0/80 is the fixed-seed sample; across 8 fresh samples
 > (BIG400, 800 targets) the measured contamination FPR is **4.25%**, dominated
