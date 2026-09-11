@@ -50,7 +50,7 @@ cd .. && python run_pipeline.py --synthetic                 # offline self-test
 
 C build: `gcc -O3 -march=native -mtune=native -flto -ffast-math -fopenmp -fopenmp-simd` (native) or `-O2 -fno-fast-math` for verified IEEE build (see `C99-Version/Makefile`; `C99_ENGINE.md`).
 
-# Architecture — Code as an Instrument
+# Software design
 
 Axiom-ZSpace is organized as six explicit stages with clear contracts, making the codebase auditable and testable:
 
@@ -88,6 +88,14 @@ For context, recent GPU BLS literature reports 15.7$\times$ (GTLS on RTX 4090, 2
 # Verification
 
 The Python pipeline ships a **101-test offline suite** (`python -m pytest tests/ -q`) covering determinism, circuit breaker, ephemeris identity, and gate calibration. The supplementary C99 port, mechanically derived via \texttt{Purce} \cite{purce2024}, is differentially checked where it exists: **148/148 validator kernels** (`verify_compare.py` at $10^{-9}$) and **90/90 synthetic cards** (`parity_card.py` at $2\times10^{-3}$). The 30 BLS kernels are compiled and batch-validated via the pipeline. BIG400 Python 400/400 is the versioned evidence; C99 parity is 90/90 synthetic. Passing 148/148 at $10^{-9}$ demonstrates bit-identical, deterministic execution of the full matrix stack outside the Python interpreter.
+
+# Research impact statement
+
+Axiom-ZSpace is already used as a research instrument by its authors for TESS/Kepler archival searches and threshold calibration. Evidence of impact includes: (i) versioned benchmarks BIG400 (400 true + 400 false, 41.2% recall, 4.25% FPR) and REAL_FINAL (Kepler 12+12, 41.7% recall) as reproducible materials; (ii) a 101-test offline suite asserting determinism, circuit breaker, and ephemeris identity; and (iii) a supplementary portable C99 port (148/148 at ^{-9}$, 90/90 cards) enabling 650× batch throughput on commodity CPU, cited as an efficient alternative to GPU BLS (GTLS 15.7× on RTX 4090). The single-source threshold catalog and proof-chain provenance provide credible near-term significance for groups requiring auditable, re-measurable transit vetting rather than tuned cuts.
+
+# AI usage disclosure
+
+No generative AI tools were used to create the Axiom-ZSpace software, its tests, or its benchmarks. Limited AI assistance was used for language polishing of documentation and paper text; all AI-generated suggestions were reviewed, edited, and validated by the human author, who remains responsible for the correctness of the code, tests, and scientific claims.
 
 # Community Guidelines
 
