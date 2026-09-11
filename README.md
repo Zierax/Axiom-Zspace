@@ -13,7 +13,7 @@ single-source threshold catalog**
 [![Benchmark](https://img.shields.io/badge/BIG400-41.2%25%20recall%20%7C%204.25%25%20FPR-orange)](docs/BENCHMARKS.md)
 [![C99](https://img.shields.io/badge/C99-650x%20light%20%7C%205.8x%20heavy-red)](docs/BENCHMARKS.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22255875.svg)](https://doi.org/10.5281/zenodo.22255875)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/22255875.svg)](https://doi.org/10.5281/zenodo.22255875)
 
 <sub>v1.1.1 — Dual-Engine C99 Sovereign Validator · 101-test suite · 148/148 kernels · 90/90 cards · 400/400 parity · controlled + real benchmarks as first-class evidence · [documentation hub →](docs/README.md) · [paper →](paper/JOSS/paper.md)</sub>
 
