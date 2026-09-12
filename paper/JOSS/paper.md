@@ -34,9 +34,9 @@ The pipeline is blind (no ephemeris hint required), deterministic (same seed →
 
 # State of the Field
 
-* **BLS** \citep{kovacs2002} is the standard box search; **TLS** \citep{hippke2019} adds limb-darkened templates at $\sim$1$\times$ BLS cost.
-* **GPU BLS**: `cuvarbase` \cite{cuvarbase} and **GTLS** \cite{hu2026} report 10--100$\times$ on GPU; **QLP GPU** \cite{kunimoto2023} reports 40$\times$.
-* **Approximators**: **fBLS** \cite{shahaf2022} 15$\times$ at 65k points (binned); **GPFC** \cite{wang2024} reports 15$\times$ vs `astropy` cython at equal grid (CNN, USP only). None provide a fully gate-logic, threshold-catalog pipeline with versioned controlled+real benchmarks as first-class evidence.
+* **BLS** [@kovacs2002] is the standard box search; **TLS** [@hippke2019] adds limb-darkened templates at $\sim$1$\times$ BLS cost.
+* **GPU BLS**: `cuvarbase` [@cuvarbase] and **GTLS** [@hu2026] report 10--100$\times$ on GPU; **QLP GPU** [@kunimoto2023] reports 40$\times$.
+* **Approximators**: **fBLS** [@shahaf2022] 15$\times$ at 65k points (binned); **GPFC** [@wang2024] reports 15$\times$ vs `astropy` cython at equal grid (CNN, USP only). None provide a fully gate-logic, threshold-catalog pipeline with versioned controlled+real benchmarks as first-class evidence.
 
 # Installation
 
@@ -83,15 +83,15 @@ The catalog defines three profiles (`conservative`, `balanced` (default), `sensi
 
 The pipeline's primary result is the **measured threshold catalog** (BIG400: 41.2\% recall, 4.25\% FPR; REAL\_FINAL: 41.7\% recall). As a supplementary artifact, the same logic is available as a portable C99 port that achieves **42.8 ms/TIC (650$\times$ vs Python 27.8 s, 40.6$\times$ per-core) on 3k-point light curves** and 4.8 s/TIC on 87k-point 5-sector curves (16 cores, \texttt{-O3 -march=native -flto -ffast-math -fopenmp-simd}, \texttt{OMP\_NUM\_THREADS=16}). Heavy Python for 87k is a disclosed placeholder.
 
-For context, recent GPU BLS literature reports 15.7$\times$ (GTLS on RTX 4090, 24\,GB) \cite{hu2026} and 40$\times$ (QLP GPU) \cite{kunimoto2023} on specialized hardware; the C99 artifact demonstrates that a portable, bit-identical CPU derivation can exceed those throughputs on commodity hardware when the bottleneck is gate logic and FAP calibration rather than FLOPs. The code remains the instrument; throughput is a consequence, not the claim.
+For context, recent GPU BLS literature reports 15.7$\times$ (GTLS on RTX 4090, 24\,GB) [@hu2026] and 40$\times$ (QLP GPU) [@kunimoto2023] on specialized hardware; the C99 artifact demonstrates that a portable, bit-identical CPU derivation can exceed those throughputs on commodity hardware when the bottleneck is gate logic and FAP calibration rather than FLOPs. The code remains the instrument; throughput is a consequence, not the claim.
 
 # Verification
 
-The Python pipeline ships a **101-test offline suite** (`python -m pytest tests/ -q`) covering determinism, circuit breaker, ephemeris identity, and gate calibration. The supplementary C99 port, mechanically derived via \texttt{Purce} \cite{purce2024}, is differentially checked where it exists: **148/148 validator kernels** (`verify_compare.py` at $10^{-9}$) and **90/90 synthetic cards** (`parity_card.py` at $2\times10^{-3}$). The 30 BLS kernels are compiled and batch-validated via the pipeline. BIG400 Python 400/400 is the versioned evidence; C99 parity is 90/90 synthetic. Passing 148/148 at $10^{-9}$ demonstrates bit-identical, deterministic execution of the full matrix stack outside the Python interpreter.
+The Python pipeline ships a **101-test offline suite** (`python -m pytest tests/ -q`) covering determinism, circuit breaker, ephemeris identity, and gate calibration. The supplementary C99 port, mechanically derived via \texttt{Purce} [@purce2024], is differentially checked where it exists: **148/148 validator kernels** (`verify_compare.py` at $10^{-9}$) and **90/90 synthetic cards** (`parity_card.py` at $2\times10^{-3}$). The 30 BLS kernels are compiled and batch-validated via the pipeline. BIG400 Python 400/400 is the versioned evidence; C99 parity is 90/90 synthetic. Passing 148/148 at $10^{-9}$ demonstrates bit-identical, deterministic execution of the full matrix stack outside the Python interpreter.
 
 # Research impact statement
 
-Axiom-ZSpace is already used as a research instrument by its authors for TESS/Kepler archival searches and threshold calibration. Evidence of impact includes: (i) versioned benchmarks BIG400 (400 true + 400 false, 41.2% recall, 4.25% FPR) and REAL_FINAL (Kepler 12+12, 41.7% recall) as reproducible materials; (ii) a 101-test offline suite asserting determinism, circuit breaker, and ephemeris identity; and (iii) a supplementary portable C99 port (148/148 at ^{-9}$, 90/90 cards) enabling 650× batch throughput on commodity CPU, cited as an efficient alternative to GPU BLS (GTLS 15.7× on RTX 4090). The single-source threshold catalog and proof-chain provenance provide credible near-term significance for groups requiring auditable, re-measurable transit vetting rather than tuned cuts.
+Axiom-ZSpace is already used as a research instrument by its authors for TESS/Kepler archival searches and threshold calibration. Evidence of impact includes: (i) versioned benchmarks BIG400 (400 true + 400 false, 41.2% recall, 4.25% FPR) and REAL_FINAL (Kepler 12+12, 41.7% recall) as reproducible materials; (ii) a 101-test offline suite asserting determinism, circuit breaker, and ephemeris identity; and (iii) a supplementary portable C99 port (148/148 at $10^{-9}$, 90/90 cards) enabling 650× batch throughput on commodity CPU, cited as an efficient alternative to GPU BLS (GTLS 15.7× on RTX 4090). The single-source threshold catalog and proof-chain provenance provide credible near-term significance for groups requiring auditable, re-measurable transit vetting rather than tuned cuts.
 
 # AI usage disclosure
 
@@ -103,7 +103,7 @@ Contributions, bug reports, and support requests are welcome via the GitHub issu
 
 # Availability
 
-Source: `https://github.com/Zierax/Axiom-Zspace` (tag `v1.1.1`), `zspace_engine/` (ingestion, detectors, validator, thresholds), `C99-Version/` (supplementary C99 port, \texttt{Purce} \cite{purce2024} at \url{https://github.com/Zierax/Purce}), `paper/` (JOSS `paper.md` + `paper.bib` archived with tag). License: MIT (`LICENSE`), archived on Zenodo \texttt{10.5281/zenodo.22255875}. Dependencies: Python $\geq$3.10 + `libc`/`libm` + OpenMP (optional for C99) + Python stack (`requirements.txt` pinned).
+Source: `https://github.com/Zierax/Axiom-Zspace` (tag `v1.1.1`), `zspace_engine/` (ingestion, detectors, validator, thresholds), `C99-Version/` (supplementary C99 port, \texttt{Purce} [@purce2024] at \url{https://github.com/Zierax/Purce}), `paper/` (JOSS `paper.md` + `paper.bib` archived with tag). License: MIT (`LICENSE`), archived on Zenodo \texttt{10.5281/zenodo.22255875}. Dependencies: Python $\geq$3.10 + `libc`/`libm` + OpenMP (optional for C99) + Python stack (`requirements.txt` pinned).
 
 This paper describes the Axiom-ZSpace software itself — its architecture, reproducibility guarantees, and the C99 differential-verification artifact — rather than novel astrophysical results.
 
