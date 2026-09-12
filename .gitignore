@@ -42,12 +42,9 @@ C99-Version/bin/
 C99-Version/build/
 C99-Version/build_asan/
 C99-Version/tests/tmp/
-# paper draft — JOSS paper is versioned with tag, MNRAS also versioned for companion
+# paper — JOSS submission exactly as per docs: only paper.md + paper.bib
 paper/*
 !paper/JOSS/
-!paper/JOSS/*
-!paper/references.bib
-!paper/MNRAS/
-!paper/MNRAS/*
-!paper/MNRAS/**
-!paper/MNRAS/figures/
+paper/JOSS/*
+!paper/JOSS/paper.md
+!paper/JOSS/paper.bib
