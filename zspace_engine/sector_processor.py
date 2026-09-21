@@ -818,6 +818,57 @@ class SectorProcessor:
             transit_depth=bls_result.transit_depth,
         )
 
+        # Audit 4b: Secondary eclipse at phase 0.5 → FP-5/FP-5b
+        sec = auditor.secondary_eclipse_test(
+            lc_product.time, lc_product.flux_flat,
+            bls_result.period_best, bls_result.t0,
+            bls_result.transit_duration,
+        )
+
+        # Alias-secondary check (FP-5c): re-fold at 2x/3x the candidate
+        # period; a grazing EB shows an asymmetric eclipse there while a
+        # real planet folds to symmetric transits (mirrors run_controlled).
+        try:
+            from zspace_engine import thresholds as _T2
+            _alias_min_snr = float(_T2.threshold("fp5c_alias_min_snr"))
+            _coherent_on = bool(_T2.threshold("coherent_override_enabled"))
+            _coh_snr = float(_T2.threshold("coherent_min_snr"))
+            _coh_ntr = int(_T2.threshold("coherent_min_transits"))
+            _coh_dip = float(_T2.threshold("coherent_min_dip_fraction"))
+        except Exception:
+            _alias_min_snr, _coherent_on = 15.0, False
+            _coh_snr, _coh_ntr, _coh_dip = 6.5, 3, 0.6
+        _alias_secondary = 0.0
+        for _mult in (2.0, 3.0):
+            _r = auditor.secondary_eclipse_test(
+                lc_product.time, lc_product.flux_flat,
+                bls_result.period_best * _mult, bls_result.t0,
+                bls_result.transit_duration,
+            )
+            if 0.20 < _r.secondary_ratio < 0.90 and _r.secondary_snr >= _alias_min_snr:
+                _alias_secondary = max(_alias_secondary, _r.secondary_ratio)
+
+        # Coherent-evidence override inputs (FP-2 firewall stays strict
+        # unless the catalog enables the override).
+        _deps = list(dc.depths) if dc.depths is not None else []
+        dip_fraction = (
+            sum(1.0 for d in _deps if float(d) > 0.0) / len(_deps)
+            if _deps else 0.0
+        )
+        if _coherent_on:
+            coherent_evidence = int(
+                len(_deps) >= _coh_ntr
+                and dip_fraction >= _coh_dip
+                and bls_result.snr >= _coh_snr
+                and sec.secondary_ratio < 0.30
+            )
+        else:
+            coherent_evidence = 0
+
+        # NaN-guarded scalars for the validator gates.
+        eo_sigma = eo.delta_sigma if not math.isnan(eo.delta_sigma) else 0.0
+        shape_r = limb.shape_ratio if not math.isnan(limb.shape_ratio) else 1.0
+
         # Audit 5: Stellar context → S_S
         from zspace_engine.context import StellarContextAuditor
         s_auditor = StellarContextAuditor(
@@ -951,13 +1002,18 @@ class SectorProcessor:
             cvs_score=cvs_score,
             cvs_verdict=cvs_verdict,
             cvs_proof_chain=[],
-            bls_snr=bls_result.snr,
-            bls_fap=bls_result.fap,
-            even_odd_delta_sigma=0.0,  # Placeholder - would compute from auditors
-            shape_ratio=1.0,           # Placeholder - would compute from auditors
-            secondary_snr=0.0,         # Placeholder - would compute from auditors
-            centroid_sigma=0.0,        # Placeholder - would compute from auditors
-        )
+                bls_snr=bls_result.snr,
+                bls_fap=bls_result.fap,
+                even_odd_delta_sigma=eo_sigma,
+                shape_ratio=shape_r,
+                secondary_snr=sec.secondary_snr,
+                secondary_depth_ratio=sec.secondary_ratio,
+                alias_secondary_ratio=_alias_secondary,
+                coherent_evidence=coherent_evidence,
+                centroid_sigma=0.0,  # TPF centroid test is off by default; FP-10 below covers geometry
+                time=lc_product.time,
+                flux=lc_product.flux_flat,
+            )
 
         logging.info(
             f"TIC {tic_id} | Validation complete: {validation_result.status}"
