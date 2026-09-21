@@ -703,8 +703,8 @@ class SectorProcessor:
             "",
             "## Discoveries",
             "",
-            "| # | TIC | Period (d) | SNR | CVS | Verdict | Card |",
-            "|---|---|---|---|---|---|---|",
+            "| # | TIC | ZSpace ID | Period (d) | SNR | CVS | Verdict | Card |",
+            "|---|---|---|---|---|---|---|---|",
         ]
         for i, disc in enumerate(stats.get("discoveries", []), start=1):
             cvs = disc.get("cvs_score", 0.0) or 0.0
@@ -719,13 +719,14 @@ class SectorProcessor:
             snr = disc.get("snr")
             lines.append(
                 f"| {i} | {disc.get('tic_id', '?')} "
+                f"| {disc.get('zspace_id', '?')} "
                 f"| {disc.get('period_days', '?')} "
                 f"| {round(snr, 3) if snr is not None else 'n/a'} "
                 f"| {round(cvs, 4)} | {verdict} "
                 f"| `{disc.get('output_file', 'unknown')}` |"
             )
         if not stats.get("discoveries"):
-            lines.append("| — | no discoveries | — | — | — | — | — |")
+            lines.append("| — | no discoveries | — | — | — | — | — | — |")
         lines += [
             "",
             "## Errors",
