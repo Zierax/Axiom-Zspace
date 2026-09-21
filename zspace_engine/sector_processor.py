@@ -344,11 +344,37 @@ class SectorProcessor:
                 f"(out of {len(tic_list)} total)"
             )
             tic_list = tic_list[:self.max_targets]
-        
+
+        # ── Resume: skip TICs attempted by an interrupted run ─────────────
+        checkpoint_path = self.output_dir / "checkpoint.json"
+        _listed_targets = len(tic_list)
+        _resumed = 0
+        try:
+            if checkpoint_path.exists():
+                _cp = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+                _done = set(_cp.get("processed_tic_ids", []))
+                if _done:
+                    tic_list = [t for t in tic_list if t not in _done]
+                    _resumed = _listed_targets - len(tic_list)
+                    logging.info(
+                        f"Resuming Sector {self.sector}: skipping "
+                        f"{_resumed} previously attempted targets "
+                        f"({len(tic_list)} remaining)"
+                    )
+        except Exception as e:
+            logging.warning(f"Ignoring unreadable checkpoint {checkpoint_path}: {e}")
+
         # Initialize statistics tracking
+        _prov = self._provenance()
         stats = {
             "sector": self.sector,
             "timestamp_utc": None,  # Set at completion
+            "pipeline_version": _prov["pipeline_version"],
+            "git_sha": _prov["git_sha"],
+            "config_hash": _prov["config_hash"],
+            "thresholds_profile": self.config.get("profile", "balanced") if isinstance(self.config, dict) else "balanced",
+            "listed_targets": _listed_targets,
+            "resumed_targets": _resumed,
             "total_targets": len(tic_list),
             "processed": 0,
             "new_discoveries": 0,
@@ -358,6 +384,7 @@ class SectorProcessor:
             "discoveries": [],
             "errors": []
         }
+        _done_ids: List[str] = []
         
         total = len(tic_list)
         logging.info(
@@ -468,6 +495,9 @@ class SectorProcessor:
                 # Always update progress bar
                 elapsed = _time.time() - t_sector_start
                 _print_progress(idx, total, tic_id, status, stats, elapsed)
+                _done_ids.append(tic_id)
+                if idx % 25 == 0:
+                    self._write_checkpoint(checkpoint_path, _done_ids)
                 
                 # Periodic summary every 100 targets (to the log file)
                 if idx % 100 == 0:
@@ -498,6 +528,9 @@ class SectorProcessor:
         stats["elapsed_minutes"] = round(total_min, 2)
         stats["rate_per_minute"] = round(total / max(total_elapsed, 0.01) * 60, 1) if total > 0 else 0
         
+        # Final checkpoint mirrors the completed attempt list
+        self._write_checkpoint(checkpoint_path, _done_ids)
+
         # Write summary to file
         summary_path = self.output_dir / "summary.json"
         try:
@@ -518,6 +551,8 @@ class SectorProcessor:
                 "scan_date": stats["timestamp_utc"],
                 "total_targets_scanned": stats["total_targets"],
                 "elapsed_minutes": stats.get("elapsed_minutes", 0),
+                "pipeline_version": stats.get("pipeline_version", "unknown"),
+                "git_sha": (stats.get("git_sha", "unknown") or "unknown")[:12],
                 "planets": []
             }
             
@@ -581,6 +616,56 @@ class SectorProcessor:
         
         return stats
     
+    @staticmethod
+    def _provenance() -> Dict[str, Any]:
+        """
+        Build the reproducibility envelope for a sector scan.
+
+        Returns pipeline_version, git_sha and config_hash (sha256 of
+        config/production.yaml). Every field degrades to "unknown"
+        instead of raising when git or the config file is unavailable.
+        """
+        import hashlib
+        import subprocess
+
+        try:
+            from zspace_engine.report import PIPELINE_VERSION as _pv
+            pipeline_version = str(_pv)
+        except Exception:
+            pipeline_version = "unknown"
+        try:
+            git_sha = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                capture_output=True, text=True, timeout=10,
+                cwd=str(Path(__file__).resolve().parent.parent),
+            ).stdout.strip() or "unknown"
+        except Exception:
+            git_sha = "unknown"
+        try:
+            cfg = Path(__file__).resolve().parent.parent / "config" / "production.yaml"
+            config_hash = hashlib.sha256(cfg.read_bytes()).hexdigest()[:16]
+        except Exception:
+            config_hash = "unknown"
+        return {
+            "pipeline_version": pipeline_version,
+            "git_sha": git_sha,
+            "config_hash": config_hash,
+        }
+
+    @staticmethod
+    def _write_checkpoint(path: Path, tic_ids: List[str]) -> None:
+        """Persist attempted TIC IDs for crash-resume (best-effort, never raises)."""
+        try:
+            path.write_text(json.dumps({
+                "processed_tic_ids": list(tic_ids),
+                "count": len(tic_ids),
+                "updated_utc": datetime.now(timezone.utc).isoformat(),
+                "note": "Interrupted runs skip these IDs; their outcomes live "
+                        "only in a finished summary.json.",
+            }, indent=2), encoding="utf-8")
+        except Exception as e:
+            logging.warning(f"Checkpoint write failed ({path}): {e}")
+
     def write_sector_report_md(self, stats: Dict[str, Any]) -> Path:
         """
         Write a human-readable markdown report for a finished sector scan.
