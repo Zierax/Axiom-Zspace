@@ -22,21 +22,21 @@ bibliography: paper.bib
 
 # Summary
 
-Axiom-ZSpace is a **blind-search exoplanet transit detection pipeline for TESS/Kepler light curves** organized around a gate-logic validator and a single-source, measured threshold catalog. The pipeline runs `ingestion → BLS detection (period-prior ladder, FAP firewall) → ephemeris resolution → transit-physics audits → context/density checks → false-positive gate engine (circuit breaker) → CVS classification → discovery card with a full proof chain`. Every tunable number lives in `config/production.yaml` → `thresholds.py` and every verdict leaves a human-readable proof chain.
+Axiom-ZSpace searches TESS and Kepler light curves for transits without being told where to look. It chains ingestion, BLS detection over a period-prior ladder, ephemeris resolution, physics audits, an 11-gate ruling engine with a circuit breaker, and CVS scoring into one deterministic pipeline. Every check writes its reasoning into a proof chain on the output card, and every tunable number lives in a single catalog (`config/production.yaml`, read through `thresholds.py`).
 
-The pipeline is deterministic, offline-first, and measured on two complementary benchmarks: **controlled synthetic BIG400 (400 true + 400 false, 8 seeds)** — 41.2% recall at correct period, 4.25% contamination FPR, 81.7% precision — and **real Kepler 12+12** — 41.7% recall@target. All thresholds are versioned and re-measured as an instrument; a supplementary C99 port is available as an additional artifact for batch throughput (see §Availability).
+Two benchmarks pin the numbers. The synthetic BIG400 set (400 injected planets, 400 contaminants, 8 seeds) gives 41.2% recall at the right period, 81.7% precision, and 4.25% contamination FPR. Twelve Kepler hosts with confirmed planets plus twelve quiet stars give 41.7% recall. A C99 port of the same logic ships alongside for batch runs.
 
 # Statement of Need
 
-Most transit pipelines are single-engine, single-language systems where a bug in the single engine is invisible and thresholds are scattered. Axiom-ZSpace was built to make **gate logic the product**: every tunable number lives in one threshold catalog (`config/production.yaml` → `thresholds.py`) and every verdict leaves a proof chain that can be inspected. The code is the instrument — thresholds are measured, not tuned, and both controlled synthetic and real Kepler benchmarks must be re-measured after any change (the one rule in `CONTRIBUTING.md`).
+Most transit codes mix detection, vetting, and thresholds in one place, so a silent bug or a hand-tuned cut is hard to catch. Axiom-ZSpace separates them: detection proposes, eleven gates dispose, and the catalog records every threshold with the measurement behind it. Change a number and both benchmarks must be re-run. That rule lives in `CONTRIBUTING.md` and the test suite enforces it.
 
-The pipeline is blind (no ephemeris hint required), deterministic (same seed → same results, asserted by `tests/test_reproducibility.py`), and offline-first (synthetic benchmark and 101-test suite run without network). It is **targeted at researchers running blind transit searches who need auditable, re-measurable thresholds rather than tuned black-box cuts** — including TESS/Kepler archival teams, follow-up groups vetting candidates, and students requiring a reproducible baseline with explicit false-positive control.
+Nothing here needs a hint or a network connection. The same seed gives the same result (covered by `tests/test_reproducibility.py`), and the synthetic suite plus all 101 tests run offline. This is for people running blind searches who want to inspect why a candidate passed: archive teams, follow-up groups vetting candidates, and students who need a baseline they can reproduce.
 
 # State of the Field
 
 * **BLS** [@kovacs2002] is the standard box search; **TLS** [@hippke2019] adds limb-darkened templates at $\sim$1$\times$ BLS cost.
 * **GPU BLS**: `cuvarbase` [@cuvarbase] and **GTLS** [@hu2026] report 10--100$\times$ on GPU; **QLP GPU** [@kunimoto2023] reports 40$\times$.
-* **Approximators**: **fBLS** [@shahaf2022] 15$\times$ at 65k points (binned); **GPFC** [@wang2024] reports 15$\times$ vs `astropy` cython at equal grid (CNN, USP only). None provide a fully gate-logic, threshold-catalog pipeline with versioned controlled+real benchmarks as first-class evidence.
+* **Approximators**: **fBLS** [@shahaf2022] 15$\times$ at 65k points (binned); **GPFC** [@wang2024] reports 15$\times$ vs `astropy` cython at equal grid (CNN, USP only). None ship the full chain (gates, catalog, proof chains) with versioned synthetic and real benchmarks next to the code.
 
 # Installation
 
@@ -52,7 +52,7 @@ C build: `gcc -O3 -march=native -mtune=native -flto -ffast-math -fopenmp -fopenm
 
 # Software design
 
-Axiom-ZSpace is organized as six explicit stages with clear contracts, making the codebase auditable and testable:
+Six stages, each with explicit inputs and outputs:
 
 * **Ingestion** (`zspace_engine/ingestion.py`): MAST fetch via `lightkurve` with disk cache, `quality==0` masking, sigma clipping, median normalization, and Savitzky-Golay detrending (single `flat1`, window 3.0 d or 0.75P, x in [-1,1] QR via `zspace_ingestion.c`).
 * **Detection** (`detectors.py`): BLS periodogram (`astropy.timeseries.BoxLeastSquares` baseline) over frequency grid $n_{\mathrm{freq}}=\max(\lfloor(f_{\max}-f_{\min})/df\rfloor,2000)$, $df=1/(T \cdot 20)$, duration 0.25--8 h, with a **ladder of $k20$ strict local maxima** filtered by $\tau/P>0.15$, $|\log|<0.10$, $min\_rel=0.05$, and a self-calibrating exponential-tail FAP (MAD).
@@ -61,7 +61,7 @@ Axiom-ZSpace is organized as six explicit stages with clear contracts, making th
 * **Validation** (`validator.py`): 11-gate ruling engine with circuit breaker. Critical gates ($S/N \ge 5.5$, $FAP \le 0.05$) make `SOVEREIGN_PASS` impossible when failed; non-critical allowances are `verdict_max_fail_pass=2`, `conditional=3`.
 * **Classification** (`core.py`): Composite Vitality Score (CVS) $w=(0.97,0.83,0.61,0.31)$ over $S_{\mathrm{periodicity}}, S_{\mathrm{depth}}, S_{\mathrm{limb}}, S_{\mathrm{stellar}}$ with four tiers ($\ge0.80$ PLANET, $\ge0.55$ LIKELY, $\ge0.35$ AMBIGUOUS).
 
-All tunable constants (gates, FAP, ladder, CVS weights) live in **one file** (`thresholds.py` to `config/production.yaml`) with per-key evidence in `THRESHOLDS_REPORT.md`. The 101-test suite asserts determinism, the circuit breaker, and ephemeris identity as executable contracts — changing a number without re-measuring BIG400 and REAL_FINAL is by definition a defect.
+All tunable constants (gates, FAP, ladder, CVS weights) live in one file (`thresholds.py` to `config/production.yaml`) with per-key evidence in `THRESHOLDS_REPORT.md`. The 101-test suite checks determinism, the circuit breaker, and ephemeris identity as runnable contracts. A threshold change without re-measuring BIG400 and REAL_FINAL is rejected.
 
 # Functionality
 
@@ -71,27 +71,27 @@ python run_pipeline.py --synthetic --engine c99          # batch C99 (requires p
 python benchmarks_controlled/run_controlled.py --true 50 --false 50 --seed 20260816 --engine c99
 ```
 
-**Pipeline (production `balanced`, `frequency_factor 20`, `k20`, `coherent OFF`):** `normalize → flat1 (Savitzky-Golay, window 3.0d or 0.75·P, x∈[-1,1] QR, rdiag)` → `BLS.search` (`n_freq = max(⌊(fmax-fmin)/df⌋,2000)`, `df=1/(T·20)`, duration 0.25–8h) → `top_candidates` (strict local maxima, `τ/P>0.15`, alias `|log|<0.10`, `min_rel 0.05`) → ladder validate loop (first `SOVEREIGN_PASS`/`CONDITIONAL_PASS` → `OFFLINE_NEW_DISCOVERY`, else `first_status`) → `eph_resolve` → `sovereign_validate` (11 gates, `FAP<0.05` MAD tail, `S/N`, even/odd, shape, secondary, alias, density, impact, $N_{tr}≥2$) → `CVS` → card JSON.
+**Pipeline (production `balanced`, `frequency_factor 20`, `k20`, `coherent OFF`).** Normalize, then Savitzky-Golay `flat1` (3.0 d window). `BLS.search` over a frequency-duration grid, then `top_candidates` keeps strict local maxima. Each candidate goes through fold, audits, `eph_resolve`, and the 11-gate `sovereign_validate`. The first `SOVEREIGN_PASS` or `CONDITIONAL_PASS` certifies `OFFLINE_NEW_DISCOVERY`; otherwise the first status stands. Output is a JSON card with the full chain.
 
 **CLI contract (`bin/zspace_card`):** reads `key=value` candidate + optional CSV `time,flux` and prints a single JSON sovereign card; `c99_bridge.py` auto-detects `bin/` vs `build/` and `D:/`→`/mnt/d/` for WSL. `FP-10` (`count_observed_transits`) is computed from the time/flux series, not hard-coded.
 
 # Threshold Catalog and Provenance
 
-The catalog defines three profiles (`conservative`, `balanced` (default), `sensitive`) with identical gate values in `conservative`/`balanced` and a looser experimental `sensitive`. Every key carries direction (e.g., $S/N\ge5.5$, shape $\ge0.4$, density $[0.2,5.0]$, impact $<0.9$, $N_{\mathrm{tr}}\ge2$), weight (`critical`/`major`), and a measured-evidence paragraph with pros/cons of tightening or loosening. `THRESHOLDS_REPORT.md` is auto-generated via `python -m zspace_engine.thresholds_report` and is committed with any catalog change. Provenance is first-class: every discovery card is a JSON with a full proof chain, and benchmark evidence is versioned under `benchmarks_controlled/evidence/BIG400` and `benchmarks_real/evidence/REAL_FINAL` (per-target JSONs, `chunks.json`, `EVALUATION_REPORT.md`). Runs and caches (`runs/`, `axiom_output/`, `Discovery_*.json`) are git-ignored by design.
+The catalog defines three profiles: `conservative`, `balanced` (default), and a looser experimental `sensitive`. Every key records its direction (e.g., $S/N\ge5.5$, shape $\ge0.4$, density $[0.2,5.0]$, impact $<0.9$, $N_{\mathrm{tr}}\ge2$), its weight (`critical`/`major`), and a short evidence note on what tightening or loosening costs. `THRESHOLDS_REPORT.md` regenerates via `python -m zspace_engine.thresholds_report` and ships with every catalog change. Every discovery card is JSON with its proof chain, and benchmark evidence sits versioned under `benchmarks_controlled/evidence/BIG400` and `benchmarks_real/evidence/REAL_FINAL`. Run outputs and caches stay git-ignored.
 
 # Performance — CPUs as Efficient Alternatives to GPU Acceleration
 
-The pipeline's primary result is the **measured threshold catalog** (BIG400: 41.2% recall, 4.25% FPR; REAL_FINAL: 41.7% recall). As a supplementary artifact, the same logic is available as a portable C99 port that achieves **42.8 ms/TIC (650$\times$ vs Python 27.8 s, 40.6$\times$ per-core) on 3k-point light curves** and 4.8 s/TIC on 87k-point 5-sector curves (16 cores, `-O3 -march=native -flto -ffast-math -fopenmp-simd`, `OMP_NUM_THREADS=16`). Heavy Python for 87k is a disclosed placeholder.
+The headline numbers belong to the catalog: 41.2% recall and 4.25% FPR on BIG400, 41.7% recall on REAL_FINAL. The C99 port exists for batch work. It does 42.8 ms per target on 3k-point curves (650$\times$ vs single-thread Python at 27.8 s, 40.6$\times$ per core) and 4.8 s per target on 87k-point 5-sector curves (16 cores, `-O3 -march=native -flto -ffast-math -fopenmp-simd`). The 87k Python baseline was not re-measured, so treat that ratio as provisional.
 
-For context, recent GPU BLS literature reports 15.7$\times$ (GTLS on RTX 4090, 24 GB) [@hu2026] and 40$\times$ (QLP GPU) [@kunimoto2023] on specialized hardware; the C99 artifact demonstrates that a portable, bit-identical CPU derivation can exceed those throughputs on commodity hardware when the bottleneck is gate logic and FAP calibration rather than FLOPs. The code remains the instrument; throughput is a consequence, not the claim.
+For reference, GTLS reports 15.7$\times$ on an RTX 4090 [@hu2026] and QLP GPU reports 40$\times$ [@kunimoto2023], both on dedicated hardware. The C99 port is bit-identical to Python and needs no GPU. Where the cost is gate logic and FAP calibration rather than raw FLOPs, a plain CPU build can win.
 
 # Verification
 
-The Python pipeline ships a **101-test offline suite** (`python -m pytest tests/ -q`) covering determinism, circuit breaker, ephemeris identity, and gate calibration. The supplementary C99 port, mechanically derived via `Purce` [@purce2024], is differentially checked where it exists: **148/148 validator kernels** (`verify_compare.py` at $10^{-9}$) and **90/90 synthetic cards** (`parity_card.py` at $2\times10^{-3}$). The 30 BLS kernels are compiled and batch-validated via the pipeline. BIG400 Python 400/400 is the versioned evidence; C99 parity is 90/90 synthetic. Passing 148/148 at $10^{-9}$ demonstrates bit-identical, deterministic execution of the full matrix stack outside the Python interpreter.
+101 tests ship with the Python pipeline and run offline (`python -m pytest tests/ -q`): determinism, circuit breaker, ephemeris identity, gate calibration. The C99 port, derived mechanically via `Purce` [@purce2024], is checked against Python where the harness covers it: 148/148 validator kernels at $10^{-9}$ and 90/90 synthetic cards at $2\times10^{-3}$. The 30 BLS kernels compile and get validated through batch runs instead. Versioned evidence is BIG400 at 400/400 in Python; C99 parity on that sample is 90/90 synthetic.
 
 # Research impact statement
 
-Axiom-ZSpace is already used as a research instrument by its authors for TESS/Kepler archival searches and threshold calibration. Evidence of impact includes: (i) versioned benchmarks BIG400 (400 true + 400 false, 41.2% recall, 4.25% FPR) and REAL_FINAL (Kepler 12+12, 41.7% recall) as reproducible materials; (ii) a 101-test offline suite asserting determinism, circuit breaker, and ephemeris identity; and (iii) a supplementary portable C99 port (148/148 at $10^{-9}$, 90/90 cards) enabling 650× batch throughput on commodity CPU, cited as an efficient alternative to GPU BLS (GTLS 15.7× on RTX 4090). The single-source threshold catalog and proof-chain provenance provide credible near-term significance for groups requiring auditable, re-measurable transit vetting rather than tuned cuts.
+The authors use this pipeline for TESS/Kepler archival searches and threshold calibration. What backs that up: versioned BIG400 and REAL_FINAL benchmarks anyone can re-run, 101 offline tests, and the C99 port (148/148 at $10^{-9}$, 90/90 cards) that makes batch scans practical at 650× on ordinary CPUs. Groups that need to show their work on vetting, rather than trust a cut, get a catalog and proof chains they can audit.
 
 # AI usage disclosure
 
