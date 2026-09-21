@@ -601,20 +601,21 @@ class SectorProcessor:
             If lightcurve download fails or data quality is insufficient
         FileNotFoundError
             If no lightcurve data available for TIC ID
-        
+
         Notes
         -----
         - Errors are logged but propagated to caller for statistics tracking
-        - FALSE_POSITIVE status returned if BLS detection fails gate
+        - FALSE_POSITIVE status returned if no ladder candidate exceeds the floor
+        - Ladder candidates are validated in power order; the first
+          NEW_DISCOVERY / OFFLINE_NEW_DISCOVERY / KNOWN wins, otherwise the
+          first candidate's outcome stands
         - Network errors trigger OFFLINE_NEW_DISCOVERY status
         """
         from zspace_engine.ingestion import LightCurveIngester
         from zspace_engine.detectors import BLSDetector
-        from zspace_engine.validator import AxiomValidator
-        from zspace_engine.core import VitalityMatrix, apply_hard_filters
-        
+
         logging.debug(f"Processing TIC {tic_id}")
-        
+
         # ── Step 1: Download lightcurve ──────────────────────────────────────
         try:
             ingester = LightCurveIngester(tic_id=tic_id, mission="TESS", exptime="short")
@@ -626,8 +627,19 @@ class SectorProcessor:
         except Exception as e:
             logging.error(f"TIC {tic_id} | Lightcurve download failed: {e}")
             raise
-        
-        # ── Step 2: Run BLS detection ────────────────────────────────────────
+
+        # ── Step 2: BLS global peak + candidate ladder ─────────────────────────
+        # Detection is decided from the CANDIDATE LADDER, not the global max:
+        # for weak targets the unconditional maximum is often a noise spike
+        # while the true transit sits lower in the ladder (mirrors
+        # benchmarks_controlled/run_controlled.py:evaluate_target).
+        try:
+            from zspace_engine import thresholds as _T
+            _floor = float(_T.threshold("no_detection_snr_floor"))
+            _ladder_k = int(_T.threshold("ladder_k"))
+            _ladder_min_rel = float(_T.threshold("ladder_min_relative_snr"))
+        except Exception:
+            _floor, _ladder_k, _ladder_min_rel = self.snr_threshold, 20, 0.05
         try:
             detector = BLSDetector(
                 period_min=0.5,
@@ -640,286 +652,348 @@ class SectorProcessor:
                 time=lc_product.time,
                 flux=lc_product.flux_flat
             )
-            
-            logging.debug(
-                f"TIC {tic_id} | BLS: P={bls_result.period_best:.5f} d, "
-                f"SNR={bls_result.snr:.2f}, FAP={bls_result.fap:.3e}, "
-                f"S_P={bls_result.s_periodicity:.4f}"
+            ladder = detector.top_candidates(
+                time=lc_product.time,
+                flux=lc_product.flux_flat,
+                k=_ladder_k,
+                min_relative_snr=_ladder_min_rel,
             )
-            
-            # Check detection gate
-            if not bls_result.passed_detection_gate():
+            if not ladder:
+                ladder = [bls_result] if bls_result is not None else []
+            elif bls_result is not None and not any(
+                abs(math.log(c.period_best / bls_result.period_best)) < 0.05
+                for c in ladder
+            ):
+                ladder = [bls_result] + ladder
+
+            logging.debug(
+                f"TIC {tic_id} | BLS: {len(ladder)} ladder candidates, "
+                f"best SNR={max((c.snr for c in ladder), default=0.0):.2f}"
+            )
+
+            if not ladder or not any(c.snr > _floor for c in ladder):
+                best_snr = max((c.snr for c in ladder), default=0.0)
                 logging.debug(
-                    f"TIC {tic_id} | BLS detection gate FAILED "
-                    f"(SNR={bls_result.snr:.2f} <= {self.snr_threshold} or FAP={bls_result.fap:.3e} >= {self.fap_threshold:.0e})"
+                    f"TIC {tic_id} | No BLS detection (best ladder SNR={best_snr:.1f})"
                 )
                 return {
                     "status": "FALSE_POSITIVE",
                     "tic_id": tic_id,
-                    "period_days": bls_result.period_best,
+                    "period_days": bls_result.period_best if bls_result is not None else 0.0,
                     "cvs_score": 0.0,
                     "zspace_id": None,
                     "output_file": None,
-                    "reason": "BLS detection gate failed"
+                    "reason": f"No BLS detection (best ladder SNR={best_snr:.1f})"
                 }
-        
+
         except Exception as e:
             logging.error(f"TIC {tic_id} | BLS detection failed: {e}")
             raise
-        
-        # ── Step 3: Compute CVS score ────────────────────────────────────────
+
+        # ── Step 3: stellar parameters (once per TIC) ────────────────────────
+        # Fetch real stellar parameters from TIC v8.2
+        from zspace_engine.context import TICMetadataFetcher
         try:
-            # Fetch real stellar parameters from TIC v8.2
-            from zspace_engine.context import TICMetadataFetcher
+            tic_meta = TICMetadataFetcher.fetch(tic_id, period_days=ladder[0].period_best)
+            stellar_mass_solar = tic_meta.stellar_mass_solar
+            stellar_radius_solar = tic_meta.stellar_radius_solar
+            stellar_teff_k = tic_meta.stellar_teff_k
+            stellar_logg = tic_meta.stellar_logg
+        except Exception:
+            # Fallback to solar defaults if TIC fetch fails
+            stellar_mass_solar = 1.0
+            stellar_radius_solar = 1.0
+            stellar_teff_k = 5778.0
+            stellar_logg = 4.44
+
+        # ── Step 4: ladder loop — first certified (or known) result wins ─────
+        # Mirrors benchmarks_controlled/run_controlled.py:evaluate_target:
+        # every ladder candidate is validated in power order; the first
+        # NEW_DISCOVERY / OFFLINE_NEW_DISCOVERY / KNOWN is returned,
+        # otherwise the first candidate's outcome stands.
+        first_result = None
+        for _cand in ladder:
             try:
-                tic_meta = TICMetadataFetcher.fetch(tic_id, period_days=bls_result.period_best)
-                stellar_mass_solar = tic_meta.stellar_mass_solar
-                stellar_radius_solar = tic_meta.stellar_radius_solar
-                stellar_teff_k = tic_meta.stellar_teff_k
-                stellar_logg = tic_meta.stellar_logg
-            except Exception:
-                # Fallback to solar defaults if TIC fetch fails
-                stellar_mass_solar = 1.0
-                stellar_radius_solar = 1.0
-                stellar_teff_k = 5778.0
-                stellar_logg = 4.44
-            
-            # Create VitalityMatrix
-            matrix = VitalityMatrix(tic_id=tic_id, planet_order=1)
-            
-            # Compute orbital mechanics
-            matrix.compute_orbital_mechanics(
-                period_days=bls_result.period_best,
-                transit_depth=bls_result.transit_depth,
-                stellar_mass_solar=stellar_mass_solar,
-                stellar_teff=stellar_teff_k,
-                stellar_radius_solar=stellar_radius_solar
-            )
-            
-            # Ingest scores (using real auditors — no more placeholders)
-            from zspace_engine.auditors import TransitAuditor
-            from zspace_engine.detectors import BLSDetector
-
-            # Phase-fold once, reuse for all auditors
-            bin_phase, bin_flux, _ = BLSDetector.fold_and_bin(
-                lc_product.time, lc_product.flux_flat,
-                period=bls_result.period_best, t0=bls_result.t0, n_bins=200,
-            )
-
-            auditor = TransitAuditor(verbose=False, run_mcmc=False)
-
-            # Audit 1: Even/Odd → EB flag
-            eo = auditor.even_odd_test(
-                lc_product.time, lc_product.flux_flat,
-                period=bls_result.period_best, t0=bls_result.t0,
-                duration=bls_result.transit_duration,
-            )
-            # Audit 2: Depth consistency → S_δ
-            dc = auditor.depth_consistency_score(
-                lc_product.time, lc_product.flux_flat,
-                period=bls_result.period_best, t0=bls_result.t0,
-                duration=bls_result.transit_duration, eo_result=eo,
-            )
-            # Audit 3: Limb shape (Mandel-Agol) → S_τ
-            ls = auditor.limb_shape_score(
-                period=bls_result.period_best,
-                duration=bls_result.transit_duration,
-                transit_depth=bls_result.transit_depth,
-                time=lc_product.time, flux=lc_product.flux_flat, t0=bls_result.t0,
-            )
-            # Audit 4: Ingress/Egress V-shape → FP risk
-            ie = auditor.ingress_egress_test(
-                bin_phase, bin_flux,
-                period=bls_result.period_best,
-                duration=bls_result.transit_duration,
-                transit_depth=bls_result.transit_depth,
-            )
-
-            # Audit 5: Stellar context → S_S
-            from zspace_engine.context import StellarContextAuditor
-            s_auditor = StellarContextAuditor(
-                fetch_tic=True, use_tpf_centroids=False, check_multi_sector=False,
-            )
-            try:
-                ctx = s_auditor.audit(
-                    tic_id=tic_id,
-                    time=lc_product.time,
-                    flux=lc_product.flux_flat,
-                    period=bls_result.period_best,
-                    t0=bls_result.t0,
-                    duration=bls_result.transit_duration,
-                    a_rs_transit=0.0,
-                    sector=self.sector,
+                _res = self._validate_ladder_candidate(
+                    tic_id, _cand, lc_product,
+                    stellar_mass_solar, stellar_radius_solar,
+                    stellar_teff_k, stellar_logg,
                 )
-                s_stellar = ctx.s_stellar
-                proof_s = ctx.proof
-                flags_s = ctx.flags
             except Exception as e:
-                # Stellar context must never sink an otherwise-good candidate;
-                # degrade gracefully to neutral score rather than crashing.
-                s_stellar = 0.5
-                proof_s = f"STELLAR_CONTEXT | failed ({type(e).__name__}: {e}) → S_S=0.50"
-                flags_s = [f"STELLAR_CONTEXT_UNAVAILABLE | {type(e).__name__}: {e}"]
+                logging.error(f"TIC {tic_id} | ladder-candidate validation failed: {e}")
+                raise
+            if _res["status"] in ("NEW_DISCOVERY", "OFFLINE_NEW_DISCOVERY", "KNOWN"):
+                return _res
+            if first_result is None:
+                first_result = _res
+        return first_result
 
-            s_depth  = dc.s_depth
-            s_limb   = ls.s_limb
-            flags_d  = list(dc.flags)
-            flags_l  = list(ls.flags)
-            flags_l.extend(ie.flags)
 
-            # CVS critical-FP veto: strong EB evidence caps CVS below the
-            # ambiguous threshold so the verdict becomes FALSE_POSITIVE no
-            # matter how strong the periodicity score is (fixes the
-            # "high-SNR EB can never be vetoed" impossibility).
-            veto_reasons: List[str] = []
-            if eo.is_eb_flag:
-                veto_reasons.append(
-                    f"EVEN_ODD_EB | Δσ={eo.delta_sigma:.2f}, p={eo.p_value:.4f}"
-                )
-            if ie.is_v_shape and ie.fp_risk in ("MEDIUM", "HIGH"):
-                veto_reasons.append(
-                    f"V_SHAPE | ingress_frac={ie.ingress_fraction:.3f}, fp_risk={ie.fp_risk}"
-                )
+    def _validate_ladder_candidate(
+        self,
+        tic_id: str,
+        bls_result,
+        lc_product,
+        stellar_mass_solar: float,
+        stellar_radius_solar: float,
+        stellar_teff_k: float,
+        stellar_logg: float,
+    ) -> Dict[str, Any]:
+        """
+        Validate one BLS ladder candidate (audits → CVS → sovereign validator).
 
-            matrix.ingest_scores(
-                s_periodicity=bls_result.s_periodicity,
-                proof_p=bls_result.proof,
-                s_depth=s_depth,
-                proof_d=dc.proof,
-                s_limb=s_limb,
-                proof_l=ls.proof,
-                s_stellar=s_stellar,
-                proof_s=proof_s,
-                flags_p=bls_result.flags,
-                flags_d=flags_d,
-                flags_l=flags_l,
-                flags_s=flags_s,
-            )
-            for reason in veto_reasons:
-                matrix.apply_veto(reason)
-            
-            # Apply hard physical filters before CVS
-            hard_filter = apply_hard_filters(
-                planet_radius_earth=matrix.orbital.planet_radius_earth,
-                transit_depth=bls_result.transit_depth,
-                transit_duration_hrs=bls_result.transit_duration * 24.0,
-                period_days=bls_result.period_best,
-            )
-            if not hard_filter.passed:
-                logging.debug(
-                    f"TIC {tic_id} | HARD REJECT: {hard_filter.rejection}"
-                )
-                return {
-                    "status": "FALSE_POSITIVE",
-                    "tic_id": tic_id,
-                    "period_days": bls_result.period_best,
-                    "cvs_score": 0.0,
-                    "zspace_id": None,
-                    "output_file": None,
-                    "reason": f"Hard filter: {hard_filter.rejection}"
-                }
-            matrix.cvs_engine.apply_hard_filter(hard_filter)
-            
-            # Compute CVS
-            cvs_result = matrix.cvs_engine.compute()
-            cvs_score = cvs_result
-            # Use full CVS classification from the engine (handles all 4 tiers)
-            cvs_verdict = matrix.cvs_engine._classify(cvs_score)
-            
-            planet_radius_earth = matrix.orbital.planet_radius_earth
-            
-            logging.debug(
-                f"TIC {tic_id} | CVS={cvs_score:.4f}, verdict={cvs_verdict}"
-            )
-            
-            # Check CVS threshold (from config)
-            if cvs_score < self.cvs_threshold:
-                logging.debug(
-                    f"TIC {tic_id} | CVS score {cvs_score:.4f} < {self.cvs_threshold} threshold"
-                )
-                return {
-                    "status": "FALSE_POSITIVE",
-                    "tic_id": tic_id,
-                    "period_days": bls_result.period_best,
-                    "cvs_score": cvs_score,
-                    "zspace_id": None,
-                    "output_file": None,
-                    "reason": "CVS score below planet threshold"
-                }
-        
-        except Exception as e:
-            logging.error(f"TIC {tic_id} | CVS computation failed: {e}")
-            raise
-        
-        # ── Step 4: Invoke AxiomValidator ────────────────────────────────────
+        Runs the full per-candidate chain for a single BLSResult: orbital
+        mechanics, the five transit audits, CVS scoring with EB vetoes and
+        hard filters, then the sovereign validator with the candidate's
+        measured values. The resulting card is routed to its organized
+        output path via OutputOrganizer.
+
+        Parameters
+        ----------
+        tic_id : str
+            TESS Input Catalogue identifier.
+        bls_result : BLSResult
+            One candidate from the BLS ladder (or the global peak).
+        lc_product : LightCurveProduct
+            Downloaded light-curve product for this TIC.
+        stellar_mass_solar, stellar_radius_solar, stellar_teff_k, stellar_logg : float
+            Stellar parameters fetched once per TIC by the caller.
+
+        Returns
+        -------
+        Dict[str, Any]
+            Result dictionary with status, tic_id, period_days, cvs_score,
+            zspace_id and output_file (plus reason for FALSE_POSITIVE).
+        """
+        from zspace_engine.core import VitalityMatrix, apply_hard_filters
+        from zspace_engine.validator import AxiomValidator
+        from zspace_engine.auditors import TransitAuditor
+        from zspace_engine.detectors import BLSDetector
+
+        # Create VitalityMatrix
+        matrix = VitalityMatrix(tic_id=tic_id, planet_order=1)
+
+        # Compute orbital mechanics
+        matrix.compute_orbital_mechanics(
+            period_days=bls_result.period_best,
+            transit_depth=bls_result.transit_depth,
+            stellar_mass_solar=stellar_mass_solar,
+            stellar_teff=stellar_teff_k,
+            stellar_radius_solar=stellar_radius_solar
+        )
+
+        # Ingest scores (using real auditors — no more placeholders)
+        # Phase-fold once, reuse for all auditors
+        bin_phase, bin_flux, _ = BLSDetector.fold_and_bin(
+            lc_product.time, lc_product.flux_flat,
+            period=bls_result.period_best, t0=bls_result.t0, n_bins=200,
+        )
+
+        auditor = TransitAuditor(verbose=False, run_mcmc=False)
+
+        # Audit 1: Even/Odd → EB flag
+        eo = auditor.even_odd_test(
+            lc_product.time, lc_product.flux_flat,
+            period=bls_result.period_best, t0=bls_result.t0,
+            duration=bls_result.transit_duration,
+        )
+        # Audit 2: Depth consistency → S_δ
+        dc = auditor.depth_consistency_score(
+            lc_product.time, lc_product.flux_flat,
+            period=bls_result.period_best, t0=bls_result.t0,
+            duration=bls_result.transit_duration, eo_result=eo,
+        )
+        # Audit 3: Limb shape (Mandel-Agol) → S_τ
+        ls = auditor.limb_shape_score(
+            period=bls_result.period_best,
+            duration=bls_result.transit_duration,
+            transit_depth=bls_result.transit_depth,
+            time=lc_product.time, flux=lc_product.flux_flat, t0=bls_result.t0,
+        )
+        # Audit 4: Ingress/Egress V-shape → FP risk
+        ie = auditor.ingress_egress_test(
+            bin_phase, bin_flux,
+            period=bls_result.period_best,
+            duration=bls_result.transit_duration,
+            transit_depth=bls_result.transit_depth,
+        )
+
+        # Audit 5: Stellar context → S_S
+        from zspace_engine.context import StellarContextAuditor
+        s_auditor = StellarContextAuditor(
+            fetch_tic=True, use_tpf_centroids=False, check_multi_sector=False,
+        )
         try:
-            # Validator will write to its output_dir initially
-            validator = AxiomValidator(
-                output_dir=str(self.output_dir),
-                verbose=False
-            )
-            
-            validation_result = validator.validate(
+            ctx = s_auditor.audit(
                 tic_id=tic_id,
-                period_days=bls_result.period_best,
-                transit_depth=bls_result.transit_depth,
-                transit_duration_hrs=bls_result.transit_duration * 24.0,
-                t0_btjd=bls_result.t0,
-                stellar_mass_solar=stellar_mass_solar,
-                stellar_radius_solar=stellar_radius_solar,
-                stellar_teff_k=stellar_teff_k,
-                stellar_logg=stellar_logg,
-                planet_radius_earth=planet_radius_earth,
-                cvs_score=cvs_score,
-                cvs_verdict=cvs_verdict,
-                cvs_proof_chain=[],
-                bls_snr=bls_result.snr,
-                bls_fap=bls_result.fap,
-                even_odd_delta_sigma=0.0,  # Placeholder - would compute from auditors
-                shape_ratio=1.0,           # Placeholder - would compute from auditors
-                secondary_snr=0.0,         # Placeholder - would compute from auditors
-                centroid_sigma=0.0,        # Placeholder - would compute from auditors
+                time=lc_product.time,
+                flux=lc_product.flux_flat,
+                period=bls_result.period_best,
+                t0=bls_result.t0,
+                duration=bls_result.transit_duration,
+                a_rs_transit=0.0,
+                sector=self.sector,
             )
-            
-            logging.info(
-                f"TIC {tic_id} | Validation complete: {validation_result.status}"
+            s_stellar = ctx.s_stellar
+            proof_s = ctx.proof
+            flags_s = ctx.flags
+        except Exception as e:
+            # Stellar context must never sink an otherwise-good candidate;
+            # degrade gracefully to neutral score rather than crashing.
+            s_stellar = 0.5
+            proof_s = f"STELLAR_CONTEXT | failed ({type(e).__name__}: {e}) → S_S=0.50"
+            flags_s = [f"STELLAR_CONTEXT_UNAVAILABLE | {type(e).__name__}: {e}"]
+
+        s_depth  = dc.s_depth
+        s_limb   = ls.s_limb
+        flags_d  = list(dc.flags)
+        flags_l  = list(ls.flags)
+        flags_l.extend(ie.flags)
+
+        # CVS critical-FP veto: strong EB evidence caps CVS below the
+        # ambiguous threshold so the verdict becomes FALSE_POSITIVE no
+        # matter how strong the periodicity score is (fixes the
+        # "high-SNR EB can never be vetoed" impossibility).
+        veto_reasons: List[str] = []
+        if eo.is_eb_flag:
+            veto_reasons.append(
+                f"EVEN_ODD_EB | Δσ={eo.delta_sigma:.2f}, p={eo.p_value:.4f}"
             )
-            
-            # Use OutputOrganizer to determine appropriate output path
-            zspace_id = f"ZS-T-{tic_id}-01"
-            output_path = Path(validation_result.output_file)
-            
-            if output_path.exists():
-                # Get organized output path based on validation status
-                organized_path = self.output_organizer.get_output_path(
-                    sector=self.sector,
-                    status=validation_result.status,
-                    zspace_id=zspace_id
-                )
-                
-                # Move file to organized location
-                output_path.rename(organized_path)
-                final_output = str(organized_path)
-                
-                logging.debug(
-                    f"TIC {tic_id} | Output saved to {organized_path}"
-                )
-            else:
-                final_output = validation_result.output_file
-            
-            # Build result dictionary
+        if ie.is_v_shape and ie.fp_risk in ("MEDIUM", "HIGH"):
+            veto_reasons.append(
+                f"V_SHAPE | ingress_frac={ie.ingress_fraction:.3f}, fp_risk={ie.fp_risk}"
+            )
+
+        matrix.ingest_scores(
+            s_periodicity=bls_result.s_periodicity,
+            proof_p=bls_result.proof,
+            s_depth=s_depth,
+            proof_d=dc.proof,
+            s_limb=s_limb,
+            proof_l=ls.proof,
+            s_stellar=s_stellar,
+            proof_s=proof_s,
+            flags_p=bls_result.flags,
+            flags_d=flags_d,
+            flags_l=flags_l,
+            flags_s=flags_s,
+        )
+        for reason in veto_reasons:
+            matrix.apply_veto(reason)
+
+        # Apply hard physical filters before CVS
+        hard_filter = apply_hard_filters(
+            planet_radius_earth=matrix.orbital.planet_radius_earth,
+            transit_depth=bls_result.transit_depth,
+            transit_duration_hrs=bls_result.transit_duration * 24.0,
+            period_days=bls_result.period_best,
+        )
+        if not hard_filter.passed:
+            logging.debug(
+                f"TIC {tic_id} | HARD REJECT: {hard_filter.rejection}"
+            )
             return {
-                "status": validation_result.status,
+                "status": "FALSE_POSITIVE",
+                "tic_id": tic_id,
+                "period_days": bls_result.period_best,
+                "cvs_score": 0.0,
+                "zspace_id": None,
+                "output_file": None,
+                "reason": f"Hard filter: {hard_filter.rejection}"
+            }
+        matrix.cvs_engine.apply_hard_filter(hard_filter)
+
+        # Compute CVS
+        cvs_result = matrix.cvs_engine.compute()
+        cvs_score = cvs_result
+        # Use full CVS classification from the engine (handles all 4 tiers)
+        cvs_verdict = matrix.cvs_engine._classify(cvs_score)
+
+        planet_radius_earth = matrix.orbital.planet_radius_earth
+
+        logging.debug(
+            f"TIC {tic_id} | CVS={cvs_score:.4f}, verdict={cvs_verdict}"
+        )
+
+        # Check CVS threshold (from config)
+        if cvs_score < self.cvs_threshold:
+            logging.debug(
+                f"TIC {tic_id} | CVS score {cvs_score:.4f} < {self.cvs_threshold} threshold"
+            )
+            return {
+                "status": "FALSE_POSITIVE",
                 "tic_id": tic_id,
                 "period_days": bls_result.period_best,
                 "cvs_score": cvs_score,
-                "zspace_id": zspace_id,
-                "output_file": final_output,
+                "zspace_id": None,
+                "output_file": None,
+                "reason": "CVS score below planet threshold"
             }
-        
-        except Exception as e:
-            logging.error(f"TIC {tic_id} | Validation failed: {e}")
-            raise
+
+        # ── Sovereign validation ─────────────────────────────────────────────
+        # Validator will write to its output_dir initially
+        validator = AxiomValidator(
+            output_dir=str(self.output_dir),
+            verbose=False
+        )
+
+        validation_result = validator.validate(
+            tic_id=tic_id,
+            period_days=bls_result.period_best,
+            transit_depth=bls_result.transit_depth,
+            transit_duration_hrs=bls_result.transit_duration * 24.0,
+            t0_btjd=bls_result.t0,
+            stellar_mass_solar=stellar_mass_solar,
+            stellar_radius_solar=stellar_radius_solar,
+            stellar_teff_k=stellar_teff_k,
+            stellar_logg=stellar_logg,
+            planet_radius_earth=planet_radius_earth,
+            cvs_score=cvs_score,
+            cvs_verdict=cvs_verdict,
+            cvs_proof_chain=[],
+            bls_snr=bls_result.snr,
+            bls_fap=bls_result.fap,
+            even_odd_delta_sigma=0.0,  # Placeholder - would compute from auditors
+            shape_ratio=1.0,           # Placeholder - would compute from auditors
+            secondary_snr=0.0,         # Placeholder - would compute from auditors
+            centroid_sigma=0.0,        # Placeholder - would compute from auditors
+        )
+
+        logging.info(
+            f"TIC {tic_id} | Validation complete: {validation_result.status}"
+        )
+
+        # Use OutputOrganizer to determine appropriate output path
+        zspace_id = f"ZS-T-{tic_id}-01"
+        output_path = Path(validation_result.output_file)
+
+        if output_path.exists():
+            # Get organized output path based on validation status
+            organized_path = self.output_organizer.get_output_path(
+                sector=self.sector,
+                status=validation_result.status,
+                zspace_id=zspace_id
+            )
+
+            # Move file to organized location
+            output_path.rename(organized_path)
+            final_output = str(organized_path)
+
+            logging.debug(
+                f"TIC {tic_id} | Output saved to {organized_path}"
+            )
+        else:
+            final_output = validation_result.output_file
+
+        # Build result dictionary
+        return {
+            "status": validation_result.status,
+            "tic_id": tic_id,
+            "period_days": bls_result.period_best,
+            "cvs_score": cvs_score,
+            "zspace_id": zspace_id,
+            "output_file": final_output,
+        }
 
 
 # ─────────────────────────────────────────────────────────────────────────────
