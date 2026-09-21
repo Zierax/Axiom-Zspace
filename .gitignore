@@ -48,3 +48,4 @@ paper/*
 paper/JOSS/*
 !paper/JOSS/paper.md
 !paper/JOSS/paper.bib
+notes.txt
