@@ -52,30 +52,35 @@ class OutputOrganizer:
         self,
         sector: int,
         status: str,
-        zspace_id: str
+        zspace_id: str,
+        unique: bool = False,
     ) -> Path:
         """
         Returns appropriate output path based on discovery status.
-        
+
         Routes Discovery Cards to appropriate subdirectories:
         - NEW_DISCOVERY → axiom_output/sector_N/discoveries/
         - KNOWN → axiom_output/sector_N/known/
         - FALSE_POSITIVE → axiom_output/sector_N/rejected/
-        
-        Adds timestamps to prevent overwrites and creates subdirectories as needed.
-        
+
+        Paths are deterministic by default (same inputs ⇒ same path) so
+        re-running a sector scan overwrites instead of piling up
+        timestamped duplicates. Pass unique=True to opt into the legacy
+        timestamped filename when parallel writers must never collide.
+
         Args:
             sector: TESS sector number
             status: Discovery status ("NEW_DISCOVERY", "KNOWN", "FALSE_POSITIVE")
             zspace_id: ZSpace identifier (e.g., "ZS-T-12345678-01")
-        
+            unique: if True, append a timestamp to avoid overwrites
+
         Returns:
-            Path object for the output file with timestamp
-        
+            Path object for the output file (deterministic unless unique=True)
+
         Requirements: 5.3, 5.4, 5.5, 5.8
         """
         sector_dir = self.base_dir / f"sector_{sector}"
-        
+
         # Route to appropriate subdirectory based on status
         if status in ("NEW_DISCOVERY", "OFFLINE_NEW_DISCOVERY"):
             subdir = sector_dir / "discoveries"
@@ -86,11 +91,14 @@ class OutputOrganizer:
         else:  # FALSE_POSITIVE
             subdir = sector_dir / "rejected"
             filename = f"false_positive_{zspace_id}.json"
-        
+
         # Create subdirectories if they don't exist
         subdir.mkdir(parents=True, exist_ok=True)
-        
-        # Add timestamp to prevent overwrites
+
+        if not unique:
+            return subdir / filename
+
+        # Legacy opt-in: timestamp to prevent overwrites
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         stem = filename.rsplit('.', 1)[0]
         return subdir / f"{stem}_{timestamp}.json"
