@@ -429,6 +429,8 @@ class SectorProcessor:
                         "tic_id": result["tic_id"],
                         "period_days": result["period_days"],
                         "cvs_score": result["cvs_score"],
+                        "snr": result.get("snr"),
+                        "fap": result.get("fap"),
                         "output_file": result.get("output_file", "unknown")
                     }
                     stats["discoveries"].append(discovery_entry)
@@ -534,8 +536,11 @@ class SectorProcessor:
                     "tic_id": disc["tic_id"],
                     "zspace_id": disc.get("zspace_id", f"ZS-T-{disc['tic_id']}-01"),
                     "period_days": round(disc["period_days"], 5),
+                    "snr": round(disc["snr"], 3) if disc.get("snr") is not None else None,
+                    "fap": disc.get("fap"),
                     "cvs": round(cvs, 4),
                     "verdict": verdict,
+                    "output_file": disc.get("output_file", "unknown"),
                 })
             
             with open(discoveries_path, 'w', encoding='utf-8') as f:
@@ -545,6 +550,13 @@ class SectorProcessor:
         except Exception as e:
             logging.error(f"Failed to save discoveries.json: {e}")
         
+        # ── Human-readable sector report (markdown) ──────────────────────────
+        try:
+            report_path = self.write_sector_report_md(stats)
+            logging.info(f"Sector report saved to {report_path}")
+        except Exception as e:
+            logging.error(f"Failed to write SECTOR_REPORT.md: {e}")
+
         # Print prominent final summary to stderr
         sys.stderr.write(
             f"\n  ╔══════════════════════════════════════════════════════════╗\n"
@@ -569,6 +581,97 @@ class SectorProcessor:
         
         return stats
     
+    def write_sector_report_md(self, stats: Dict[str, Any]) -> Path:
+        """
+        Write a human-readable markdown report for a finished sector scan.
+
+        Produces ``axiom_output/sector_N/SECTOR_REPORT.md`` with run
+        statistics, the discoveries table (TIC, period, SNR, CVS, verdict,
+        card path) and the recorded errors. Provenance fields
+        (pipeline_version, git_sha, config_hash) are read from ``stats``
+        when present (see process_sector) and rendered as ``unknown``
+        otherwise.
+
+        Returns the report path.
+        """
+        lines = [
+            f"# Axiom-ZSpace Sector {self.sector} Scan Report",
+            "",
+            f"**Scanned:** {stats.get('timestamp_utc', 'unknown')} UTC  ",
+            f"**Targets:** {stats.get('processed', 0)}/{stats.get('total_targets', 0)} processed  ",
+            f"**Elapsed:** {stats.get('elapsed_minutes', 0)} min "
+            f"({stats.get('rate_per_minute', 0)}/min)",
+            "",
+            "| Outcome | Count |",
+            "|---|---|",
+            f"| New discoveries | {stats.get('new_discoveries', 0)} |",
+            f"| Known planets | {stats.get('known_planets', 0)} |",
+            f"| False positives | {stats.get('false_positives', 0)} |",
+            f"| Failed | {stats.get('failed', 0)} |",
+            "",
+            "## Provenance",
+            "",
+            f"- pipeline_version: `{stats.get('pipeline_version', 'unknown')}`",
+            f"- git_sha: `{stats.get('git_sha', 'unknown')}`",
+            f"- config_hash: `{stats.get('config_hash', 'unknown')}`",
+            f"- thresholds_profile: `{stats.get('thresholds_profile', 'unknown')}`",
+            "",
+            "## Discoveries",
+            "",
+            "| # | TIC | Period (d) | SNR | CVS | Verdict | Card |",
+            "|---|---|---|---|---|---|---|",
+        ]
+        for i, disc in enumerate(stats.get("discoveries", []), start=1):
+            cvs = disc.get("cvs_score", 0.0) or 0.0
+            if cvs >= THRESHOLD_PLANET:
+                verdict = "PLANET CANDIDATE"
+            elif cvs >= THRESHOLD_LIKELY:
+                verdict = "LIKELY PLANET CANDIDATE"
+            elif cvs >= THRESHOLD_AMBIGUOUS:
+                verdict = "AMBIGUOUS"
+            else:
+                verdict = "FALSE POSITIVE"
+            snr = disc.get("snr")
+            lines.append(
+                f"| {i} | {disc.get('tic_id', '?')} "
+                f"| {disc.get('period_days', '?')} "
+                f"| {round(snr, 3) if snr is not None else 'n/a'} "
+                f"| {round(cvs, 4)} | {verdict} "
+                f"| `{disc.get('output_file', 'unknown')}` |"
+            )
+        if not stats.get("discoveries"):
+            lines.append("| — | no discoveries | — | — | — | — | — |")
+        lines += [
+            "",
+            "## Errors",
+            "",
+        ]
+        errors = stats.get("errors", [])
+        if errors:
+            lines += ["| TIC | Error |", "|---|---|"]
+            for err in errors[:50]:
+                msg = str(err.get("error", ""))[:160].replace("|", "/").replace("\n", " ")
+                lines.append(f"| {err.get('tic_id', '?')} | {msg} |")
+            if len(errors) > 50:
+                lines.append(f"| … | +{len(errors) - 50} more (see summary.json) |")
+        else:
+            lines.append("None.")
+        lines += [
+            "",
+            "## Reproduce",
+            "",
+            "```bash",
+            f"python run_pipeline.py --sector {self.sector} "
+            f"--output {self.output_dir.parent}",
+            "```",
+            "",
+            f"Machine-readable mirrors: `summary.json`, `discoveries.json` "
+            f"in `{self.output_dir}`.",
+        ]
+        report_path = self.output_dir / "SECTOR_REPORT.md"
+        report_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        return report_path
+
     def _process_single_tic(self, tic_id: str) -> Dict[str, Any]:
         """
         Process a single TIC target through the full pipeline.
@@ -681,6 +784,8 @@ class SectorProcessor:
                     "tic_id": tic_id,
                     "period_days": bls_result.period_best if bls_result is not None else 0.0,
                     "cvs_score": 0.0,
+                    "snr": best_snr,
+                    "fap": None,
                     "zspace_id": None,
                     "output_file": None,
                     "reason": f"No BLS detection (best ladder SNR={best_snr:.1f})"
@@ -946,11 +1051,13 @@ class SectorProcessor:
             return {
                 "status": "FALSE_POSITIVE",
                 "tic_id": tic_id,
-                "period_days": bls_result.period_best,
-                "cvs_score": 0.0,
-                "zspace_id": None,
-                "output_file": None,
-                "reason": f"Hard filter: {hard_filter.rejection}"
+                    "period_days": bls_result.period_best,
+                    "cvs_score": 0.0,
+                    "snr": bls_result.snr,
+                    "fap": bls_result.fap,
+                    "zspace_id": None,
+                    "output_file": None,
+                    "reason": f"Hard filter: {hard_filter.rejection}"
             }
         matrix.cvs_engine.apply_hard_filter(hard_filter)
 
@@ -974,11 +1081,13 @@ class SectorProcessor:
             return {
                 "status": "FALSE_POSITIVE",
                 "tic_id": tic_id,
-                "period_days": bls_result.period_best,
-                "cvs_score": cvs_score,
-                "zspace_id": None,
-                "output_file": None,
-                "reason": "CVS score below planet threshold"
+                    "period_days": bls_result.period_best,
+                    "cvs_score": cvs_score,
+                    "snr": bls_result.snr,
+                    "fap": bls_result.fap,
+                    "zspace_id": None,
+                    "output_file": None,
+                    "reason": "CVS score below planet threshold"
             }
 
         # ── Sovereign validation ─────────────────────────────────────────────
@@ -1041,15 +1150,17 @@ class SectorProcessor:
         else:
             final_output = validation_result.output_file
 
-        # Build result dictionary
-        return {
-            "status": validation_result.status,
-            "tic_id": tic_id,
-            "period_days": bls_result.period_best,
-            "cvs_score": cvs_score,
-            "zspace_id": zspace_id,
-            "output_file": final_output,
-        }
+            # Build result dictionary
+            return {
+                "status": validation_result.status,
+                "tic_id": tic_id,
+                "period_days": bls_result.period_best,
+                "cvs_score": cvs_score,
+                "snr": bls_result.snr,
+                "fap": bls_result.fap,
+                "zspace_id": zspace_id,
+                "output_file": final_output,
+            }
 
 
 # ─────────────────────────────────────────────────────────────────────────────
