@@ -15,7 +15,7 @@ single-source threshold catalog**
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/22255875.svg)](https://doi.org/10.5281/zenodo.22255875)
 
-<sub>v1.1.1 — Dual-Engine C99 Sovereign Validator · 101-test suite · 148/148 kernels · 90/90 cards · 400/400 parity · controlled + real benchmarks as first-class evidence · [documentation hub →](docs/README.md) · [paper →](paper/JOSS/paper.md)</sub>
+<sub>v1.1.1 — 101-test suite · 148/148 validator kernels · 90/90 cards · BIG400 Python 400/400 · versioned synthetic + real benchmarks · [documentation hub →](docs/README.md) · [paper →](paper/JOSS/paper.md)</sub>
 
 </div>
 
@@ -39,29 +39,27 @@ Every tunable number lives in **one place** —
 
 ## Features
 
-- **Blind search with a prior, not a lock**: the period hint (benchmarks)
-  is only *preferred* when its harmonic-ladder peak carries enough power;
-  otherwise the global BLS peak wins.
-- **Physical-invariant auditing**: even/odd depth (Welch t-test), U/V shape
-  ratio, per-transit depth consistency, ingress/egress, secondary eclipse,
+- **Blind search with a prior, not a lock**: a period hint only wins when
+  its harmonic-ladder peak carries enough power; otherwise the global BLS
+  peak wins.
+- **Physics audits**: even/odd depth (Welch t-test), U/V shape ratio,
+  per-transit depth consistency, ingress/egress, secondary eclipse,
   stellar-density mismatch, centroid (optional), MCMC posterior (optional).
-- **Evidence-bearing verdicts**: every card ships a human-readable proof
-  chain; no gate result is decided silently.
+- **Proof chains**: every card records why each gate passed or failed.
 - **Circuit breaker**: a failed critical gate makes `SOVEREIGN_PASS`
-  impossible — asserted by tests.
-- **One measured catalog**: three profiles
-  (`conservative` / `balanced` / `sensitive`), auto-generated reference report
-  (`THRESHOLDS_REPORT.md`).
-- **Determinism as a contract**: same seed ⇒ same results, asserted by
+  impossible — covered by tests.
+- **One catalog**: three profiles (`conservative` / `balanced` / `sensitive`)
+  with an auto-generated reference (`THRESHOLDS_REPORT.md`).
+- **Deterministic**: same seed gives same results, checked by
   `tests/test_reproducibility.py`.
-- **Dual sovereign engine**: the verdict engine also ships as a
-  **dependency-free C99 binary** whose math kernels are machine-generated
-  from a strict numpy subset by [**Purce**](https://github.com/Zierax/Purce),
-  differentially verified against the Python reference (148/148 validator kernels,
-  90/90 cards) — selectable with `--engine {python,c99}` (`python` default for reference, `c99` **recommended for batch**: `42.8 ms/TIC` light `650×` / `4.8 s/TIC` heavy `5.8×`, 16 cores, `-O3 -march=native -flto -fopenmp`, per-core 40.6×/0.36×, `docs/BENCHMARKS.md:151`).
-- **Offline-first**: the engine and the test suite run without network; the
-  real benchmark rehydrates from pinned snapshot JSONs + a one-time MAST
-  download.
+- **C99 build included**: the same logic ships as a dependency-free C99
+  binary (kernels generated from NumPy by
+  [**Purce**](https://github.com/Zierax/Purce), 148/148 validator kernels,
+  90/90 cards). Use `--engine {python,c99}` — `python` by default,
+  `c99` for batch (`42.8 ms/TIC` light at `650×`, `4.8 s/TIC` heavy at
+  `5.8×`, 16 cores; see `docs/BENCHMARKS.md:151`).
+- **Offline-first**: engine and test suite run without network; the real
+  benchmark needs one MAST download, then works from pinned snapshots.
 
 ## Measured results (balanced profile, 2026-08-16/17)
 
@@ -82,9 +80,9 @@ Every tunable number lives in **one place** —
 | `verify_compare` | — | — | — | — | — | **148/148** validator kernels |
 | `parity_card --n 90 --lc --seed 20260817` | — | — | — | — | — | **90/90** cards |
 
-\* Heavy Python ~27.8 s is placeholder from light (not re-measured for 87k; expected higher, `O(n·n_freq)`). † Heavy 8/10 — 2 marginal `FAP≈0.05` flips (`fap 0.008→0.078`, alias).
+\* Heavy Python ~27.8 s is a placeholder copied from light (not re-measured for 87k; expect higher). † Heavy 8/10 — two marginal `FAP≈0.05` flips (`fap 0.008→0.078`, alias).
 
-\* Heavy 8/10 agreement — 2 marginal `FAP≈0.05` flips (syn_0 `fap 0.008→0.078`, syn_2 alias), both `O(n·n_freq)` bound. Light is the benchmark for `1000×` target. Heavy pre-binned 87k→3k recovers light speed. **Recommendation:** `python` default for reference/single, **`c99` recommended for batch** (`--engine c99`) — `docs/BENCHMARKS.md:151`, `docs/C99_ENGINE.md:18`. Per-core: light 40.6×, heavy 0.36×.
+**Recommendation:** `python` for reference and single targets, **`c99` for batch** (`--engine c99`) — `docs/BENCHMARKS.md:151`, `docs/C99_ENGINE.md:18`. Per-core: light 40.6×, heavy 0.36×.
 
 > **FPR honesty:** 0/80 is the fixed-seed sample; across 8 fresh samples
 > (BIG400, 800 targets) the measured contamination FPR is **4.25%**, dominated
@@ -97,8 +95,8 @@ Evidence runs are versioned in the repo:
 metrics, and the reports that derive from them. How to reproduce everything
 in two commands: [`docs/BENCHMARKS.md`](docs/BENCHMARKS.md).
 
-> The real numbers are a **measurement, not a tune** — re-run both benchmarks
-> after any threshold edit.
+> Re-run both benchmarks after any threshold edit — the numbers above only
+> describe the shipped configuration.
 
 ## Quick start
 
@@ -155,16 +153,15 @@ archive/                 local-only pre-v1 history — git-ignored, never pushed
 
 ## Honesty & reproducibility
 
-- **Evidence over claims.** Every number in the docs traces to a committed
-  artifact; the CHANGELOG's v2.x entries are explicitly labeled legacy
-  because their batch-scale numbers were not preserved. Anything else is not
-  claimed.
-- **Deterministic samples.** The controlled benchmark is seed-fixed
-  (`--seed 20260814`); the real sample is pinned by offline NEA snapshot JSONs
-  (`scripts/fetch_nea_snapshot.py`). Two identical commands produce identical
-  results — asserted by tests, verifiable by any clone.
-- **Privacy by construction.** `archive/`, run outputs, caches, discovery
-  cards, credential-bearing scripts and keys are git-ignored by hard rule.
+- **Numbers trace to artifacts.** Every figure in the docs comes from a
+  committed file; CHANGELOG v2.x entries are marked legacy because their
+  batch numbers were not preserved.
+- **Fixed samples.** The synthetic benchmark is seed-fixed (`--seed 20260814`);
+  the real sample is pinned by offline NEA snapshots
+  (`scripts/fetch_nea_snapshot.py`). Same command, same result — checked by
+  tests.
+- **Git-ignored by rule.** `archive/`, run outputs, caches, discovery cards,
+  and anything credential-bearing never get committed.
 
 ## Contributing & license
 
@@ -174,5 +171,4 @@ and *no number ships without an artifact*.
 
 ---
 
-<sub>Built for blind, honest, reproducible transit searching. If the numbers
-surprise you, the evidence tells you why — that is the point.</sub>
+<sub>Blind transit search with reproducible numbers. The evidence files say where each figure comes from.</sub>

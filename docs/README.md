@@ -1,10 +1,10 @@
-# Axiom-ZSpace Documentation — v1.1.0 Professional
+# Axiom-ZSpace Documentation — v1.1.1
 
-> **Dual-Engine · Differentially Verified · Measured · Deterministic**
+> **Measured · Deterministic · Reproducible**
 
-The documentation hub for Axiom-ZSpace v1.1.0 (C99 Sovereign Validator, 148/148 kernels, 90/90 cards, BIG400 400/400 parity, 604× light). Read in this order for a full picture: **Quickstart → Architecture → Benchmarks → Testing → Production → Contributing → C99 Engine**. Use the Glossary for terminology, THRESHOLDS_REPORT.md for every tunable number, and CHANGELOG.txt for release history (v2.x entries are legacy, not evidence).
+Documentation hub for Axiom-ZSpace v1.1.1 (101 tests, 148/148 validator kernels, 90/90 cards, BIG400 Python 400/400, 650× light). Read in order: **Quickstart → Architecture → Benchmarks → Testing → Production → Contributing → C99 Engine**. The Glossary covers terminology, THRESHOLDS_REPORT.md covers every tunable number, CHANGELOG.txt covers release history (v2.x entries are legacy, not evidence).
 
-**Cite:** `Axiom-ZSpace Collaboration (2026). Axiom-ZSpace v1.1.0 — Dual-Engine C99 Sovereign Validator. https://github.com/Zierax/Axiom-Zspace/releases/tag/v1.1.0` · **License:** MIT · **Paper:** `paper/main.tex` (JOSS-ready)
+**Cite:** `Salah, Z. (2026). Axiom-ZSpace v1.1.1 — Blind-Search, Gate-Logic Transit Detection Pipeline. https://github.com/Zierax/Axiom-Zspace/releases/tag/v1.1.1` · **License:** MIT · **Paper:** `paper/JOSS/paper.md`
 
 ## Reading map
 
