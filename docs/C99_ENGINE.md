@@ -1,4 +1,4 @@
-# The C99 Engine — v1.1.1 Professional
+# The C99 Engine — v1.1.2 Professional
 
 > **Portable · Dependency-Free · Purce-Derived · Differentially Verified · Production-Ready**
 

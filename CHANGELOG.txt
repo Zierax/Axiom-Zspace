@@ -2,6 +2,18 @@
 AXIOM-ZSPACE CHANGELOG
 ================================================================================
 
+v1.1.2 (2026-09-22)
+===============================================================================
+
+- Sector scans fixed: BLS candidate ladder in _process_single_tic (first
+  certified result wins, mirrors run_controlled), real auditor values to the
+  validator (secondary, alias-secondary, coherent, time/flux for FP-10 —
+  no placeholders), idempotent discovery filenames, SECTOR_REPORT.md
+  markdown report with SNR/FAP, provenance envelope (pipeline version,
+  git SHA, config hash) and crash-resume checkpoint.json.
+- Docs: plainer JOSS paper voice (4pp, all required sections, 1507 words),
+  stale 604x/400-parity references corrected to 650x/90-90 synthetic.
+
 v1.0 — public release (2026-08-17)
 ===============================================================================
 

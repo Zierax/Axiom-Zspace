@@ -1,4 +1,4 @@
-# Benchmarks — v1.1.1 Professional
+# Benchmarks — v1.1.2 Professional
 
 > **Measured · Versioned · Deterministic · Honest**
 

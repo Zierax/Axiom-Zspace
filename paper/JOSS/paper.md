@@ -103,7 +103,7 @@ Contributions, bug reports, and support requests are welcome via the GitHub issu
 
 # Availability
 
-Source: `https://github.com/Zierax/Axiom-Zspace` (tag `v1.1.1`), `zspace_engine/` (ingestion, detectors, validator, thresholds), `C99-Version/` (supplementary C99 port, `Purce` [@purce2024] at <https://github.com/Zierax/Purce>), `paper/` (JOSS `paper.md` + `paper.bib` archived with tag). License: MIT (`LICENSE`), archived on Zenodo `10.5281/zenodo.22255875`. Dependencies: Python $>=3.10$ + `libc`/`libm` + OpenMP (optional for C99) + Python stack (`requirements.txt` pinned).
+Source: `https://github.com/Zierax/Axiom-Zspace` (tag `v1.1.2`), `zspace_engine/` (ingestion, detectors, validator, thresholds), `C99-Version/` (supplementary C99 port, `Purce` [@purce2024] at <https://github.com/Zierax/Purce>), `paper/` (JOSS `paper.md` + `paper.bib` archived with tag). License: MIT (`LICENSE`), archived on Zenodo `10.5281/zenodo.22255875`. Dependencies: Python $>=3.10$ + `libc`/`libm` + OpenMP (optional for C99) + Python stack (`requirements.txt` pinned).
 
 This paper describes the Axiom-ZSpace software itself — its architecture, reproducibility guarantees, and the C99 differential-verification artifact — rather than novel astrophysical results.
 

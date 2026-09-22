@@ -1,4 +1,4 @@
-# Architecture — v1.1.1 Professional
+# Architecture — v1.1.2 Professional
 
 > **Deterministic · Single-Source Thresholds · Dual-Engine Parity · Measured**
 
