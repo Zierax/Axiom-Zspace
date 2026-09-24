@@ -35,8 +35,8 @@ Nothing here needs a hint or a network connection. The same seed gives the same 
 # State of the Field
 
 * **BLS** [@kovacs2002] is the standard box search; **TLS** [@hippke2019] adds limb-darkened templates at $\sim$1$\times$ BLS cost.
-* **GPU BLS**: `cuvarbase` [@cuvarbase] and **GTLS** [@hu2026] report 10--100$\times$ on GPU; **QLP GPU** [@kunimoto2023] reports 40$\times$.
-* **Approximators**: **fBLS** [@shahaf2022] 15$\times$ at 65k points (binned); **GPFC** [@wang2024] reports 15$\times$ vs `astropy` cython at equal grid (CNN, USP only). None ship the full chain (gates, catalog, proof chains) with versioned synthetic and real benchmarks next to the code.
+* **GPU BLS**: `cuvarbase` [@cuvarbase] is the standard GPU BLS baseline; **GTLS** [@hu2026] accelerates TLS-style search $\approx$24$\times$ on one RTX 4090; **QLP GPU** [@kunimoto2023] reports 40$\times$.
+* **Approximators**: **fBLS** [@shahaf2022] is a fast-folding BLS variant that trades binning for speed; **GPFC** [@wang2024] is a CNN-based USP search reporting orders-of-magnitude speedups over BLS. None ship the full chain (gates, catalog, proof chains) with versioned synthetic and real benchmarks next to the code.
 
 # Installation
 
@@ -83,7 +83,7 @@ The catalog defines three profiles: `conservative`, `balanced` (default), and a 
 
 The headline numbers belong to the catalog: 41.2% recall and 4.25% FPR on BIG400, 41.7% recall on REAL_FINAL. The C99 port exists for batch work. It does 42.8 ms per target on 3k-point curves (650$\times$ vs single-thread Python at 27.8 s, 40.6$\times$ per core) and 4.8 s per target on 87k-point 5-sector curves (16 cores, `-O3 -march=native -flto -ffast-math -fopenmp-simd`). The 87k Python baseline was not re-measured, so treat that ratio as provisional.
 
-For reference, GTLS reports 15.7$\times$ on an RTX 4090 [@hu2026] and QLP GPU reports 40$\times$ [@kunimoto2023], both on dedicated hardware. The C99 port is bit-identical to Python and needs no GPU. Where the cost is gate logic and FAP calibration rather than raw FLOPs, a plain CPU build can win.
+For reference, GTLS needs an RTX 4090 to reach $\approx$24$\times$ over CPU TLS (3289 s down to 138 s on their benchmark) [@hu2026], and QLP GPU reports 40$\times$ [@kunimoto2023], both on dedicated hardware. The C99 port is bit-identical to Python and needs no GPU. Where the cost is gate logic and FAP calibration rather than raw FLOPs, a plain CPU build can win.
 
 # Verification
 
